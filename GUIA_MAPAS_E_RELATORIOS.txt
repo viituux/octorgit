@@ -1,0 +1,35 @@
+OCTORGIT 0.5.0 - MAPAS VISUAIS E DOCUMENTO COM DIAGRAMAS
+
+1. Extraia este ZIP em uma pasta nova.
+2. Dê dois cliques em ABRIR_OCTORGIT.bat.
+3. Clique em Experimentar um exemplo.
+4. Explore Primeiro contato: clique numa etapa e leia o trecho ao lado.
+5. Em Endpoints, clique numa rota para conferir campos e evidencias.
+6. Em Arquitetura, troque o tipo de mapa e use + / - ou baixe o SVG.
+7. Em Cobertura, veja parsing, exclusoes e campos desconhecidos.
+8. Em Comparar versoes, clique em Testar exemplo alterado.
+9. Em Relatorio visual, confira o documento completo.
+10. Baixe Relatorio visual ou Exportar ZIP no topo.
+
+PARA PDF
+Abra RELATORIO.html no Edge/Chrome e pressione Ctrl+P.
+Escolha Salvar como PDF. Os diagramas ja estao dentro do documento.
+Nao precisa de internet para abrir o HTML exportado.
+
+EXEMPLO PRONTO
+Abra examples/relatorio-visual/RELATORIO-EXEMPLO.html sem iniciar o app.
+
+HISTORICO
+No Windows: %LOCALAPPDATA%\OctorGit\history.sqlite3
+O historico continua salvo apos encerrar. Nao vem no ZIP do programa.
+A lista mostra ate 100 analises recentes; registros antigos ficam no banco.
+
+PROJETOS REAIS
+Informe uma URL publica Python/Django/DRF e a branch ou SHA nas opcoes.
+Analise dois SHAs do mesmo projeto para comparar as versoes.
+Os exemplos integrados sao fixtures sem commit SHA, identificados como tal.
+
+Os mapas seguem a referencia de grupos, caixas e conexoes azuis.
+Sao SVGs gerados dos fatos detectados no codigo. Gemini pode complementar
+o texto, mas nao e necessario para gerar imagens ou exportar documentos.
+Campos dinamicos ainda ficam como nao confirmados.

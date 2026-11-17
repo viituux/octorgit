@@ -1,0 +1,16 @@
+{
+  "repository": {
+    "url": null,
+    "branch": null,
+    "commit_sha": null,
+    "source": "local_fixture"
+  },
+  "files": {
+    "api/urls.py": "from rest_framework.routers import DefaultRouter\nfrom .views import Users, Reports\n\nrouter = DefaultRouter()\nrouter.register(\"users\", Users, basename=\"user\")\nrouter.register(\"reports\", Reports, basename=\"report\")\n",
+    "api/views.py": "from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet\nfrom rest_framework.decorators import action\nfrom rest_framework.permissions import IsAuthenticated, AllowAny\nfrom rest_framework.authentication import SessionAuthentication\nfrom .serializers import UserSerializer, ReportSerializer\n\n\nclass Users(ModelViewSet):\n    serializer_class = UserSerializer\n    permission_classes = [IsAuthenticated]\n    authentication_classes = [SessionAuthentication]\n\n    @action(detail=True, methods=[\"post\"], url_path=\"activate\")\n    def activate(self, request, pk=None):\n        pass\n\n    @action(detail=False)\n    def recent(self, request):\n        pass\n\n\nclass Reports(ReadOnlyModelViewSet):\n    serializer_class = ReportSerializer\n    permission_classes = [AllowAny]\n    authentication_classes = []\n\n\nfrom django.views.decorators.http import require_GET\n\n@require_GET\ndef health(request):\n    pass\n",
+    "config/urls.py": "from django.urls import path, include\nfrom api.urls import router\nfrom api.views import health\n\nurlpatterns = [path(\"health/\", health), path(\"api/\", include(router.urls))]\n",
+    "config/settings.py": "ROOT_URLCONF = \"config.urls\"\n",
+    "api/serializers.py": "from rest_framework import serializers\nfrom .models import User, Report\n\nclass UserSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = User\n        fields = [\"id\", \"name\"]\n\nclass ReportSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = Report\n        fields = [\"id\", \"title\"]\n",
+    "api/models.py": "from django.db import models\n\nclass User(models.Model):\n    name = models.CharField(max_length=120)\n\nclass Report(models.Model):\n    title = models.CharField(max_length=200)\n"
+  }
+}

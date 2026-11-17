@@ -1,0 +1,68 @@
+{
+  "scope": "synthetic_reviewable_fixtures_not_real_repository_validation",
+  "automatic_head_options": "excluded_by_manifest_policy",
+  "fixtures": [
+    {
+      "fixture": "django_nested",
+      "true_positive": 7,
+      "false_positive": 0,
+      "false_negative": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "unexpected": [],
+      "missing": [],
+      "reference_validation": "passed",
+      "diagnostics": [],
+      "seconds": 0.002039
+    },
+    {
+      "fixture": "drf_mixins",
+      "true_positive": 3,
+      "false_positive": 0,
+      "false_negative": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "unexpected": [],
+      "missing": [],
+      "reference_validation": "passed",
+      "diagnostics": [],
+      "seconds": 0.000868
+    },
+    {
+      "fixture": "drf_router",
+      "true_positive": 10,
+      "false_positive": 0,
+      "false_negative": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "unexpected": [],
+      "missing": [],
+      "reference_validation": "passed",
+      "diagnostics": [
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "api/urls.py",
+          "reason": "default_router_api_root_and_format_suffix_not_enumerated",
+          "evidence": {
+            "schema_version": "0.1.0",
+            "parser_version": "0.2.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 4,
+            "end_line": 4,
+            "confidence": "extracted"
+          }
+        }
+      ],
+      "seconds": 0.00105
+    }
+  ],
+  "totals": {
+    "true_positive": 20,
+    "false_positive": 0,
+    "false_negative": 0,
+    "precision": 1.0,
+    "recall": 1.0
+  }
+}

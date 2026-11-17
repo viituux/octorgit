@@ -1,0 +1,2704 @@
+{
+  "before_sha": null,
+  "after_sha": null,
+  "before_fingerprint": "59f0b87b90b19f4f",
+  "after_fingerprint": "ca11cca787951706",
+  "added": [
+    {
+      "schema_version": "0.2.0",
+      "parser_version": "0.5.0",
+      "route": "status/",
+      "route_kind": "path",
+      "view": "api.views.health",
+      "method": "GET",
+      "serializer": null,
+      "authentication": null,
+      "permissions": null,
+      "configuration": {
+        "serializer": {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "value": null,
+          "confidence": "unconfirmed",
+          "evidence_chain": []
+        },
+        "permissions": {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "value": null,
+          "confidence": "unconfirmed",
+          "evidence_chain": []
+        },
+        "authentication": {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "value": null,
+          "confidence": "unconfirmed",
+          "evidence_chain": []
+        }
+      },
+      "scope": "explicit_root",
+      "confidence": "extracted",
+      "evidence": {
+        "schema_version": "0.2.0",
+        "parser_version": "0.5.0",
+        "file": "config/urls.py",
+        "symbol": null,
+        "start_line": 5,
+        "end_line": 5,
+        "confidence": "extracted"
+      },
+      "evidence_chain": [
+        {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "file": "config/urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "file": "api/views.py",
+          "symbol": "health",
+          "start_line": 30,
+          "end_line": 30,
+          "confidence": "extracted"
+        }
+      ],
+      "unknown_fields": [
+        "serializer",
+        "permissions",
+        "authentication"
+      ]
+    }
+  ],
+  "removed": [
+    {
+      "schema_version": "0.2.0",
+      "parser_version": "0.5.0",
+      "route": "health/",
+      "route_kind": "path",
+      "view": "api.views.health",
+      "method": "GET",
+      "serializer": null,
+      "authentication": null,
+      "permissions": null,
+      "configuration": {
+        "serializer": {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "value": null,
+          "confidence": "unconfirmed",
+          "evidence_chain": []
+        },
+        "permissions": {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "value": null,
+          "confidence": "unconfirmed",
+          "evidence_chain": []
+        },
+        "authentication": {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "value": null,
+          "confidence": "unconfirmed",
+          "evidence_chain": []
+        }
+      },
+      "scope": "explicit_root",
+      "confidence": "extracted",
+      "evidence": {
+        "schema_version": "0.2.0",
+        "parser_version": "0.5.0",
+        "file": "config/urls.py",
+        "symbol": null,
+        "start_line": 5,
+        "end_line": 5,
+        "confidence": "extracted"
+      },
+      "evidence_chain": [
+        {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "file": "config/urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "file": "api/views.py",
+          "symbol": "health",
+          "start_line": 30,
+          "end_line": 30,
+          "confidence": "extracted"
+        }
+      ],
+      "unknown_fields": [
+        "serializer",
+        "permissions",
+        "authentication"
+      ]
+    }
+  ],
+  "changed": [
+    {
+      "before": {
+        "schema_version": "0.2.0",
+        "parser_version": "0.5.0",
+        "route": "api/users/{pk}/",
+        "route_kind": "drf_template",
+        "view": "api.views.Users.destroy",
+        "method": "DELETE",
+        "serializer": "api.serializers.UserSerializer",
+        "authentication": [
+          "rest_framework.authentication.SessionAuthentication"
+        ],
+        "permissions": [
+          "rest_framework.permissions.IsAuthenticated"
+        ],
+        "configuration": {
+          "serializer": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": "api.serializers.UserSerializer",
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 9,
+                "end_line": 9,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "permissions": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.permissions.IsAuthenticated"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 10,
+                "end_line": 10,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "authentication": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.authentication.SessionAuthentication"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 11,
+                "end_line": 11,
+                "confidence": "extracted"
+              }
+            ]
+          }
+        },
+        "scope": "explicit_root",
+        "confidence": "inferred",
+        "evidence": {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "file": "api/urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        "evidence_chain": [
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "config/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 4,
+            "end_line": 4,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/views.py",
+            "symbol": "Users",
+            "start_line": 8,
+            "end_line": 19,
+            "confidence": "extracted"
+          }
+        ],
+        "unknown_fields": []
+      },
+      "after": {
+        "schema_version": "0.2.0",
+        "parser_version": "0.5.0",
+        "route": "api/users/{pk}/",
+        "route_kind": "drf_template",
+        "view": "api.views.Users.destroy",
+        "method": "DELETE",
+        "serializer": "api.serializers.UserSerializer",
+        "authentication": [
+          "rest_framework.authentication.SessionAuthentication"
+        ],
+        "permissions": [
+          "rest_framework.permissions.AllowAny"
+        ],
+        "configuration": {
+          "serializer": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": "api.serializers.UserSerializer",
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 9,
+                "end_line": 9,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "permissions": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.permissions.AllowAny"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 10,
+                "end_line": 10,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "authentication": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.authentication.SessionAuthentication"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 11,
+                "end_line": 11,
+                "confidence": "extracted"
+              }
+            ]
+          }
+        },
+        "scope": "explicit_root",
+        "confidence": "inferred",
+        "evidence": {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "file": "api/urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        "evidence_chain": [
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "config/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 4,
+            "end_line": 4,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/views.py",
+            "symbol": "Users",
+            "start_line": 8,
+            "end_line": 19,
+            "confidence": "extracted"
+          }
+        ],
+        "unknown_fields": []
+      },
+      "fields": [
+        "permissions",
+        "evidence_file_changed"
+      ]
+    },
+    {
+      "before": {
+        "schema_version": "0.2.0",
+        "parser_version": "0.5.0",
+        "route": "api/reports/",
+        "route_kind": "drf_template",
+        "view": "api.views.Reports.list",
+        "method": "GET",
+        "serializer": "api.serializers.ReportSerializer",
+        "authentication": [],
+        "permissions": [
+          "rest_framework.permissions.AllowAny"
+        ],
+        "configuration": {
+          "serializer": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": "api.serializers.ReportSerializer",
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Reports",
+                "start_line": 23,
+                "end_line": 23,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "permissions": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.permissions.AllowAny"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Reports",
+                "start_line": 24,
+                "end_line": 24,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "authentication": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Reports",
+                "start_line": 25,
+                "end_line": 25,
+                "confidence": "extracted"
+              }
+            ]
+          }
+        },
+        "scope": "explicit_root",
+        "confidence": "inferred",
+        "evidence": {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "file": "api/urls.py",
+          "symbol": null,
+          "start_line": 6,
+          "end_line": 6,
+          "confidence": "extracted"
+        },
+        "evidence_chain": [
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "config/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 4,
+            "end_line": 4,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 6,
+            "end_line": 6,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/views.py",
+            "symbol": "Reports",
+            "start_line": 22,
+            "end_line": 25,
+            "confidence": "extracted"
+          }
+        ],
+        "unknown_fields": []
+      },
+      "after": {
+        "schema_version": "0.2.0",
+        "parser_version": "0.5.0",
+        "route": "api/reports/",
+        "route_kind": "drf_template",
+        "view": "api.views.Reports.list",
+        "method": "GET",
+        "serializer": "api.serializers.ReportSerializer",
+        "authentication": [],
+        "permissions": [
+          "rest_framework.permissions.AllowAny"
+        ],
+        "configuration": {
+          "serializer": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": "api.serializers.ReportSerializer",
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Reports",
+                "start_line": 23,
+                "end_line": 23,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "permissions": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.permissions.AllowAny"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Reports",
+                "start_line": 24,
+                "end_line": 24,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "authentication": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Reports",
+                "start_line": 25,
+                "end_line": 25,
+                "confidence": "extracted"
+              }
+            ]
+          }
+        },
+        "scope": "explicit_root",
+        "confidence": "inferred",
+        "evidence": {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "file": "api/urls.py",
+          "symbol": null,
+          "start_line": 6,
+          "end_line": 6,
+          "confidence": "extracted"
+        },
+        "evidence_chain": [
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "config/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 4,
+            "end_line": 4,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 6,
+            "end_line": 6,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/views.py",
+            "symbol": "Reports",
+            "start_line": 22,
+            "end_line": 25,
+            "confidence": "extracted"
+          }
+        ],
+        "unknown_fields": []
+      },
+      "fields": [
+        "evidence_file_changed"
+      ]
+    },
+    {
+      "before": {
+        "schema_version": "0.2.0",
+        "parser_version": "0.5.0",
+        "route": "api/reports/{pk}/",
+        "route_kind": "drf_template",
+        "view": "api.views.Reports.retrieve",
+        "method": "GET",
+        "serializer": "api.serializers.ReportSerializer",
+        "authentication": [],
+        "permissions": [
+          "rest_framework.permissions.AllowAny"
+        ],
+        "configuration": {
+          "serializer": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": "api.serializers.ReportSerializer",
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Reports",
+                "start_line": 23,
+                "end_line": 23,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "permissions": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.permissions.AllowAny"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Reports",
+                "start_line": 24,
+                "end_line": 24,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "authentication": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Reports",
+                "start_line": 25,
+                "end_line": 25,
+                "confidence": "extracted"
+              }
+            ]
+          }
+        },
+        "scope": "explicit_root",
+        "confidence": "inferred",
+        "evidence": {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "file": "api/urls.py",
+          "symbol": null,
+          "start_line": 6,
+          "end_line": 6,
+          "confidence": "extracted"
+        },
+        "evidence_chain": [
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "config/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 4,
+            "end_line": 4,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 6,
+            "end_line": 6,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/views.py",
+            "symbol": "Reports",
+            "start_line": 22,
+            "end_line": 25,
+            "confidence": "extracted"
+          }
+        ],
+        "unknown_fields": []
+      },
+      "after": {
+        "schema_version": "0.2.0",
+        "parser_version": "0.5.0",
+        "route": "api/reports/{pk}/",
+        "route_kind": "drf_template",
+        "view": "api.views.Reports.retrieve",
+        "method": "GET",
+        "serializer": "api.serializers.ReportSerializer",
+        "authentication": [],
+        "permissions": [
+          "rest_framework.permissions.AllowAny"
+        ],
+        "configuration": {
+          "serializer": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": "api.serializers.ReportSerializer",
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Reports",
+                "start_line": 23,
+                "end_line": 23,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "permissions": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.permissions.AllowAny"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Reports",
+                "start_line": 24,
+                "end_line": 24,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "authentication": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Reports",
+                "start_line": 25,
+                "end_line": 25,
+                "confidence": "extracted"
+              }
+            ]
+          }
+        },
+        "scope": "explicit_root",
+        "confidence": "inferred",
+        "evidence": {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "file": "api/urls.py",
+          "symbol": null,
+          "start_line": 6,
+          "end_line": 6,
+          "confidence": "extracted"
+        },
+        "evidence_chain": [
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "config/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 4,
+            "end_line": 4,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 6,
+            "end_line": 6,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/views.py",
+            "symbol": "Reports",
+            "start_line": 22,
+            "end_line": 25,
+            "confidence": "extracted"
+          }
+        ],
+        "unknown_fields": []
+      },
+      "fields": [
+        "evidence_file_changed"
+      ]
+    },
+    {
+      "before": {
+        "schema_version": "0.2.0",
+        "parser_version": "0.5.0",
+        "route": "api/users/",
+        "route_kind": "drf_template",
+        "view": "api.views.Users.list",
+        "method": "GET",
+        "serializer": "api.serializers.UserSerializer",
+        "authentication": [
+          "rest_framework.authentication.SessionAuthentication"
+        ],
+        "permissions": [
+          "rest_framework.permissions.IsAuthenticated"
+        ],
+        "configuration": {
+          "serializer": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": "api.serializers.UserSerializer",
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 9,
+                "end_line": 9,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "permissions": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.permissions.IsAuthenticated"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 10,
+                "end_line": 10,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "authentication": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.authentication.SessionAuthentication"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 11,
+                "end_line": 11,
+                "confidence": "extracted"
+              }
+            ]
+          }
+        },
+        "scope": "explicit_root",
+        "confidence": "inferred",
+        "evidence": {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "file": "api/urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        "evidence_chain": [
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "config/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 4,
+            "end_line": 4,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/views.py",
+            "symbol": "Users",
+            "start_line": 8,
+            "end_line": 19,
+            "confidence": "extracted"
+          }
+        ],
+        "unknown_fields": []
+      },
+      "after": {
+        "schema_version": "0.2.0",
+        "parser_version": "0.5.0",
+        "route": "api/users/",
+        "route_kind": "drf_template",
+        "view": "api.views.Users.list",
+        "method": "GET",
+        "serializer": "api.serializers.UserSerializer",
+        "authentication": [
+          "rest_framework.authentication.SessionAuthentication"
+        ],
+        "permissions": [
+          "rest_framework.permissions.AllowAny"
+        ],
+        "configuration": {
+          "serializer": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": "api.serializers.UserSerializer",
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 9,
+                "end_line": 9,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "permissions": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.permissions.AllowAny"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 10,
+                "end_line": 10,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "authentication": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.authentication.SessionAuthentication"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 11,
+                "end_line": 11,
+                "confidence": "extracted"
+              }
+            ]
+          }
+        },
+        "scope": "explicit_root",
+        "confidence": "inferred",
+        "evidence": {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "file": "api/urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        "evidence_chain": [
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "config/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 4,
+            "end_line": 4,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/views.py",
+            "symbol": "Users",
+            "start_line": 8,
+            "end_line": 19,
+            "confidence": "extracted"
+          }
+        ],
+        "unknown_fields": []
+      },
+      "fields": [
+        "permissions",
+        "evidence_file_changed"
+      ]
+    },
+    {
+      "before": {
+        "schema_version": "0.2.0",
+        "parser_version": "0.5.0",
+        "route": "api/users/recent/",
+        "route_kind": "drf_template",
+        "view": "api.views.Users.recent",
+        "method": "GET",
+        "serializer": "api.serializers.UserSerializer",
+        "authentication": [
+          "rest_framework.authentication.SessionAuthentication"
+        ],
+        "permissions": [
+          "rest_framework.permissions.IsAuthenticated"
+        ],
+        "configuration": {
+          "serializer": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": "api.serializers.UserSerializer",
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 9,
+                "end_line": 9,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "permissions": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.permissions.IsAuthenticated"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 10,
+                "end_line": 10,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "authentication": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.authentication.SessionAuthentication"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 11,
+                "end_line": 11,
+                "confidence": "extracted"
+              }
+            ]
+          }
+        },
+        "scope": "explicit_root",
+        "confidence": "inferred",
+        "evidence": {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "file": "api/urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        "evidence_chain": [
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "config/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 4,
+            "end_line": 4,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/views.py",
+            "symbol": "Users",
+            "start_line": 8,
+            "end_line": 19,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/views.py",
+            "symbol": "Users.recent",
+            "start_line": 17,
+            "end_line": 17,
+            "confidence": "extracted"
+          }
+        ],
+        "unknown_fields": []
+      },
+      "after": {
+        "schema_version": "0.2.0",
+        "parser_version": "0.5.0",
+        "route": "api/users/recent/",
+        "route_kind": "drf_template",
+        "view": "api.views.Users.recent",
+        "method": "GET",
+        "serializer": "api.serializers.UserSerializer",
+        "authentication": [
+          "rest_framework.authentication.SessionAuthentication"
+        ],
+        "permissions": [
+          "rest_framework.permissions.AllowAny"
+        ],
+        "configuration": {
+          "serializer": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": "api.serializers.UserSerializer",
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 9,
+                "end_line": 9,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "permissions": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.permissions.AllowAny"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 10,
+                "end_line": 10,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "authentication": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.authentication.SessionAuthentication"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 11,
+                "end_line": 11,
+                "confidence": "extracted"
+              }
+            ]
+          }
+        },
+        "scope": "explicit_root",
+        "confidence": "inferred",
+        "evidence": {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "file": "api/urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        "evidence_chain": [
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "config/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 4,
+            "end_line": 4,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/views.py",
+            "symbol": "Users",
+            "start_line": 8,
+            "end_line": 19,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/views.py",
+            "symbol": "Users.recent",
+            "start_line": 17,
+            "end_line": 17,
+            "confidence": "extracted"
+          }
+        ],
+        "unknown_fields": []
+      },
+      "fields": [
+        "permissions",
+        "evidence_file_changed"
+      ]
+    },
+    {
+      "before": {
+        "schema_version": "0.2.0",
+        "parser_version": "0.5.0",
+        "route": "api/users/{pk}/",
+        "route_kind": "drf_template",
+        "view": "api.views.Users.retrieve",
+        "method": "GET",
+        "serializer": "api.serializers.UserSerializer",
+        "authentication": [
+          "rest_framework.authentication.SessionAuthentication"
+        ],
+        "permissions": [
+          "rest_framework.permissions.IsAuthenticated"
+        ],
+        "configuration": {
+          "serializer": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": "api.serializers.UserSerializer",
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 9,
+                "end_line": 9,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "permissions": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.permissions.IsAuthenticated"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 10,
+                "end_line": 10,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "authentication": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.authentication.SessionAuthentication"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 11,
+                "end_line": 11,
+                "confidence": "extracted"
+              }
+            ]
+          }
+        },
+        "scope": "explicit_root",
+        "confidence": "inferred",
+        "evidence": {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "file": "api/urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        "evidence_chain": [
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "config/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 4,
+            "end_line": 4,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/views.py",
+            "symbol": "Users",
+            "start_line": 8,
+            "end_line": 19,
+            "confidence": "extracted"
+          }
+        ],
+        "unknown_fields": []
+      },
+      "after": {
+        "schema_version": "0.2.0",
+        "parser_version": "0.5.0",
+        "route": "api/users/{pk}/",
+        "route_kind": "drf_template",
+        "view": "api.views.Users.retrieve",
+        "method": "GET",
+        "serializer": "api.serializers.UserSerializer",
+        "authentication": [
+          "rest_framework.authentication.SessionAuthentication"
+        ],
+        "permissions": [
+          "rest_framework.permissions.AllowAny"
+        ],
+        "configuration": {
+          "serializer": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": "api.serializers.UserSerializer",
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 9,
+                "end_line": 9,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "permissions": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.permissions.AllowAny"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 10,
+                "end_line": 10,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "authentication": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.authentication.SessionAuthentication"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 11,
+                "end_line": 11,
+                "confidence": "extracted"
+              }
+            ]
+          }
+        },
+        "scope": "explicit_root",
+        "confidence": "inferred",
+        "evidence": {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "file": "api/urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        "evidence_chain": [
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "config/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 4,
+            "end_line": 4,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/views.py",
+            "symbol": "Users",
+            "start_line": 8,
+            "end_line": 19,
+            "confidence": "extracted"
+          }
+        ],
+        "unknown_fields": []
+      },
+      "fields": [
+        "permissions",
+        "evidence_file_changed"
+      ]
+    },
+    {
+      "before": {
+        "schema_version": "0.2.0",
+        "parser_version": "0.5.0",
+        "route": "api/users/{pk}/",
+        "route_kind": "drf_template",
+        "view": "api.views.Users.partial_update",
+        "method": "PATCH",
+        "serializer": "api.serializers.UserSerializer",
+        "authentication": [
+          "rest_framework.authentication.SessionAuthentication"
+        ],
+        "permissions": [
+          "rest_framework.permissions.IsAuthenticated"
+        ],
+        "configuration": {
+          "serializer": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": "api.serializers.UserSerializer",
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 9,
+                "end_line": 9,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "permissions": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.permissions.IsAuthenticated"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 10,
+                "end_line": 10,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "authentication": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.authentication.SessionAuthentication"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 11,
+                "end_line": 11,
+                "confidence": "extracted"
+              }
+            ]
+          }
+        },
+        "scope": "explicit_root",
+        "confidence": "inferred",
+        "evidence": {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "file": "api/urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        "evidence_chain": [
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "config/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 4,
+            "end_line": 4,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/views.py",
+            "symbol": "Users",
+            "start_line": 8,
+            "end_line": 19,
+            "confidence": "extracted"
+          }
+        ],
+        "unknown_fields": []
+      },
+      "after": {
+        "schema_version": "0.2.0",
+        "parser_version": "0.5.0",
+        "route": "api/users/{pk}/",
+        "route_kind": "drf_template",
+        "view": "api.views.Users.partial_update",
+        "method": "PATCH",
+        "serializer": "api.serializers.UserSerializer",
+        "authentication": [
+          "rest_framework.authentication.SessionAuthentication"
+        ],
+        "permissions": [
+          "rest_framework.permissions.AllowAny"
+        ],
+        "configuration": {
+          "serializer": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": "api.serializers.UserSerializer",
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 9,
+                "end_line": 9,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "permissions": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.permissions.AllowAny"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 10,
+                "end_line": 10,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "authentication": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.authentication.SessionAuthentication"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 11,
+                "end_line": 11,
+                "confidence": "extracted"
+              }
+            ]
+          }
+        },
+        "scope": "explicit_root",
+        "confidence": "inferred",
+        "evidence": {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "file": "api/urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        "evidence_chain": [
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "config/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 4,
+            "end_line": 4,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/views.py",
+            "symbol": "Users",
+            "start_line": 8,
+            "end_line": 19,
+            "confidence": "extracted"
+          }
+        ],
+        "unknown_fields": []
+      },
+      "fields": [
+        "permissions",
+        "evidence_file_changed"
+      ]
+    },
+    {
+      "before": {
+        "schema_version": "0.2.0",
+        "parser_version": "0.5.0",
+        "route": "api/users/",
+        "route_kind": "drf_template",
+        "view": "api.views.Users.create",
+        "method": "POST",
+        "serializer": "api.serializers.UserSerializer",
+        "authentication": [
+          "rest_framework.authentication.SessionAuthentication"
+        ],
+        "permissions": [
+          "rest_framework.permissions.IsAuthenticated"
+        ],
+        "configuration": {
+          "serializer": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": "api.serializers.UserSerializer",
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 9,
+                "end_line": 9,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "permissions": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.permissions.IsAuthenticated"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 10,
+                "end_line": 10,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "authentication": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.authentication.SessionAuthentication"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 11,
+                "end_line": 11,
+                "confidence": "extracted"
+              }
+            ]
+          }
+        },
+        "scope": "explicit_root",
+        "confidence": "inferred",
+        "evidence": {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "file": "api/urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        "evidence_chain": [
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "config/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 4,
+            "end_line": 4,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/views.py",
+            "symbol": "Users",
+            "start_line": 8,
+            "end_line": 19,
+            "confidence": "extracted"
+          }
+        ],
+        "unknown_fields": []
+      },
+      "after": {
+        "schema_version": "0.2.0",
+        "parser_version": "0.5.0",
+        "route": "api/users/",
+        "route_kind": "drf_template",
+        "view": "api.views.Users.create",
+        "method": "POST",
+        "serializer": "api.serializers.UserSerializer",
+        "authentication": [
+          "rest_framework.authentication.SessionAuthentication"
+        ],
+        "permissions": [
+          "rest_framework.permissions.AllowAny"
+        ],
+        "configuration": {
+          "serializer": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": "api.serializers.UserSerializer",
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 9,
+                "end_line": 9,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "permissions": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.permissions.AllowAny"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 10,
+                "end_line": 10,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "authentication": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.authentication.SessionAuthentication"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 11,
+                "end_line": 11,
+                "confidence": "extracted"
+              }
+            ]
+          }
+        },
+        "scope": "explicit_root",
+        "confidence": "inferred",
+        "evidence": {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "file": "api/urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        "evidence_chain": [
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "config/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 4,
+            "end_line": 4,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/views.py",
+            "symbol": "Users",
+            "start_line": 8,
+            "end_line": 19,
+            "confidence": "extracted"
+          }
+        ],
+        "unknown_fields": []
+      },
+      "fields": [
+        "permissions",
+        "evidence_file_changed"
+      ]
+    },
+    {
+      "before": {
+        "schema_version": "0.2.0",
+        "parser_version": "0.5.0",
+        "route": "api/users/{pk}/activate/",
+        "route_kind": "drf_template",
+        "view": "api.views.Users.activate",
+        "method": "POST",
+        "serializer": "api.serializers.UserSerializer",
+        "authentication": [
+          "rest_framework.authentication.SessionAuthentication"
+        ],
+        "permissions": [
+          "rest_framework.permissions.IsAuthenticated"
+        ],
+        "configuration": {
+          "serializer": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": "api.serializers.UserSerializer",
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 9,
+                "end_line": 9,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "permissions": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.permissions.IsAuthenticated"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 10,
+                "end_line": 10,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "authentication": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.authentication.SessionAuthentication"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 11,
+                "end_line": 11,
+                "confidence": "extracted"
+              }
+            ]
+          }
+        },
+        "scope": "explicit_root",
+        "confidence": "inferred",
+        "evidence": {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "file": "api/urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        "evidence_chain": [
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "config/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 4,
+            "end_line": 4,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/views.py",
+            "symbol": "Users",
+            "start_line": 8,
+            "end_line": 19,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/views.py",
+            "symbol": "Users.activate",
+            "start_line": 13,
+            "end_line": 13,
+            "confidence": "extracted"
+          }
+        ],
+        "unknown_fields": []
+      },
+      "after": {
+        "schema_version": "0.2.0",
+        "parser_version": "0.5.0",
+        "route": "api/users/{pk}/activate/",
+        "route_kind": "drf_template",
+        "view": "api.views.Users.activate",
+        "method": "POST",
+        "serializer": "api.serializers.UserSerializer",
+        "authentication": [
+          "rest_framework.authentication.SessionAuthentication"
+        ],
+        "permissions": [
+          "rest_framework.permissions.AllowAny"
+        ],
+        "configuration": {
+          "serializer": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": "api.serializers.UserSerializer",
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 9,
+                "end_line": 9,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "permissions": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.permissions.AllowAny"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 10,
+                "end_line": 10,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "authentication": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.authentication.SessionAuthentication"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 11,
+                "end_line": 11,
+                "confidence": "extracted"
+              }
+            ]
+          }
+        },
+        "scope": "explicit_root",
+        "confidence": "inferred",
+        "evidence": {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "file": "api/urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        "evidence_chain": [
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "config/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 4,
+            "end_line": 4,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/views.py",
+            "symbol": "Users",
+            "start_line": 8,
+            "end_line": 19,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/views.py",
+            "symbol": "Users.activate",
+            "start_line": 13,
+            "end_line": 13,
+            "confidence": "extracted"
+          }
+        ],
+        "unknown_fields": []
+      },
+      "fields": [
+        "permissions",
+        "evidence_file_changed"
+      ]
+    },
+    {
+      "before": {
+        "schema_version": "0.2.0",
+        "parser_version": "0.5.0",
+        "route": "api/users/{pk}/",
+        "route_kind": "drf_template",
+        "view": "api.views.Users.update",
+        "method": "PUT",
+        "serializer": "api.serializers.UserSerializer",
+        "authentication": [
+          "rest_framework.authentication.SessionAuthentication"
+        ],
+        "permissions": [
+          "rest_framework.permissions.IsAuthenticated"
+        ],
+        "configuration": {
+          "serializer": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": "api.serializers.UserSerializer",
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 9,
+                "end_line": 9,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "permissions": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.permissions.IsAuthenticated"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 10,
+                "end_line": 10,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "authentication": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.authentication.SessionAuthentication"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 11,
+                "end_line": 11,
+                "confidence": "extracted"
+              }
+            ]
+          }
+        },
+        "scope": "explicit_root",
+        "confidence": "inferred",
+        "evidence": {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "file": "api/urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        "evidence_chain": [
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "config/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 4,
+            "end_line": 4,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/views.py",
+            "symbol": "Users",
+            "start_line": 8,
+            "end_line": 19,
+            "confidence": "extracted"
+          }
+        ],
+        "unknown_fields": []
+      },
+      "after": {
+        "schema_version": "0.2.0",
+        "parser_version": "0.5.0",
+        "route": "api/users/{pk}/",
+        "route_kind": "drf_template",
+        "view": "api.views.Users.update",
+        "method": "PUT",
+        "serializer": "api.serializers.UserSerializer",
+        "authentication": [
+          "rest_framework.authentication.SessionAuthentication"
+        ],
+        "permissions": [
+          "rest_framework.permissions.AllowAny"
+        ],
+        "configuration": {
+          "serializer": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": "api.serializers.UserSerializer",
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 9,
+                "end_line": 9,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "permissions": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.permissions.AllowAny"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 10,
+                "end_line": 10,
+                "confidence": "extracted"
+              }
+            ]
+          },
+          "authentication": {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "value": [
+              "rest_framework.authentication.SessionAuthentication"
+            ],
+            "confidence": "extracted",
+            "evidence_chain": [
+              {
+                "schema_version": "0.2.0",
+                "parser_version": "0.5.0",
+                "file": "api/views.py",
+                "symbol": "Users",
+                "start_line": 11,
+                "end_line": 11,
+                "confidence": "extracted"
+              }
+            ]
+          }
+        },
+        "scope": "explicit_root",
+        "confidence": "inferred",
+        "evidence": {
+          "schema_version": "0.2.0",
+          "parser_version": "0.5.0",
+          "file": "api/urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        "evidence_chain": [
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "config/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 4,
+            "end_line": 4,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/urls.py",
+            "symbol": null,
+            "start_line": 5,
+            "end_line": 5,
+            "confidence": "extracted"
+          },
+          {
+            "schema_version": "0.2.0",
+            "parser_version": "0.5.0",
+            "file": "api/views.py",
+            "symbol": "Users",
+            "start_line": 8,
+            "end_line": 19,
+            "confidence": "extracted"
+          }
+        ],
+        "unknown_fields": []
+      },
+      "fields": [
+        "permissions",
+        "evidence_file_changed"
+      ]
+    }
+  ],
+  "files": {
+    "added": [],
+    "removed": [],
+    "changed": [
+      "api/views.py",
+      "config/urls.py"
+    ]
+  },
+  "documents_to_review": [
+    {
+      "document": "ENDPOINTS.md",
+      "reason": "Rotas/configurações ou arquivos de evidência mudaram; revise o mapa."
+    },
+    {
+      "document": "README.md",
+      "reason": "O snapshot de arquivos mudou; revise as explicações e as evidências."
+    },
+    {
+      "document": "ARCHITECTURE.md",
+      "reason": "O snapshot de arquivos mudou; revise as explicações e as evidências."
+    },
+    {
+      "document": "AI.md",
+      "reason": "O snapshot de arquivos mudou; revise as explicações e as evidências."
+    },
+    {
+      "document": "RELATORIO.html",
+      "reason": "O snapshot de arquivos mudou; revise as explicações e as evidências."
+    }
+  ],
+  "warnings": [],
+  "note": "Diferenças entre fatos detectados, não garantia de todas as alterações do projeto. Arquivo de evidência alterado é sinal de revisão; não prova mudança em cada função.",
+  "base_id": "40409d6e43201144e9c36e65",
+  "after_id": "01b2f66434a1006063beb2a7"
+}

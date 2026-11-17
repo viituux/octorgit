@@ -1,0 +1,55 @@
+{
+  "scope": "Gabarito escrito por inspeção estática de snippets/urls.py e snippets/views.py no SHA fixado; exige revisão humana independente antes de servir como evidência de produto. Escopo: rotas de negócio do router de snippets; exclui HEAD/OPTIONS automáticos, API root, formatos, login/logout da dependência DRF e schema/docs da dependência drf-spectacular. {pk} representa [^/.]+.",
+  "repository": {
+    "url": "https://github.com/encode/rest-framework-tutorial",
+    "branch": "68c0f79c37bbda4f665711446ee32cbf9f54de7d",
+    "commit_sha": "68c0f79c37bbda4f665711446ee32cbf9f54de7d",
+    "source": "github"
+  },
+  "route_files": [
+    "snippets/urls.py"
+  ],
+  "totals": {
+    "true_positive": 9,
+    "false_positive": 0,
+    "false_negative": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "unexpected": [],
+    "missing": []
+  },
+  "emitted_outside_manifest_scope": 2,
+  "reference_validation": "passed",
+  "diagnostics": [
+    {
+      "schema_version": "0.2.0",
+      "parser_version": "0.5.0",
+      "file": "snippets/urls.py",
+      "reason": "default_router_api_root_and_format_suffix_not_enumerated",
+      "evidence": {
+        "schema_version": "0.2.0",
+        "parser_version": "0.5.0",
+        "file": "snippets/urls.py",
+        "symbol": null,
+        "start_line": 7,
+        "end_line": 7,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.2.0",
+      "parser_version": "0.5.0",
+      "file": "tutorial/urls.py",
+      "reason": "include_module_not_found",
+      "evidence": {
+        "schema_version": "0.2.0",
+        "parser_version": "0.5.0",
+        "file": "tutorial/urls.py",
+        "symbol": null,
+        "start_line": 6,
+        "end_line": 6,
+        "confidence": "extracted"
+      }
+    }
+  ]
+}

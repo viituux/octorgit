@@ -1,0 +1,35 @@
+name: Windows e Linux
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: ${{ matrix.os }} / Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.14']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Testes do parser, servidor, histórico e relatório
+        run: python -m unittest discover -s tests -v
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Sintaxe do JavaScript
+        run: node --check src/octorgit/static/app.js
+      - name: Sintaxe do inicializador Linux
+        if: runner.os == 'Linux'
+        run: bash -n ABRIR_OCTORGIT.sh

@@ -1,0 +1,36 @@
+OCTORGIT 0.5.0 - INTERFACE COM TELAS
+
+1. Extraia todo o ZIP em uma pasta nova.
+2. Abra a pasta octorgit.
+3. De dois cliques em ABRIR_OCTORGIT.bat.
+4. O navegador abrira em http://127.0.0.1:8765.
+5. Clique em Experimentar um exemplo para testar sem internet.
+
+Mantenha a janela do programa aberta enquanto usa as telas.
+Para encerrar, volte a janela do programa e pressione Ctrl+C.
+
+Voce ja tem Python instalado, conforme a instalacao anterior.
+O inicializador usa o codigo desta pasta e nao precisa reinstalar.
+
+ALTERNATIVA PELO POWERSHELL
+Abra o PowerShell dentro da pasta octorgit e execute:
+
+py -m pip install -e .
+py -m octorgit.web
+
+Se a porta estiver ocupada:
+py -m octorgit.web --port 8766
+Abra http://127.0.0.1:8766 nesse caso.
+
+TELAS
+Visao geral, Endpoints, Arquitetura, Documentacao e Historico.
+
+Os downloads ficam na pasta de downloads do navegador.
+O historico fica salvo no SQLite local, mesmo apos fechar o programa.
+
+GEMINI OPCIONAL
+Para ativar a IA Google, siga CONFIGURAR_GEMINI_WINDOWS.txt.
+A analise estatica e a demo continuam funcionando sem chave.
+
+MAPAS VISUAIS
+Veja GUIA_MAPAS_E_RELATORIOS.txt e o exemplo em examples/relatorio-visual.

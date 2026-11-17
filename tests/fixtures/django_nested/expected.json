@@ -1,0 +1,13 @@
+{
+  "root_urlconf": "config.urls",
+  "policy": "Gabarito escrito a partir das declarações da fixture; exclui HEAD/OPTIONS automáticos. Duas montagens do mesmo URLconf contam separadamente.",
+  "endpoints": [
+    {"method": "GET", "route": "health/"},
+    {"method": "GET", "route": "api/users/"},
+    {"method": "POST", "route": "api/users/"},
+    {"method": "GET", "route": "api/internal/ping/"},
+    {"method": "GET", "route": "v2/users/"},
+    {"method": "POST", "route": "v2/users/"},
+    {"method": "GET", "route": "v2/internal/ping/"}
+  ]
+}

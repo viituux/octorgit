@@ -1,0 +1,360 @@
+{
+  "schema_version": "0.1.0",
+  "parser_version": "0.2.0",
+  "repository": {
+    "schema_version": "0.1.0",
+    "parser_version": "0.2.0",
+    "url": null,
+    "branch": null,
+    "commit_sha": null,
+    "source": "local_fixture"
+  },
+  "files": [
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": "urls.py",
+      "language": "python",
+      "sha256": "a7a974e05df0c3d94de719edc7983dd45fe3d392321e67f84f47541628a485a9",
+      "line_count": 8
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": "views.py",
+      "language": "python",
+      "sha256": "38f36df03592d0c8fd1df15cb5c7b6826af49eab2b4179698d2db3fec242b305",
+      "line_count": 13
+    }
+  ],
+  "symbols": [
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "id": "views.py:health",
+      "name": "health",
+      "kind": "function",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "views.py",
+        "symbol": "health",
+        "start_line": 7,
+        "end_line": 8,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "id": "views.py:UserList",
+      "name": "UserList",
+      "kind": "class",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "views.py",
+        "symbol": "UserList",
+        "start_line": 11,
+        "end_line": 13,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "id": "views.py:UserList.get",
+      "name": "UserList.get",
+      "kind": "method",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "views.py",
+        "symbol": "UserList.get",
+        "start_line": 12,
+        "end_line": 13,
+        "confidence": "extracted"
+      }
+    }
+  ],
+  "imports": [
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "urls.py",
+      "target": "django.urls.path",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "urls.py",
+        "symbol": null,
+        "start_line": 1,
+        "end_line": 1,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "urls.py",
+      "target": "django.urls.include",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "urls.py",
+        "symbol": null,
+        "start_line": 1,
+        "end_line": 1,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "urls.py",
+      "target": "views.health",
+      "resolved": true,
+      "target_file": "views.py",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "urls.py",
+        "symbol": null,
+        "start_line": 2,
+        "end_line": 2,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "urls.py",
+      "target": "views.UserList",
+      "resolved": true,
+      "target_file": "views.py",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "urls.py",
+        "symbol": null,
+        "start_line": 2,
+        "end_line": 2,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "views.py",
+      "target": "django.http.JsonResponse",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "views.py",
+        "symbol": null,
+        "start_line": 1,
+        "end_line": 1,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "views.py",
+      "target": "django.views.decorators.http.require_GET",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "views.py",
+        "symbol": null,
+        "start_line": 2,
+        "end_line": 2,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "views.py",
+      "target": "rest_framework.views.APIView",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "views.py",
+        "symbol": null,
+        "start_line": 3,
+        "end_line": 3,
+        "confidence": "extracted"
+      }
+    }
+  ],
+  "relations": [
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "urls.py",
+      "target": "views.py",
+      "kind": "imports",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "urls.py",
+        "symbol": null,
+        "start_line": 2,
+        "end_line": 2,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "urls.py",
+      "target": "views.py",
+      "kind": "imports",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "urls.py",
+        "symbol": null,
+        "start_line": 2,
+        "end_line": 2,
+        "confidence": "extracted"
+      }
+    }
+  ],
+  "endpoints": [
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "route": "health/",
+      "route_kind": "path",
+      "view": "views.health",
+      "method": "GET",
+      "serializer": null,
+      "authentication": null,
+      "scope": "explicit_root",
+      "confidence": "extracted",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "urls.py",
+        "symbol": null,
+        "start_line": 5,
+        "end_line": 5,
+        "confidence": "extracted"
+      },
+      "evidence_chain": [
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "views.py",
+          "symbol": "health",
+          "start_line": 6,
+          "end_line": 6,
+          "confidence": "extracted"
+        }
+      ],
+      "unknown_fields": [
+        "serializer",
+        "authentication"
+      ]
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "route": "users/",
+      "route_kind": "path",
+      "view": "views.UserList",
+      "method": "GET",
+      "serializer": null,
+      "authentication": null,
+      "scope": "explicit_root",
+      "confidence": "extracted",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "urls.py",
+        "symbol": null,
+        "start_line": 6,
+        "end_line": 6,
+        "confidence": "extracted"
+      },
+      "evidence_chain": [
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "urls.py",
+          "symbol": null,
+          "start_line": 6,
+          "end_line": 6,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "views.py",
+          "symbol": "UserList.get",
+          "start_line": 12,
+          "end_line": 13,
+          "confidence": "extracted"
+        }
+      ],
+      "unknown_fields": [
+        "serializer",
+        "authentication"
+      ]
+    }
+  ],
+  "diagnostics": [
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "file": "urls.py",
+      "reason": "include_module_not_found",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "urls.py",
+        "symbol": null,
+        "start_line": 7,
+        "end_line": 7,
+        "confidence": "extracted"
+      }
+    }
+  ],
+  "skipped": [],
+  "metrics": {
+    "python_files_accepted": 2,
+    "python_files_parsed": 2,
+    "parsing_coverage": 1.0,
+    "skipped_files": 0
+  },
+  "routing": {
+    "schema_version": "0.1.0",
+    "parser_version": "0.2.0",
+    "roots": [
+      "urls.py"
+    ],
+    "root_selection": "explicit",
+    "automatic_methods": "HEAD and OPTIONS not enumerated"
+  }
+}

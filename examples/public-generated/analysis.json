@@ -1,0 +1,2066 @@
+{
+  "schema_version": "0.1.0",
+  "parser_version": "0.2.0",
+  "repository": {
+    "schema_version": "0.1.0",
+    "parser_version": "0.2.0",
+    "url": "https://github.com/encode/rest-framework-tutorial",
+    "branch": "main",
+    "commit_sha": "68c0f79c37bbda4f665711446ee32cbf9f54de7d",
+    "source": "github"
+  },
+  "files": [
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": ".github/dependabot.yml",
+      "language": "text",
+      "sha256": "775eab205ee3a035b54afc4e74463cec9ba86fa1286de60fbfb0c2fa4d1bf5cb",
+      "line_count": 10
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": ".github/workflows/ci.yml",
+      "language": "text",
+      "sha256": "1f12f3b869edec7ad4a11e30fb187a6f86bbcc99d16e86d8d8973f8363f033cd",
+      "line_count": 20
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": ".gitignore",
+      "language": "text",
+      "sha256": "fc64cf5571047ecc0139d3c71c2be7e467a1ede03248bd8af66e8a6f97068373",
+      "line_count": 10
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": ".python-version",
+      "language": "text",
+      "sha256": "02e735b3dfe1c32833eb550b7ff8ffa17f5f2bc3fa1e7bae61a8f5a3883ce398",
+      "line_count": 1
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": "Procfile",
+      "language": "text",
+      "sha256": "76c355b9a381351dc4f7a8dba55ae5727bfcbb426dfea9d4282d13f7fed4bfae",
+      "line_count": 1
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": "README.md",
+      "language": "text",
+      "sha256": "8d69137f91312014c50e8e548a5e75f9f509b8f8b423272204272a8c85174623",
+      "line_count": 7
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": "app.json",
+      "language": "text",
+      "sha256": "678fe7f52ac7a52add0f3647c5d18890c8c6945bd811eeb99f0c74645466381c",
+      "line_count": 25
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": "manage.py",
+      "language": "python",
+      "sha256": "2584aaca3dc09b581ec25fb64e40874f5d6b5b7dac3fc0c1bbcceac8edd8bd3b",
+      "line_count": 22
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": "pyproject.toml",
+      "language": "text",
+      "sha256": "b6305d2c47901524647ea5246d9100cc08d7cff3cca523a222d2d7d119f9130a",
+      "line_count": 19
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": "restore.sh",
+      "language": "text",
+      "sha256": "153533004b4f110605dead85f701c8e844b6124ae1f9a6bf828669e8c7190f1e",
+      "line_count": 12
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": "snippets/__init__.py",
+      "language": "python",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "line_count": 0
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": "snippets/apps.py",
+      "language": "python",
+      "sha256": "a4f2e7b51513ab1838f39b4af6c25d3319007106c6d8472da85e9ae25ce959f8",
+      "line_count": 5
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": "snippets/fixtures/snippets.json",
+      "language": "text",
+      "sha256": "c94648aa1789ebfd71c98ee636f304b31861bd7b335725272f179bcc843da6ca",
+      "line_count": 16
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": "snippets/fixtures/users.json",
+      "language": "text",
+      "sha256": "bd074e18378d5a01fc7778bfd5421d8e8c7eec688a62ff55688ac3a3d2de5bf6",
+      "line_count": 20
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": "snippets/migrations/0001_initial.py",
+      "language": "python",
+      "sha256": "1290a076010f21e65aa32a24dccb2363ca0825b8b31b2e34a7007c125e214d9d",
+      "line_count": 32
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": "snippets/migrations/__init__.py",
+      "language": "python",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "line_count": 0
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": "snippets/models.py",
+      "language": "python",
+      "sha256": "8ac0d23253acee9fe6d805e310d1b4b58f00bdbdd7efe606faa3841a10e53626",
+      "line_count": 39
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": "snippets/permissions.py",
+      "language": "python",
+      "sha256": "6eb4ba851f74e463b506bbb64f8a60461f5e83d59601328d10d7fa1a7b6d5bf8",
+      "line_count": 16
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": "snippets/serializers.py",
+      "language": "python",
+      "sha256": "f1ea3c7b383dac2e45232f7d551f163cf6a7579a767cdf726d30b24d07bcab4d",
+      "line_count": 24
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": "snippets/urls.py",
+      "language": "python",
+      "sha256": "cd8b42d54835a7fd0235860ce321df00268fbf64fe0cc65e60f0f2ef93d225fd",
+      "line_count": 15
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": "snippets/views.py",
+      "language": "python",
+      "sha256": "a29eda4ee53917005aa9cabebd561400f8b556f9525ec42e6f4e94837242267f",
+      "line_count": 38
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": "tutorial/__init__.py",
+      "language": "python",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "line_count": 0
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": "tutorial/asgi.py",
+      "language": "python",
+      "sha256": "352e52a172454132694bdf6b9a8cded0d964b3f0054daf603513cb5e938eb814",
+      "line_count": 16
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": "tutorial/settings.py",
+      "language": "python",
+      "sha256": "2e6db72b796da6e36001fb6628ee3f6afe4f3e5fa0398b466627982160f15bc9",
+      "line_count": 152
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": "tutorial/urls.py",
+      "language": "python",
+      "sha256": "3aa1e66b4421b2b00bda9a79b11f907226dcc4fe83a20e227b8f0731b61a0d59",
+      "line_count": 9
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": "tutorial/wsgi.py",
+      "language": "python",
+      "sha256": "5a36543df4b5b39e71369c6952782e68bb67ea5dd59dd022b87493411c694b82",
+      "line_count": 16
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "path": "uv.lock",
+      "language": "text",
+      "sha256": "b01e34404f6ec48aeeb7f38e01209e2fb9e6f3d1dc3f07f61379af0d7c00d2d0",
+      "line_count": 311
+    }
+  ],
+  "symbols": [
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "id": "manage.py:main",
+      "name": "main",
+      "kind": "function",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "manage.py",
+        "symbol": "main",
+        "start_line": 7,
+        "end_line": 18,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "id": "snippets/apps.py:SnippetsConfig",
+      "name": "SnippetsConfig",
+      "kind": "class",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/apps.py",
+        "symbol": "SnippetsConfig",
+        "start_line": 4,
+        "end_line": 5,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "id": "snippets/migrations/0001_initial.py:Migration",
+      "name": "Migration",
+      "kind": "class",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/migrations/0001_initial.py",
+        "symbol": "Migration",
+        "start_line": 6,
+        "end_line": 32,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "id": "snippets/models.py:Snippet",
+      "name": "Snippet",
+      "kind": "class",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/models.py",
+        "symbol": "Snippet",
+        "start_line": 12,
+        "end_line": 39,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "id": "snippets/models.py:Snippet.Meta",
+      "name": "Snippet.Meta",
+      "kind": "class",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/models.py",
+        "symbol": "Snippet.Meta",
+        "start_line": 25,
+        "end_line": 26,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "id": "snippets/models.py:Snippet.save",
+      "name": "Snippet.save",
+      "kind": "method",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/models.py",
+        "symbol": "Snippet.save",
+        "start_line": 28,
+        "end_line": 39,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "id": "snippets/permissions.py:IsOwnerOrReadOnly",
+      "name": "IsOwnerOrReadOnly",
+      "kind": "class",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/permissions.py",
+        "symbol": "IsOwnerOrReadOnly",
+        "start_line": 4,
+        "end_line": 16,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "id": "snippets/permissions.py:IsOwnerOrReadOnly.has_object_permission",
+      "name": "IsOwnerOrReadOnly.has_object_permission",
+      "kind": "method",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/permissions.py",
+        "symbol": "IsOwnerOrReadOnly.has_object_permission",
+        "start_line": 9,
+        "end_line": 16,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "id": "snippets/serializers.py:SnippetSerializer",
+      "name": "SnippetSerializer",
+      "kind": "class",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/serializers.py",
+        "symbol": "SnippetSerializer",
+        "start_line": 7,
+        "end_line": 15,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "id": "snippets/serializers.py:SnippetSerializer.Meta",
+      "name": "SnippetSerializer.Meta",
+      "kind": "class",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/serializers.py",
+        "symbol": "SnippetSerializer.Meta",
+        "start_line": 12,
+        "end_line": 15,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "id": "snippets/serializers.py:UserSerializer",
+      "name": "UserSerializer",
+      "kind": "class",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/serializers.py",
+        "symbol": "UserSerializer",
+        "start_line": 18,
+        "end_line": 24,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "id": "snippets/serializers.py:UserSerializer.Meta",
+      "name": "UserSerializer.Meta",
+      "kind": "class",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/serializers.py",
+        "symbol": "UserSerializer.Meta",
+        "start_line": 22,
+        "end_line": 24,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "id": "snippets/views.py:SnippetViewSet",
+      "name": "SnippetViewSet",
+      "kind": "class",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/views.py",
+        "symbol": "SnippetViewSet",
+        "start_line": 11,
+        "end_line": 30,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "id": "snippets/views.py:SnippetViewSet.highlight",
+      "name": "SnippetViewSet.highlight",
+      "kind": "method",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/views.py",
+        "symbol": "SnippetViewSet.highlight",
+        "start_line": 25,
+        "end_line": 27,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "id": "snippets/views.py:SnippetViewSet.perform_create",
+      "name": "SnippetViewSet.perform_create",
+      "kind": "method",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/views.py",
+        "symbol": "SnippetViewSet.perform_create",
+        "start_line": 29,
+        "end_line": 30,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "id": "snippets/views.py:UserViewSet",
+      "name": "UserViewSet",
+      "kind": "class",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/views.py",
+        "symbol": "UserViewSet",
+        "start_line": 33,
+        "end_line": 38,
+        "confidence": "extracted"
+      }
+    }
+  ],
+  "imports": [
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "manage.py",
+      "target": "os",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "manage.py",
+        "symbol": null,
+        "start_line": 3,
+        "end_line": 3,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "manage.py",
+      "target": "sys",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "manage.py",
+        "symbol": null,
+        "start_line": 4,
+        "end_line": 4,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/apps.py",
+      "target": "django.apps.AppConfig",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/apps.py",
+        "symbol": null,
+        "start_line": 1,
+        "end_line": 1,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/migrations/0001_initial.py",
+      "target": "django.conf.settings",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/migrations/0001_initial.py",
+        "symbol": null,
+        "start_line": 1,
+        "end_line": 1,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/migrations/0001_initial.py",
+      "target": "django.db.migrations",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/migrations/0001_initial.py",
+        "symbol": null,
+        "start_line": 2,
+        "end_line": 2,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/migrations/0001_initial.py",
+      "target": "django.db.models",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/migrations/0001_initial.py",
+        "symbol": null,
+        "start_line": 2,
+        "end_line": 2,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/migrations/0001_initial.py",
+      "target": "django.db.models.deletion",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/migrations/0001_initial.py",
+        "symbol": null,
+        "start_line": 3,
+        "end_line": 3,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/models.py",
+      "target": "django.db.models",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/models.py",
+        "symbol": null,
+        "start_line": 1,
+        "end_line": 1,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/models.py",
+      "target": "pygments.highlight",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/models.py",
+        "symbol": null,
+        "start_line": 2,
+        "end_line": 2,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/models.py",
+      "target": "pygments.formatters.html.HtmlFormatter",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/models.py",
+        "symbol": null,
+        "start_line": 3,
+        "end_line": 3,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/models.py",
+      "target": "pygments.lexers.get_all_lexers",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/models.py",
+        "symbol": null,
+        "start_line": 4,
+        "end_line": 4,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/models.py",
+      "target": "pygments.lexers.get_lexer_by_name",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/models.py",
+        "symbol": null,
+        "start_line": 4,
+        "end_line": 4,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/models.py",
+      "target": "pygments.styles.get_all_styles",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/models.py",
+        "symbol": null,
+        "start_line": 5,
+        "end_line": 5,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/permissions.py",
+      "target": "rest_framework.permissions",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/permissions.py",
+        "symbol": null,
+        "start_line": 1,
+        "end_line": 1,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/serializers.py",
+      "target": "django.contrib.auth.models.User",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/serializers.py",
+        "symbol": null,
+        "start_line": 1,
+        "end_line": 1,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/serializers.py",
+      "target": "rest_framework.serializers",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/serializers.py",
+        "symbol": null,
+        "start_line": 2,
+        "end_line": 2,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/serializers.py",
+      "target": "snippets.models.Snippet",
+      "resolved": true,
+      "target_file": "snippets/models.py",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/serializers.py",
+        "symbol": null,
+        "start_line": 4,
+        "end_line": 4,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/urls.py",
+      "target": "django.urls.include",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/urls.py",
+        "symbol": null,
+        "start_line": 1,
+        "end_line": 1,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/urls.py",
+      "target": "django.urls.path",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/urls.py",
+        "symbol": null,
+        "start_line": 1,
+        "end_line": 1,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/urls.py",
+      "target": "rest_framework.routers.DefaultRouter",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/urls.py",
+        "symbol": null,
+        "start_line": 2,
+        "end_line": 2,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/urls.py",
+      "target": "snippets.views",
+      "resolved": true,
+      "target_file": "snippets/views.py",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/urls.py",
+        "symbol": null,
+        "start_line": 4,
+        "end_line": 4,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/views.py",
+      "target": "django.contrib.auth.models.User",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/views.py",
+        "symbol": null,
+        "start_line": 1,
+        "end_line": 1,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/views.py",
+      "target": "rest_framework.permissions",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/views.py",
+        "symbol": null,
+        "start_line": 2,
+        "end_line": 2,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/views.py",
+      "target": "rest_framework.renderers",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/views.py",
+        "symbol": null,
+        "start_line": 2,
+        "end_line": 2,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/views.py",
+      "target": "rest_framework.viewsets",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/views.py",
+        "symbol": null,
+        "start_line": 2,
+        "end_line": 2,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/views.py",
+      "target": "rest_framework.decorators.action",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/views.py",
+        "symbol": null,
+        "start_line": 3,
+        "end_line": 3,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/views.py",
+      "target": "rest_framework.response.Response",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/views.py",
+        "symbol": null,
+        "start_line": 4,
+        "end_line": 4,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/views.py",
+      "target": "snippets.models.Snippet",
+      "resolved": true,
+      "target_file": "snippets/models.py",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/views.py",
+        "symbol": null,
+        "start_line": 6,
+        "end_line": 6,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/views.py",
+      "target": "snippets.permissions.IsOwnerOrReadOnly",
+      "resolved": true,
+      "target_file": "snippets/permissions.py",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/views.py",
+        "symbol": null,
+        "start_line": 7,
+        "end_line": 7,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/views.py",
+      "target": "snippets.serializers.SnippetSerializer",
+      "resolved": true,
+      "target_file": "snippets/serializers.py",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/views.py",
+        "symbol": null,
+        "start_line": 8,
+        "end_line": 8,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/views.py",
+      "target": "snippets.serializers.UserSerializer",
+      "resolved": true,
+      "target_file": "snippets/serializers.py",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/views.py",
+        "symbol": null,
+        "start_line": 8,
+        "end_line": 8,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "tutorial/asgi.py",
+      "target": "os",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "tutorial/asgi.py",
+        "symbol": null,
+        "start_line": 10,
+        "end_line": 10,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "tutorial/asgi.py",
+      "target": "django.core.asgi.get_asgi_application",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "tutorial/asgi.py",
+        "symbol": null,
+        "start_line": 12,
+        "end_line": 12,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "tutorial/settings.py",
+      "target": "os",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "tutorial/settings.py",
+        "symbol": null,
+        "start_line": 11,
+        "end_line": 11,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "tutorial/settings.py",
+      "target": "dj_database_url",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "tutorial/settings.py",
+        "symbol": null,
+        "start_line": 12,
+        "end_line": 12,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "tutorial/urls.py",
+      "target": "django.urls.include",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "tutorial/urls.py",
+        "symbol": null,
+        "start_line": 1,
+        "end_line": 1,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "tutorial/urls.py",
+      "target": "django.urls.path",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "tutorial/urls.py",
+        "symbol": null,
+        "start_line": 1,
+        "end_line": 1,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "tutorial/urls.py",
+      "target": "drf_spectacular.views.SpectacularAPIView",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "tutorial/urls.py",
+        "symbol": null,
+        "start_line": 2,
+        "end_line": 2,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "tutorial/urls.py",
+      "target": "drf_spectacular.views.SpectacularSwaggerView",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "tutorial/urls.py",
+        "symbol": null,
+        "start_line": 2,
+        "end_line": 2,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "tutorial/wsgi.py",
+      "target": "os",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "tutorial/wsgi.py",
+        "symbol": null,
+        "start_line": 10,
+        "end_line": 10,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "tutorial/wsgi.py",
+      "target": "django.core.wsgi.get_wsgi_application",
+      "resolved": false,
+      "target_file": null,
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "tutorial/wsgi.py",
+        "symbol": null,
+        "start_line": 12,
+        "end_line": 12,
+        "confidence": "extracted"
+      }
+    }
+  ],
+  "relations": [
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/serializers.py",
+      "target": "snippets/models.py",
+      "kind": "imports",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/serializers.py",
+        "symbol": null,
+        "start_line": 4,
+        "end_line": 4,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/urls.py",
+      "target": "snippets/views.py",
+      "kind": "imports",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/urls.py",
+        "symbol": null,
+        "start_line": 4,
+        "end_line": 4,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/views.py",
+      "target": "snippets/models.py",
+      "kind": "imports",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/views.py",
+        "symbol": null,
+        "start_line": 6,
+        "end_line": 6,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/views.py",
+      "target": "snippets/permissions.py",
+      "kind": "imports",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/views.py",
+        "symbol": null,
+        "start_line": 7,
+        "end_line": 7,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/views.py",
+      "target": "snippets/serializers.py",
+      "kind": "imports",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/views.py",
+        "symbol": null,
+        "start_line": 8,
+        "end_line": 8,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "source": "snippets/views.py",
+      "target": "snippets/serializers.py",
+      "kind": "imports",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/views.py",
+        "symbol": null,
+        "start_line": 8,
+        "end_line": 8,
+        "confidence": "extracted"
+      }
+    }
+  ],
+  "endpoints": [
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "route": "snippets/",
+      "route_kind": "drf_template",
+      "view": "snippets.views.SnippetViewSet.list",
+      "method": "GET",
+      "serializer": null,
+      "authentication": null,
+      "scope": "explicit_root",
+      "confidence": "inferred",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/urls.py",
+        "symbol": null,
+        "start_line": 8,
+        "end_line": 8,
+        "confidence": "extracted"
+      },
+      "evidence_chain": [
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "tutorial/urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/urls.py",
+          "symbol": null,
+          "start_line": 14,
+          "end_line": 14,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/urls.py",
+          "symbol": null,
+          "start_line": 7,
+          "end_line": 7,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/urls.py",
+          "symbol": null,
+          "start_line": 8,
+          "end_line": 8,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/views.py",
+          "symbol": "SnippetViewSet",
+          "start_line": 11,
+          "end_line": 30,
+          "confidence": "extracted"
+        }
+      ],
+      "unknown_fields": [
+        "serializer",
+        "authentication"
+      ]
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "route": "snippets/",
+      "route_kind": "drf_template",
+      "view": "snippets.views.SnippetViewSet.create",
+      "method": "POST",
+      "serializer": null,
+      "authentication": null,
+      "scope": "explicit_root",
+      "confidence": "inferred",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/urls.py",
+        "symbol": null,
+        "start_line": 8,
+        "end_line": 8,
+        "confidence": "extracted"
+      },
+      "evidence_chain": [
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "tutorial/urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/urls.py",
+          "symbol": null,
+          "start_line": 14,
+          "end_line": 14,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/urls.py",
+          "symbol": null,
+          "start_line": 7,
+          "end_line": 7,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/urls.py",
+          "symbol": null,
+          "start_line": 8,
+          "end_line": 8,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/views.py",
+          "symbol": "SnippetViewSet",
+          "start_line": 11,
+          "end_line": 30,
+          "confidence": "extracted"
+        }
+      ],
+      "unknown_fields": [
+        "serializer",
+        "authentication"
+      ]
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "route": "snippets/{pk}/",
+      "route_kind": "drf_template",
+      "view": "snippets.views.SnippetViewSet.retrieve",
+      "method": "GET",
+      "serializer": null,
+      "authentication": null,
+      "scope": "explicit_root",
+      "confidence": "inferred",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/urls.py",
+        "symbol": null,
+        "start_line": 8,
+        "end_line": 8,
+        "confidence": "extracted"
+      },
+      "evidence_chain": [
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "tutorial/urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/urls.py",
+          "symbol": null,
+          "start_line": 14,
+          "end_line": 14,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/urls.py",
+          "symbol": null,
+          "start_line": 7,
+          "end_line": 7,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/urls.py",
+          "symbol": null,
+          "start_line": 8,
+          "end_line": 8,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/views.py",
+          "symbol": "SnippetViewSet",
+          "start_line": 11,
+          "end_line": 30,
+          "confidence": "extracted"
+        }
+      ],
+      "unknown_fields": [
+        "serializer",
+        "authentication"
+      ]
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "route": "snippets/{pk}/",
+      "route_kind": "drf_template",
+      "view": "snippets.views.SnippetViewSet.update",
+      "method": "PUT",
+      "serializer": null,
+      "authentication": null,
+      "scope": "explicit_root",
+      "confidence": "inferred",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/urls.py",
+        "symbol": null,
+        "start_line": 8,
+        "end_line": 8,
+        "confidence": "extracted"
+      },
+      "evidence_chain": [
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "tutorial/urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/urls.py",
+          "symbol": null,
+          "start_line": 14,
+          "end_line": 14,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/urls.py",
+          "symbol": null,
+          "start_line": 7,
+          "end_line": 7,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/urls.py",
+          "symbol": null,
+          "start_line": 8,
+          "end_line": 8,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/views.py",
+          "symbol": "SnippetViewSet",
+          "start_line": 11,
+          "end_line": 30,
+          "confidence": "extracted"
+        }
+      ],
+      "unknown_fields": [
+        "serializer",
+        "authentication"
+      ]
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "route": "snippets/{pk}/",
+      "route_kind": "drf_template",
+      "view": "snippets.views.SnippetViewSet.partial_update",
+      "method": "PATCH",
+      "serializer": null,
+      "authentication": null,
+      "scope": "explicit_root",
+      "confidence": "inferred",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/urls.py",
+        "symbol": null,
+        "start_line": 8,
+        "end_line": 8,
+        "confidence": "extracted"
+      },
+      "evidence_chain": [
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "tutorial/urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/urls.py",
+          "symbol": null,
+          "start_line": 14,
+          "end_line": 14,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/urls.py",
+          "symbol": null,
+          "start_line": 7,
+          "end_line": 7,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/urls.py",
+          "symbol": null,
+          "start_line": 8,
+          "end_line": 8,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/views.py",
+          "symbol": "SnippetViewSet",
+          "start_line": 11,
+          "end_line": 30,
+          "confidence": "extracted"
+        }
+      ],
+      "unknown_fields": [
+        "serializer",
+        "authentication"
+      ]
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "route": "snippets/{pk}/",
+      "route_kind": "drf_template",
+      "view": "snippets.views.SnippetViewSet.destroy",
+      "method": "DELETE",
+      "serializer": null,
+      "authentication": null,
+      "scope": "explicit_root",
+      "confidence": "inferred",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/urls.py",
+        "symbol": null,
+        "start_line": 8,
+        "end_line": 8,
+        "confidence": "extracted"
+      },
+      "evidence_chain": [
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "tutorial/urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/urls.py",
+          "symbol": null,
+          "start_line": 14,
+          "end_line": 14,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/urls.py",
+          "symbol": null,
+          "start_line": 7,
+          "end_line": 7,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/urls.py",
+          "symbol": null,
+          "start_line": 8,
+          "end_line": 8,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/views.py",
+          "symbol": "SnippetViewSet",
+          "start_line": 11,
+          "end_line": 30,
+          "confidence": "extracted"
+        }
+      ],
+      "unknown_fields": [
+        "serializer",
+        "authentication"
+      ]
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "route": "snippets/{pk}/highlight/",
+      "route_kind": "drf_template",
+      "view": "snippets.views.SnippetViewSet.highlight",
+      "method": "GET",
+      "serializer": null,
+      "authentication": null,
+      "scope": "explicit_root",
+      "confidence": "inferred",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/urls.py",
+        "symbol": null,
+        "start_line": 8,
+        "end_line": 8,
+        "confidence": "extracted"
+      },
+      "evidence_chain": [
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "tutorial/urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/urls.py",
+          "symbol": null,
+          "start_line": 14,
+          "end_line": 14,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/urls.py",
+          "symbol": null,
+          "start_line": 7,
+          "end_line": 7,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/urls.py",
+          "symbol": null,
+          "start_line": 8,
+          "end_line": 8,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/views.py",
+          "symbol": "SnippetViewSet",
+          "start_line": 11,
+          "end_line": 30,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/views.py",
+          "symbol": "SnippetViewSet.highlight",
+          "start_line": 24,
+          "end_line": 24,
+          "confidence": "extracted"
+        }
+      ],
+      "unknown_fields": [
+        "serializer",
+        "authentication"
+      ]
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "route": "users/",
+      "route_kind": "drf_template",
+      "view": "snippets.views.UserViewSet.list",
+      "method": "GET",
+      "serializer": null,
+      "authentication": null,
+      "scope": "explicit_root",
+      "confidence": "inferred",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/urls.py",
+        "symbol": null,
+        "start_line": 9,
+        "end_line": 9,
+        "confidence": "extracted"
+      },
+      "evidence_chain": [
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "tutorial/urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/urls.py",
+          "symbol": null,
+          "start_line": 14,
+          "end_line": 14,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/urls.py",
+          "symbol": null,
+          "start_line": 7,
+          "end_line": 7,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/urls.py",
+          "symbol": null,
+          "start_line": 9,
+          "end_line": 9,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/views.py",
+          "symbol": "UserViewSet",
+          "start_line": 33,
+          "end_line": 38,
+          "confidence": "extracted"
+        }
+      ],
+      "unknown_fields": [
+        "serializer",
+        "authentication"
+      ]
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "route": "users/{pk}/",
+      "route_kind": "drf_template",
+      "view": "snippets.views.UserViewSet.retrieve",
+      "method": "GET",
+      "serializer": null,
+      "authentication": null,
+      "scope": "explicit_root",
+      "confidence": "inferred",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/urls.py",
+        "symbol": null,
+        "start_line": 9,
+        "end_line": 9,
+        "confidence": "extracted"
+      },
+      "evidence_chain": [
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "tutorial/urls.py",
+          "symbol": null,
+          "start_line": 5,
+          "end_line": 5,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/urls.py",
+          "symbol": null,
+          "start_line": 14,
+          "end_line": 14,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/urls.py",
+          "symbol": null,
+          "start_line": 7,
+          "end_line": 7,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/urls.py",
+          "symbol": null,
+          "start_line": 9,
+          "end_line": 9,
+          "confidence": "extracted"
+        },
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "snippets/views.py",
+          "symbol": "UserViewSet",
+          "start_line": 33,
+          "end_line": 38,
+          "confidence": "extracted"
+        }
+      ],
+      "unknown_fields": [
+        "serializer",
+        "authentication"
+      ]
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "route": "schema/",
+      "route_kind": "path",
+      "view": "drf_spectacular.views.SpectacularAPIView",
+      "method": null,
+      "serializer": null,
+      "authentication": null,
+      "scope": "explicit_root",
+      "confidence": "unconfirmed",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "tutorial/urls.py",
+        "symbol": null,
+        "start_line": 7,
+        "end_line": 7,
+        "confidence": "extracted"
+      },
+      "evidence_chain": [
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "tutorial/urls.py",
+          "symbol": null,
+          "start_line": 7,
+          "end_line": 7,
+          "confidence": "extracted"
+        }
+      ],
+      "unknown_fields": [
+        "serializer",
+        "authentication",
+        "method"
+      ]
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "route": "docs/",
+      "route_kind": "path",
+      "view": "drf_spectacular.views.SpectacularSwaggerView",
+      "method": null,
+      "serializer": null,
+      "authentication": null,
+      "scope": "explicit_root",
+      "confidence": "unconfirmed",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "tutorial/urls.py",
+        "symbol": null,
+        "start_line": 8,
+        "end_line": 8,
+        "confidence": "extracted"
+      },
+      "evidence_chain": [
+        {
+          "schema_version": "0.1.0",
+          "parser_version": "0.2.0",
+          "file": "tutorial/urls.py",
+          "symbol": null,
+          "start_line": 8,
+          "end_line": 8,
+          "confidence": "extracted"
+        }
+      ],
+      "unknown_fields": [
+        "serializer",
+        "authentication",
+        "method"
+      ]
+    }
+  ],
+  "diagnostics": [
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "file": "snippets/urls.py",
+      "reason": "default_router_api_root_and_format_suffix_not_enumerated",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "snippets/urls.py",
+        "symbol": null,
+        "start_line": 7,
+        "end_line": 7,
+        "confidence": "extracted"
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "parser_version": "0.2.0",
+      "file": "tutorial/urls.py",
+      "reason": "include_module_not_found",
+      "evidence": {
+        "schema_version": "0.1.0",
+        "parser_version": "0.2.0",
+        "file": "tutorial/urls.py",
+        "symbol": null,
+        "start_line": 6,
+        "end_line": 6,
+        "confidence": "extracted"
+      }
+    }
+  ],
+  "skipped": [],
+  "metrics": {
+    "python_files_accepted": 15,
+    "python_files_parsed": 15,
+    "parsing_coverage": 1.0,
+    "skipped_files": 0
+  },
+  "routing": {
+    "schema_version": "0.1.0",
+    "parser_version": "0.2.0",
+    "roots": [
+      "tutorial/urls.py"
+    ],
+    "root_selection": "explicit",
+    "automatic_methods": "HEAD and OPTIONS not enumerated"
+  }
+}

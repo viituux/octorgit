@@ -1,0 +1,160 @@
+{
+  "repository_url": "https://github.com/encode/rest-framework-tutorial",
+  "commit_sha": "68c0f79c37bbda4f665711446ee32cbf9f54de7d",
+  "root_urlconf": "tutorial.urls",
+  "route_files": [
+    "snippets/urls.py"
+  ],
+  "policy": "Gabarito escrito por inspeção estática de snippets/urls.py e snippets/views.py no SHA fixado; exige revisão humana independente antes de servir como evidência de produto. Escopo: rotas de negócio do router de snippets; exclui HEAD/OPTIONS automáticos, API root, formatos, login/logout da dependência DRF e schema/docs da dependência drf-spectacular. {pk} representa [^/.]+.",
+  "endpoints": [
+    {
+      "method": "GET",
+      "route": "snippets/",
+      "manual_sources": [
+        {
+          "file": "snippets/urls.py",
+          "start_line": 8,
+          "end_line": 8
+        },
+        {
+          "file": "snippets/views.py",
+          "start_line": 11,
+          "end_line": 11
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "route": "snippets/",
+      "manual_sources": [
+        {
+          "file": "snippets/urls.py",
+          "start_line": 8,
+          "end_line": 8
+        },
+        {
+          "file": "snippets/views.py",
+          "start_line": 11,
+          "end_line": 11
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "route": "snippets/{pk}/",
+      "manual_sources": [
+        {
+          "file": "snippets/urls.py",
+          "start_line": 8,
+          "end_line": 8
+        },
+        {
+          "file": "snippets/views.py",
+          "start_line": 11,
+          "end_line": 11
+        }
+      ]
+    },
+    {
+      "method": "PUT",
+      "route": "snippets/{pk}/",
+      "manual_sources": [
+        {
+          "file": "snippets/urls.py",
+          "start_line": 8,
+          "end_line": 8
+        },
+        {
+          "file": "snippets/views.py",
+          "start_line": 11,
+          "end_line": 11
+        }
+      ]
+    },
+    {
+      "method": "PATCH",
+      "route": "snippets/{pk}/",
+      "manual_sources": [
+        {
+          "file": "snippets/urls.py",
+          "start_line": 8,
+          "end_line": 8
+        },
+        {
+          "file": "snippets/views.py",
+          "start_line": 11,
+          "end_line": 11
+        }
+      ]
+    },
+    {
+      "method": "DELETE",
+      "route": "snippets/{pk}/",
+      "manual_sources": [
+        {
+          "file": "snippets/urls.py",
+          "start_line": 8,
+          "end_line": 8
+        },
+        {
+          "file": "snippets/views.py",
+          "start_line": 11,
+          "end_line": 11
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "route": "snippets/{pk}/highlight/",
+      "manual_sources": [
+        {
+          "file": "snippets/urls.py",
+          "start_line": 8,
+          "end_line": 8
+        },
+        {
+          "file": "snippets/views.py",
+          "start_line": 11,
+          "end_line": 11
+        },
+        {
+          "file": "snippets/views.py",
+          "start_line": 24,
+          "end_line": 25
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "route": "users/",
+      "manual_sources": [
+        {
+          "file": "snippets/urls.py",
+          "start_line": 9,
+          "end_line": 9
+        },
+        {
+          "file": "snippets/views.py",
+          "start_line": 33,
+          "end_line": 33
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "route": "users/{pk}/",
+      "manual_sources": [
+        {
+          "file": "snippets/urls.py",
+          "start_line": 9,
+          "end_line": 9
+        },
+        {
+          "file": "snippets/views.py",
+          "start_line": 33,
+          "end_line": 33
+        }
+      ]
+    }
+  ]
+}

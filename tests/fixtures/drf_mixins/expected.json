@@ -1,0 +1,9 @@
+{
+  "root_urlconf": "config.urls",
+  "policy": "Gabarito estático revisável. Restrição herdada de métodos respeitada; sem barra final no SimpleRouter; exclui métodos automáticos.",
+  "endpoints": [
+    {"method": "GET", "route": "status/"},
+    {"method": "POST", "route": "status/"},
+    {"method": "GET", "route": "items"}
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "root_urlconf": "config.urls",
+  "policy": "Gabarito estático revisável. {pk} representa [^/.]+; não inclui HEAD/OPTIONS, API root nem variantes de formato do DefaultRouter.",
+  "endpoints": [
+    {"method": "GET", "route": "api/users/"},
+    {"method": "POST", "route": "api/users/"},
+    {"method": "GET", "route": "api/users/{pk}/"},
+    {"method": "PUT", "route": "api/users/{pk}/"},
+    {"method": "PATCH", "route": "api/users/{pk}/"},
+    {"method": "DELETE", "route": "api/users/{pk}/"},
+    {"method": "POST", "route": "api/users/{pk}/activate/"},
+    {"method": "GET", "route": "api/users/recent/"},
+    {"method": "GET", "route": "api/reports/"},
+    {"method": "GET", "route": "api/reports/{pk}/"}
+  ]
+}
