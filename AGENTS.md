@@ -12,7 +12,7 @@
 - Não usar innerHTML para conteúdo do repositório; construir nós DOM e links de origem seguros.
 - Preservar proteção de Host/Origin e token de sessão nos POSTs. A API local não aceita caminhos arbitrários de disco.
 
-- Gemini foi autorizado pelo usuário. Ler GEMINI_API_KEY apenas no servidor; nunca colocar chave em HTML, JSON, logs, fixtures, ZIP ou arquivos de configuração.
+- A IA é configurável pelo usuário (API compatível OpenAI, Google e Anthropic). Chaves são recebidas por POST protegido e mantidas só na memória do servidor, ou lidas de variáveis de ambiente. Nunca devolver a chave em GET, logs, histórico, ZIP ou preferências persistidas.
 - A chamada de IA é opt-in. Enviar apenas contexto limitado da IR, nunca arquivos brutos. Validar esquema/IDs antes de publicar a saída e preservar análise estática em falhas.
 - Não afirmar que referências válidas provam semanticamente o texto gerado. Documentar testes simulados e não afirmar chamada real sem executá-la.
 
@@ -21,3 +21,7 @@
 - Distinguir configuração declarada de autenticação/permissão efetiva em runtime. Marcar getters/expressões desconhecidos.
 - Comparar snapshots do mesmo repositório. Hash de arquivo alterado indica revisão, não prova impacto por função.
 - Relatórios HTML devem ser independentes e escapar código/nomes; manter diagramas SVG derivados da IR, sem ilustrar componentes não detectados.
+
+- Primeiro contato foi removido por solicitação do usuário: não reintroduzir a tela nem o capítulo nos relatórios.
+- Arquitetura deve mostrar linguagem, banco e infraestrutura declarados com evidências. Dependência de cliente não comprova banco/serviço ativo; não inventar nuvem, Kafka ou microserviços por estética.
+- Tipos de API precisam de adaptadores explícitos. Não prometer que qualquer chave funciona sem escolher protocolo, modelo e endereço.

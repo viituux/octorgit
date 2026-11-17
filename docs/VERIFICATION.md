@@ -1,3 +1,11 @@
+# Verificações 0.6.0 — 17/11/2026
+
+- 83 testes unittest passaram localmente: tecnologias/evidências, mapas/relatórios, configurações sem persistir chave, transporte simulado dos três adaptadores, isolamento de cache e API local.
+- SVG de arquitetura renderizado com Inkscape e inspecionado como imagem. Não houve teste interativo do navegador nesta versão.
+- Nenhuma chamada autenticada real a provedores de IA. Compatibilidade final depende de modelo, protocolo, conta e cota.
+- Identificação de linguagens é por extensão; extração de endpoints continua limitada a Python/Django/DRF. Infraestrutura é declaração estática, não observação de runtime.
+- O gate de dez repositórios e cinco desenvolvedores continua pendente. Resultados de benchmarks anteriores abaixo não foram ampliados nesta versão.
+
 # Windows e Linux — 0.5.1 — 17/11/2026
 
 - Suite local: **65 testes passaram**. Inicializador Linux exercitado a partir de outra pasta, incluindo HTTP e histórico.

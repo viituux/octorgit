@@ -1,4 +1,4 @@
-OCTORGIT 0.5.0 - INTERFACE COM TELAS
+OCTORGIT 0.6.0 - INTERFACE COM TELAS
 
 1. Extraia todo o ZIP em uma pasta nova.
 2. Abra a pasta octorgit.
@@ -28,9 +28,9 @@ Visao geral, Endpoints, Arquitetura, Documentacao e Historico.
 Os downloads ficam na pasta de downloads do navegador.
 O historico fica salvo no SQLite local, mesmo apos fechar o programa.
 
-GEMINI OPCIONAL
-Para ativar a IA Google, siga CONFIGURAR_GEMINI_WINDOWS.txt.
-A analise estatica e a demo continuam funcionando sem chave.
+IA OPCIONAL
+Abra Configuracoes de IA e siga CONFIGURAR_IA.md.
+A chave fica na memoria da sessao; a analise estatica funciona sem chave.
 
 MAPAS VISUAIS
 Veja GUIA_MAPAS_E_RELATORIOS.txt e o exemplo em examples/relatorio-visual.

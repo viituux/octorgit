@@ -1,4 +1,4 @@
-# Arquitetura — mapas, histórico e relatórios 0.5.0
+# Arquitetura — mapas, histórico e relatórios 0.6.0
 
 CLI → snapshot → filtros → AST Python → índice de módulos → regras Django/DRF → IR → validação de evidências → JSON/Markdown.
 
@@ -14,13 +14,13 @@ Regras de router derivam a relação HTTP/ação de bases DRF reconhecidas. Port
 
 `documentation.py` valida referências diretas e cadeias e exporta resultados. `benchmark.py` compara com gabaritos JSON explícitos usando método+rota. Duplicatas e métodos desconhecidos contam como falsos positivos. Um manifesto pode restringir arquivos de rotas e relata quantos registros emitidos ficaram fora desse escopo.
 
-SQLite local persiste análises; não há banco ou fila externos. O LLM Gemini é opcional desde a versão 0.4.0. Por solicitação do usuário, a versão 0.3.0 acrescenta um servidor HTTP local e uma interface HTML/CSS/JavaScript servida pelo próprio pacote Python.
+SQLite local persiste análises; não há banco ou fila externos. O provedor de IA é opcional desde a versão 0.4.0. Por solicitação do usuário, a versão 0.3.0 acrescenta um servidor HTTP local e uma interface HTML/CSS/JavaScript servida pelo próprio pacote Python.
 
 ## Interface local
 
 `web.py` usa ThreadingHTTPServer ligado exclusivamente a 127.0.0.1. Um ThreadPoolExecutor com um worker executa a mesma aquisição, parser e validação da CLI. Estados reais: queued/running/completed/failed, com progresso por etapa (não por percentual de bytes). Nenhum diretório arbitrário do computador é exposto; entradas são GitHub público ou demo integrada.
 
-`static/` contém HTML, CSS, JavaScript e uma fixture JSON. Não existem CDNs, scripts externos ou dependências npm. Gemini é acessado apenas pelo servidor Python, se ativado. Dados do repositório são inseridos por textContent/nós DOM, nunca por innerHTML. Os SVGs são derivados de fatos detectados, com grupos, cartões e conexões azuis. Limites de apresentação são declarados; arquitetura mostra até oito grupos e quatro nós por grupo.
+`static/` contém HTML, CSS, JavaScript e uma fixture JSON. Não existem CDNs, scripts externos ou dependências npm. O provedor é acessado apenas pelo servidor Python, se ativado. Dados do repositório são inseridos por textContent/nós DOM, nunca por innerHTML. Os SVGs são derivados de fatos detectados, com grupos, cartões e conexões azuis. Limites de apresentação são declarados; o mapa de tecnologias mostra até 20 componentes.
 
 POSTs exigem token aleatório de sessão e JSON; Host e Origin são verificados. A CSP impede recursos externos, framing e scripts inline. O servidor local não deve ser publicado ou ligado a todas as interfaces.
 
@@ -39,19 +39,19 @@ A demo contém código sintético autoral, sem SHA e explicitamente identificada
 - Campos declarados de serializer, permissões e autenticação são extraídos quando suportados; getters e configurações dinâmicas ficam não confirmados.
 - Snapshot/parser ainda não têm processo isolado com orçamento de CPU/memória. Não usar como serviço público antes dessa etapa.
 
-## Gemini opcional
+## IA configurável
 
-`ai_engine.py` define LLMProvider, GeminiProvider, construção de contexto, contrato JSON, validação e cache. A API key vem exclusivamente de GEMINI_API_KEY no processo servidor; o navegador recebe somente status de presença/modelo.
+`ai_engine.py` define LLMProvider e adaptadores Google, OpenAI compatível e Anthropic, construção de contexto, contrato JSON, validação e cache. `ai_config.py` valida protocolo, modelo e endereço. A chave chega por POST protegido ou ambiente e fica em memória. Só preferências sem chave são persistidas. O navegador recebe somente status de presença/modelo. Cada job captura o provedor configurado antes de iniciar.
 
-Fluxo: IR validada → seleção de fatos com IDs → limite de 32.000 bytes → Gemini REST → JSON estruturado → validação de esquema/IDs → enriquecimento com evidências originais → AI.md e AI.json. O modelo não fornece caminhos/linhas usados na exportação: os IDs são resolvidos pela aplicação para evidências da IR.
+Fluxo: IR validada → seleção de fatos com IDs → limite de 32.000 bytes → API escolhida → JSON estruturado → validação de esquema/IDs → enriquecimento com evidências originais → AI.md e AI.json. O modelo não fornece caminhos/linhas usados na exportação: os IDs são resolvidos pela aplicação para evidências da IR.
 
 As explicações são sempre inferred ou unconfirmed; nunca extracted. Inferências exigem IDs válidos e informações não confirmadas não podem alegar evidências. A validação comprova a existência da referência, não o significado da afirmação. Prompts tratam todos os dados do repositório como não confiáveis; isso não constitui uma garantia absoluta contra prompt injection.
 
-Uma chamada, sem retry automático. Em erros de rede, chave/cota ou resposta inválida, o job conclui a parte estática e expõe o erro de IA separadamente. O cache mantém até oito resultados válidos por contexto/commit/modelo, só na sessão. Nenhuma chave ou corpo de erro bruto é registrado ou exportado.
+Uma chamada, sem retry automático. Em erros de rede, chave/cota ou resposta inválida, o job conclui a parte estática e expõe o erro de IA separadamente. O cache mantém até oito resultados válidos por provedor/endereço/contexto/commit/modelo, só na sessão. Nenhuma chave ou corpo de erro bruto é registrado ou exportado.
 
-## Mapas e histórico (0.5.0)
+## Mapas e histórico (0.6.0)
 
-`insights.py` deriva guia de leitura, cobertura e snippets limitados de fontes já filtradas. Referências preservam arquivo/linhas/versão. Snippets têm cerca de 30 linhas, 400 caracteres por linha, até 1.500 referências e 2 MB por análise; são mostrados por nós DOM e escapados no HTML.
+`insights.py` deriva cobertura e snippets limitados de fontes já filtradas. Referências preservam arquivo/linhas/versão. Snippets têm cerca de 30 linhas, 400 caracteres por linha, até 1.500 referências e 2 MB por análise; são mostrados por nós DOM e escapados no HTML.
 
 `history.py` salva metadata/payload em SQLite com operações parametrizadas e uma conexão por operação. O servidor local usa LOCALAPPDATA/OctorGit no Windows; --data-dir permite substituição. A API expõe as 100 análises recentes, preservando registros antigos. Falha de gravação aparece no resultado, que continua em memória para exportação.
 
@@ -62,3 +62,7 @@ Uma chamada, sem retry automático. Em erros de rede, chave/cota ou resposta inv
 ## Configuração dos endpoints
 
 A IR 0.2.0 inclui permissions e configuration com evidências por campo. São reconhecidos atributos/decorators diretos, herança local simples, @action e defaults literais únicos de REST_FRAMEWORK para views DRF. Lista vazia é declaração explícita; não é confundida com ausência de informação. Getters dinâmicos impedem afirmar uma configuração efetiva. A declaração não comprova comportamento em runtime.
+
+## Tecnologias — 0.6.0
+
+`technology.py` examina extensões, manifests conhecidos, DATABASES literal, Dockerfile, Compose, Kubernetes, Terraform e Render sem executar comandos ou carregar dependências. Mantém evidências e distingue clientes de servidores declarados. `reports.py` gera ícones e relações estáticas; não usa IA para inventar imagens. Hospedagem não detectada é explicitamente não confirmada. Primeiro contato foi removido da interface e relatório.

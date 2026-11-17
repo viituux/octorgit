@@ -11,6 +11,9 @@
     "config/urls.py": "from django.urls import path, include\nfrom api.urls import router\nfrom api.views import health\n\nurlpatterns = [path(\"health/\", health), path(\"api/\", include(router.urls))]\n",
     "config/settings.py": "ROOT_URLCONF = \"config.urls\"\n",
     "api/serializers.py": "from rest_framework import serializers\nfrom .models import User, Report\n\nclass UserSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = User\n        fields = [\"id\", \"name\"]\n\nclass ReportSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = Report\n        fields = [\"id\", \"title\"]\n",
-    "api/models.py": "from django.db import models\n\nclass User(models.Model):\n    name = models.CharField(max_length=120)\n\nclass Report(models.Model):\n    title = models.CharField(max_length=200)\n"
+    "api/models.py": "from django.db import models\n\nclass User(models.Model):\n    name = models.CharField(max_length=120)\n\nclass Report(models.Model):\n    title = models.CharField(max_length=200)\n",
+    "compose.yaml": "services:\n  web:\n    build: .\n    depends_on: [db, cache, broker]\n  db:\n    image: postgres:16\n  cache:\n    image: redis:7\n  broker:\n    image: apache/kafka:3.9\n  proxy:\n    image: nginx:1.27\n    depends_on: [web]\n",
+    "Dockerfile": "FROM python:3.12-slim\nWORKDIR /app\nCOPY . /app\n",
+    "requirements.txt": "Django>=5.0\ndjangorestframework\npsycopg[binary]\n"
   }
 }

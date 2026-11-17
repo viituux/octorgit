@@ -2,8 +2,8 @@
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 const state = {job: null, data: null, page: "overview", document: "README.md", history: [], busy: false, endpointPage: 0};
-const pageNames = {overview: "Visão geral", endpoints: "Endpoints", architecture: "Arquitetura", documents: "Documentação", history: "Histórico salvo", guide: "Guia de primeiro contato", coverage: "Relatório de cobertura", compare: "Comparar versões", report: "Relatório visual"};
-const descriptions = {overview: "Transforme um repositório Python em um mapa que você pode verificar.", endpoints: "Do método à view, com as referências que sustentam cada descoberta.", architecture: "Explore os arquivos Python e as dependências locais encontradas.", documents: "Consulte, confira e exporte o conhecimento extraído do repositório.", history: "Retome snapshots e evidências salvos no seu computador.", guide: "Uma trilha de leitura com o código da versão analisada.", coverage: "Veja o que foi lido, filtrado e permaneceu desconhecido.", compare: "Rotas, configurações e documentos que precisam de revisão.", report: "Compartilhe explicações e diagramas em um documento independente."};
+const pageNames = {overview: "Visão geral", endpoints: "Endpoints", architecture: "Arquitetura", documents: "Documentação", history: "Histórico salvo", coverage: "Relatório de cobertura", compare: "Comparar versões", report: "Relatório visual", settings: "Configurações de IA"};
+const descriptions = {overview: "Transforme um repositório Python em um mapa que você pode verificar.", endpoints: "Do método à view, com as referências que sustentam cada descoberta.", architecture: "Linguagens, bancos e infraestrutura identificados com evidências.", documents: "Consulte, confira e exporte o conhecimento extraído do repositório.", history: "Retome snapshots e evidências salvos no seu computador.", coverage: "Veja o que foi lido, filtrado e permaneceu desconhecido.", compare: "Rotas, configurações e documentos que precisam de revisão.", report: "Compartilhe explicações e diagramas em um documento independente.", settings: "Escolha seu provedor, modelo, endereço de API e chave para esta sessão."};
 const confidenceNames = {extracted: "Extraído", inferred: "Inferido", unconfirmed: "Não confirmado"};
 const gaps = {default_router_api_root_and_format_suffix_not_enumerated: "API root e sufixos de formato do DefaultRouter não enumerados", include_module_not_found: "Módulo de URLs não encontrado no snapshot", view_symbol_not_resolved: "Não foi possível resolver o símbolo da view", custom_lookup_not_supported: "Lookup personalizado ainda não suportado", nested_regex_not_supported: "Montagem de regex aninhado não suportada", regex_include_not_supported: "Include com regex não suportado", include_cycle_or_depth_limit: "Include cíclico ou limite de profundidade atingido", dynamic_urlpatterns_not_supported: "urlpatterns construído de forma dinâmica", dynamic_route_not_supported: "Declaração dinâmica de rota não suportada", relative_import_outside_package: "Import relativo fora do pacote selecionado", root_urlconf_module_not_found: "Módulo raiz de URLs não encontrado", multiple_root_urlconfs_select_explicitly: "Várias raízes de URLs encontradas; selecione uma nas opções", python_parse_failed: "Arquivo incompatível com o parser Python", custom_action_not_supported: "Configuração de ação personalizada não suportada", dynamic_include_not_supported: "Include dinâmico não suportado", custom_dispatch_not_supported: "Dispatch personalizado exige análise adicional", viewset_base_not_supported: "Base do ViewSet não reconhecida", as_view_overrides_not_supported: "Opções de as_view ainda não suportadas"};
 
@@ -54,6 +54,7 @@ function setBusy(busy) {
   ["#analyze-button", "#demo-button", "#welcome-demo", "#demo-next-button"].forEach(id => $(id).disabled = busy);
   $("#analyze-button").textContent = busy ? "Analisando…" : "Analisar repositório ↗";
   $("#new-analysis").disabled = busy;
+  ["#save-ai-settings", "#test-ai-settings", "#clear-ai-key"].forEach(id => $(id).disabled = busy);
   if (state.aiConfigured !== undefined) $("#use-ai").disabled = busy || !state.aiConfigured;
 }
 function progress(job) {
@@ -104,8 +105,8 @@ function renderResult() {
   const notice = $("#ai-result-notice");
   notice.hidden = !ai || ai.status === "disabled";
   notice.classList.toggle("failed", ai?.status === "failed");
-  if (ai?.status === "completed") notice.textContent = `Gemini · ${ai.model} · ${ai.usage.totalTokenCount ?? "?"} tokens na geração${ai.cache_hit ? " · resposta reutilizada do cache da sessão" : ""}. Consulte a aba Gemini em Documentação. As referências foram verificadas; as explicações continuam sendo inferências.`;
-  else if (ai?.status === "failed") notice.textContent = `A análise estática foi concluída, mas o Gemini não gerou o documento: ${ai.error}`;
+  if (ai?.status === "completed") notice.textContent = `IA · ${ai.provider} · ${ai.model} · ${ai.usage.totalTokenCount ?? "?"} tokens na geração${ai.cache_hit ? " · resposta reutilizada do cache da sessão" : ""}. Consulte a aba IA em Documentação. As referências foram verificadas; as explicações continuam sendo inferências.`;
+  else if (ai?.status === "failed") notice.textContent = `A análise estática foi concluída, mas a IA não gerou o documento: ${ai.error}`;
   $("#welcome").hidden = true; $("#overview-results").hidden = false; $("#repository-bar").hidden = false;
   $("#repository-name").textContent = repo.url ? repo.url.replace("https://github.com/", "") : "Exemplo integrado · Django/DRF";
   $("#repository-meta").textContent = repo.commit_sha ? `${repo.branch || "ref"} · commit ${repo.commit_sha.slice(0, 12)}` : "Fixture local · sem commit SHA · dados de demonstração";
@@ -188,7 +189,7 @@ function svgElement(tag, attributes = {}, text) {
 function renderArchitecture() {
   if (!state.data) return;
   const ir = state.data.analysis;
-  renderMainDiagram();
+  renderMainDiagram(); renderTechnology();
   $("#graph-caption").textContent = "Diagramas SVG com relações detectadas e grupos por diretório. Use o seletor para trocar de mapa; limites de exibição acompanham cada imagem.";
   $("#mermaid-source").textContent = state.data.documents["ARCHITECTURE.md"].split("```mermaid\n")[1]?.split("```")[0] || "Nenhum diagrama disponível.";
   $("#imports-count").textContent = `${ir.imports.length} imports`;
@@ -215,7 +216,7 @@ function renderDocument() {
   const content = $("#document-content"); content.replaceChildren();
   if (text === undefined) {
     $("#download-document").hidden = true;
-    content.append(element("p", "empty-state", state.data.ai?.status === "failed" ? `O Gemini não gerou documentação: ${state.data.ai.error}` : "Ative Usar Gemini ao iniciar uma nova análise para gerar este documento."));
+    content.append(element("p", "empty-state", state.data.ai?.status === "failed" ? `A IA não gerou documentação: ${state.data.ai.error}` : "Ative Usar IA ao iniciar uma nova análise para gerar este documento."));
     return;
   }
   $("#download-document").hidden = false;
@@ -278,15 +279,6 @@ function renderMainDiagram() {
 }
 function renderInsights() {
   const insights = state.data.insights;
-  $("#reading-steps").replaceChildren();
-  if (!insights?.guide.length) $("#reading-steps").append(element("p", "empty-state", "Pontos de entrada insuficientes para sugerir uma trilha. Consulte os símbolos e diagnósticos."));
-  (insights?.guide || []).forEach((step, index) => {
-    const card = element("button", `reading-step${!index ? " selected" : ""}`); card.type = "button";
-    card.append(element("span", "reading-number", String(step.order).padStart(2, "0")), element("strong", "", step.title), element("code", "", step.file), element("p", "", step.explanation), pill("Leitura sugerida · inferida", "inferred"));
-    card.addEventListener("click", () => { $$(".reading-step").forEach(n => n.classList.toggle("selected", n === card)); showCode($("#reading-code"), step.evidence); });
-    $("#reading-steps").append(card);
-  });
-  showCode($("#reading-code"), insights?.guide[0]?.evidence);
   const coverage = insights.coverage;
   const container = $("#coverage-content"); container.replaceChildren();
   container.append(element("p", "detail-notice", coverage.note));
@@ -306,7 +298,7 @@ function renderInsights() {
 async function refreshVisuals() {
   if (!state.data) return;
   renderMainDiagram();
-  for (const [id, kind] of [["#guide-diagram", "primeiro-contato"], ["#coverage-diagram", "cobertura"], ["#comparison-diagram", "comparacao"]]) { $(id).hidden = false; $(id).src = visualUrl(kind); }
+  for (const [id, kind] of [["#coverage-diagram", "cobertura"], ["#comparison-diagram", "comparacao"]]) { $(id).hidden = false; $(id).src = visualUrl(kind); }
   const query = `?base=${encodeURIComponent(state.baseId || "none")}`;
   const report = `/api/jobs/${state.job}/report${query}`;
   $("#download-report").href = report + "&download=1";
@@ -334,6 +326,72 @@ async function refreshVisuals() {
     diff.documents_to_review.forEach(row => content.append(element("p", "", `${row.document}: ${row.reason}`)));
     content.append(element("p", "card-note", "Até 100 registros exibidos por grupo. As diferenças são observações do parser, não uma análise de impacto completa."));
   } catch (error) { message(error.message); }
+}
+
+function applyPublicAI(config) {
+  state.aiConfig = config; state.aiConfigured = config.configured;
+  $("#use-ai").disabled = state.busy || !config.configured;
+  if (!config.configured) $("#use-ai").checked = false;
+  $("#ai-provider").value = config.provider;
+  $("#ai-model").value = config.model;
+  $("#ai-base-url").value = config.base_url;
+  $("#ai-api-key").value = "";
+  $("#ai-api-key").type = "password"; $("#toggle-ai-key").textContent = "Mostrar";
+  $("#ai-config-status").textContent = config.configured ? `IA configurada para esta sessão · ${config.model}. A conexão só é verificada quando você testa ou gera explicações.` : "Configure seu provedor e sua chave em Configurações de IA para habilitar as explicações.";
+  $("#ai-key-status").textContent = config.key_present ? "Chave presente na memória. Deixe o campo vazio para mantê-la no mesmo destino, ou cole uma nova para substituir." : "Nenhuma chave nesta sessão. Servidores em localhost podem funcionar sem chave.";
+  if (config.persistence_error) $("#ai-settings-message").textContent = config.persistence_error;
+}
+function aiPayload() {
+  return {provider: $("#ai-provider").value, model: $("#ai-model").value.trim(), base_url: $("#ai-base-url").value.trim(), api_key: $("#ai-api-key").value.trim()};
+}
+function settingsBusy(busy) {
+  ["#save-ai-settings", "#test-ai-settings", "#clear-ai-key"].forEach(id => $(id).disabled = busy || state.busy);
+}
+async function saveAI(event) {
+  event.preventDefault(); settingsBusy(true);
+  try {
+    const data = await api("/api/ai/config", aiPayload());
+    applyPublicAI(data.ai);
+    $("#ai-settings-message").textContent = data.ai.persistence_error || (data.ai.configured ? "Configuração aplicada. A chave fica só na memória desta sessão. Você já pode testar a conexão ou usar IA na próxima análise." : "Preferências aplicadas. Configure uma chave para habilitar a geração com este provedor.");
+  } catch (error) { $("#ai-settings-message").textContent = error.message; }
+  finally { settingsBusy(false); }
+}
+async function testAI() {
+  const fields = aiPayload();
+  if (!state.aiConfig || fields.api_key || ["provider", "model", "base_url"].some(k => fields[k] !== state.aiConfig[k])) {
+    $("#ai-settings-message").textContent = "Aplique as configurações antes de testar a conexão."; return;
+  }
+  settingsBusy(true); $("#ai-settings-message").textContent = "Testando a API configurada, sem enviar dados do repositório…";
+  try {
+    const data = await api("/api/ai/test", {});
+    $("#ai-settings-message").textContent = `Conexão e resposta JSON verificadas · ${data.model} · ${data.usage.totalTokenCount ?? "?"} tokens informados.`;
+  } catch (error) { $("#ai-settings-message").textContent = error.message; }
+  finally { settingsBusy(false); }
+}
+function renderTechnology() {
+  const summary = $("#technology-summary"), list = $("#technology-components"); summary.replaceChildren(); list.replaceChildren();
+  const tech = state.data.analysis.technology;
+  if (!tech) { list.append(element("p", "empty-state", "Esta análise é de uma versão anterior. Analise novamente o mesmo SHA para detectar linguagem, banco e infraestrutura.")); return; }
+  const groups = [["Linguagens", tech.languages.map(l => `${l.name} (${l.files})`).join(", ")], ["Frameworks", tech.components.filter(c => c.kind === "framework").map(c => c.name).join(", ")], ["Bancos", tech.components.filter(c => c.kind === "database").map(c => c.name).join(", ")], ["Infraestrutura declarada", tech.components.filter(c => ["cloud", "infrastructure", "proxy", "ci"].includes(c.kind)).map(c => c.name).join(", ")]];
+  groups.forEach(([title, value]) => { const card = element("div", "card technology-stat"); card.append(element("span", "", title), element("strong", "", value || "Não confirmado")); summary.append(card); });
+  const scopes = {dependency: "Dependência", import: "Import", compose_service: "Serviço Compose", django_settings: "Configuração Django", build_configuration: "Build", terraform_declaration: "Terraform", manifest: "Manifesto", deployment_manifest: "Deploy declarado", compose_manifest: "Compose", ci_configuration: "CI declarada", repository: "Inventário de código"};
+  tech.components.forEach(component => {
+    const card = element("button", "technology-component"); card.type = "button";
+    card.append(element("span", "technology-symbol", ["database", "cache"].includes(component.kind) ? "▱" : ["cloud", "infrastructure"].includes(component.kind) ? "☁" : component.kind === "queue" ? "⋈" : "⚙"), element("strong", "", component.name), pill(scopes[component.scope] || component.scope), element("span", "small-muted", component.evidence_chain.length ? `${component.evidence_chain.length} referência(s) · ver código →` : "Inferido do inventário"));
+    card.addEventListener("click", () => showTechnology(component, scopes[component.scope])); list.append(card);
+  });
+  const note = element("p", "card-note", tech.limits.join(" ")); list.append(note);
+}
+function showTechnology(component, scope) {
+  $("#dialog-title").textContent = component.name;
+  const content = $("#dialog-content"); content.replaceChildren();
+  [["Tipo", component.kind], ["Origem da detecção", scope || component.scope], ["Confiança", confidenceNames[component.confidence] || component.confidence]].forEach(([label, value]) => { const row = element("div", "detail-row"); row.append(element("span", "", label), element("code", "", value)); content.append(row); });
+  const code = element("div", "code-panel evidence-code");
+  content.append(element("h3", "", "Evidências")); const refs = element("ol", "evidence-list");
+  component.evidence_chain.forEach(ref => { const li = element("li"); const button = element("button", "text-button", "Ver código →"); button.type = "button"; button.addEventListener("click", () => showCode(code, ref)); li.append(sourceRef(ref), document.createTextNode(" · "), button); refs.append(li); });
+  content.append(refs, code, element("p", "detail-notice", "Esta é uma declaração encontrada no repositório. Bibliotecas, arquivos de build e manifests não comprovam serviço implantado ou tráfego real."));
+  showCode(code, component.evidence_chain[0]);
+  if (!$("#endpoint-dialog").open) $("#endpoint-dialog").showModal();
 }
 
 $("#analysis-form").addEventListener("submit", event => { event.preventDefault(); start("github"); });
@@ -366,15 +424,14 @@ $("#diagram-smaller").addEventListener("click", () => { state.diagramWidth = Mat
 $("#comparison-base").addEventListener("change", () => { state.baseId = $("#comparison-base").value || null; refreshVisuals(); });
 $("#demo-next-button").addEventListener("click", () => start("demo-next"));
 $("#refresh-history").addEventListener("click", loadHistory);
+$("#ai-settings-form").addEventListener("submit", saveAI);
+$("#test-ai-settings").addEventListener("click", testAI);
+$("#toggle-ai-key").addEventListener("click", () => { const field = $("#ai-api-key"); field.type = field.type === "password" ? "text" : "password"; $("#toggle-ai-key").textContent = field.type === "password" ? "Mostrar" : "Ocultar"; });
+$("#ai-provider").addEventListener("change", () => { const preset = state.aiConfig?.presets[$("#ai-provider").value]; if (preset) { $("#ai-model").value = preset.model; $("#ai-base-url").value = preset.base_url; } $("#ai-api-key").value = ""; $("#ai-key-status").textContent = "Ao trocar de provedor ou endereço, informe a chave desse destino. A chave anterior não é reutilizada automaticamente."; });
+$("#clear-ai-key").addEventListener("click", async () => { settingsBusy(true); try { applyPublicAI((await api("/api/ai/config", {clear_key: true})).ai); $("#ai-settings-message").textContent = "Chave removida da sessão. Preferências não secretas mantidas."; } catch (error) { $("#ai-settings-message").textContent = error.message; } finally { settingsBusy(false); } });
 async function init() {
-  try {
-    const config = await api("/api/config");
-    state.aiConfigured = config.ai.configured;
-    $("#use-ai").disabled = !state.aiConfigured;
-    $("#ai-config-status").textContent = state.aiConfigured ? `Chave detectada no servidor (ainda não testada) · modelo: ${config.ai.model}` : "Para habilitar, configure GEMINI_API_KEY no Windows e reinicie o OctorGit. Veja as instruções em CONFIGURAR_GEMINI_WINDOWS.txt.";
-  } catch {
-    $("#ai-config-status").textContent = "Não foi possível consultar a configuração do Gemini. Atualize a página.";
-  }
+  try { applyPublicAI((await api("/api/config")).ai); }
+  catch { $("#ai-config-status").textContent = "Não foi possível consultar a configuração de IA. Atualize a página."; }
   await loadHistory();
   let saved;
   try { saved = sessionStorage.getItem("octorgit-job"); } catch {}

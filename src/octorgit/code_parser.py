@@ -2,6 +2,8 @@
 
 import ast
 import hashlib
+from pathlib import PurePosixPath
+from .technology import LANGUAGES, detect_technology
 from . import SCHEMA_VERSION, __version__
 
 
@@ -54,8 +56,8 @@ def analyze(repository, files, skipped, root_urlconf=None):
     python_count = parsed = 0
     trees = {}
     for path, text in sorted(files.items()):
-        result["files"].append(record(path=path, language="python" if path.endswith(".py") else "text", sha256=hashlib.sha256(text.encode()).hexdigest(), line_count=len(text.splitlines())))
-        if not path.endswith(".py"):
+        result["files"].append(record(path=path, language=LANGUAGES.get(PurePosixPath(path).suffix.lower(), "text").lower(), sha256=hashlib.sha256(text.encode()).hexdigest(), line_count=len(text.splitlines())))
+        if not path.lower().endswith(".py"):
             continue
         python_count += 1
         try:
@@ -69,4 +71,5 @@ def analyze(repository, files, skipped, root_urlconf=None):
     result["metrics"] = {"python_files_accepted": python_count, "python_files_parsed": parsed, "parsing_coverage": parsed / python_count if python_count else None, "skipped_files": len(skipped)}
     from .django_parser import DjangoParser
     DjangoParser(trees, result).run(root_urlconf)
+    result["technology"] = detect_technology(files, SCHEMA_VERSION, __version__)
     return result

@@ -33,18 +33,17 @@ def wait(jobs, job):
 
 
 class VisualTests(unittest.TestCase):
-    def test_guide_and_snippets_point_to_actual_code(self):
+    def test_technology_and_snippets_point_to_actual_code(self):
         repo, source = demo()
         ir = analyze(repo, source, [], "config.urls")
         insights = build_insights(ir, source)
-        self.assertEqual(insights["guide"][0]["file"], "config/urls.py")
-        self.assertIn("api/serializers.py", {s["file"] for s in insights["guide"]})
-        self.assertIn("api/models.py", {s["file"] for s in insights["guide"]})
+        self.assertNotIn("guide", insights)
+        self.assertTrue(ir["technology"]["languages"])
         for snippet in insights["snippets"].values():
             for row in snippet["lines"]:
                 self.assertEqual(row["text"], source[snippet["file"]].splitlines()[row["number"] - 1][:400])
             self.assertLessEqual(len(snippet["lines"]), 30)
-        validate({**ir, "guide": insights["guide"]}, source)
+        validate(ir, source)
 
     def test_coverage_keeps_python_and_exclusions_separate(self):
         repo, source = demo()
@@ -61,7 +60,7 @@ class VisualTests(unittest.TestCase):
         repo, source = demo()
         ir = analyze(repo, source, [], "config.urls")
         charts = diagrams(ir, build_insights(ir, source))
-        self.assertEqual(set(charts), {"arquitetura", "primeiro-contato", "endpoints", "historico", "comparacao", "cobertura"})
+        self.assertEqual(set(charts), {"arquitetura", "arquivos", "endpoints", "historico", "comparacao", "cobertura"})
         for svg in charts.values():
             tree = ET.fromstring(svg)
             self.assertTrue(tree.tag.endswith("svg"))
@@ -86,7 +85,7 @@ class VisualTests(unittest.TestCase):
         ir = analyze(repo, source, [], "config.urls")
         report = report_html(ir, build_insights(ir, source))
         self.assertEqual(report.count('<svg xmlns='), 6)
-        for name in ("guia", "codigo", "arquitetura", "endpoints", "historico", "comparacao", "cobertura"):
+        for name in ("tecnologias", "codigo", "arquitetura", "endpoints", "historico", "comparacao", "cobertura"):
             self.assertIn(f'id="{name}"', report)
         self.assertNotIn('<img src=x', report)
         self.assertIn('&lt;img src=x', report)

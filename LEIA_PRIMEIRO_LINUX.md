@@ -39,19 +39,9 @@ Em distribuições Debian/Ubuntu, se o comando `venv` estiver indisponível, ins
 
 Por padrão, o banco fica em `$XDG_DATA_HOME/octorgit/history.sqlite3`; quando `XDG_DATA_HOME` não estiver definido, usa `~/.local/share/octorgit/history.sqlite3`. A opção `--data-dir` tem precedência. O histórico contém resultados e trechos filtrados; não compartilhe essa pasta junto do código do programa.
 
-## Gemini opcional
+## IA opcional
 
-Crie uma chave no Google AI Studio. Para usá-la apenas nesta sessão, sem colocar seu valor no histórico de comandos:
-
-```bash
-read -r -s -p 'Nova chave Gemini: ' GEMINI_API_KEY
-printf '\n'
-export GEMINI_API_KEY
-bash ABRIR_OCTORGIT.sh
-unset GEMINI_API_KEY
-```
-
-No navegador, marque **Usar Gemini para explicar o projeto**. A presença da chave não comprova sua validade ou cota. O uso depende da sua conta Google e pode gerar cobrança. Nenhuma chave é distribuída com o projeto.
+Abra **Configurações de IA** no menu e siga [CONFIGURAR_IA.md](CONFIGURAR_IA.md). A chave fica na memória da sessão; a análise estática funciona sem chave.
 
 ## Ver a parte visual sem iniciar o aplicativo
 

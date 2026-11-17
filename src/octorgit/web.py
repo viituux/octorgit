@@ -23,7 +23,8 @@ from . import __version__
 from .code_parser import analyze
 from .documentation import export, validate
 from .repositories import github_snapshot
-from .ai_engine import AIError, DocumentationEngine, GeminiProvider, render_markdown, settings
+from .ai_engine import AIError, DocumentationEngine, render_markdown, validate_response
+from .ai_config import AIConfiguration, create_provider
 from .history import HistoryStore, compare_analyses, metadata, repository_identity, snapshot_fingerprint
 from .insights import build_insights
 from .reports import diagrams, report_html
@@ -36,12 +37,13 @@ class BusyError(Exception):
 
 
 class Jobs:
-    def __init__(self, store=None):
+    def __init__(self, store=None, ai_configuration=None):
         self.lock = threading.Lock()
         self.items = {}
         self.pool = ThreadPoolExecutor(max_workers=1, thread_name_prefix="octorgit")
         self.ai_engine = DocumentationEngine()
         self.store = store
+        self.ai_configuration = ai_configuration or AIConfiguration(store.directory / "ai-settings.json" if store else None)
 
     def submit(self, payload):
         if not isinstance(payload, dict):
@@ -50,9 +52,13 @@ class Jobs:
             raise ValueError("Opção de análise não reconhecida.")
         source = payload.get("source", "github")
         if not isinstance(payload.get("use_ai", False), bool):
-            raise ValueError("A opção Gemini deve ser verdadeira ou falsa.")
-        if payload.get("use_ai") and not settings()["configured"]:
-            raise ValueError("Configure GEMINI_API_KEY no Windows e reinicie o aplicativo para usar o Gemini.")
+            raise ValueError("A opção IA deve ser verdadeira ou falsa.")
+        provider = None
+        if payload.get("use_ai"):
+            try:
+                provider = create_provider(self.ai_configuration.snapshot())
+            except AIError as exc:
+                raise ValueError(str(exc)) from None
         if source not in {"github", "demo", "demo-next"}:
             raise ValueError("Escolha GitHub ou exemplo integrado.")
         for key in ("repo", "branch", "root_urlconf"):
@@ -73,7 +79,7 @@ class Jobs:
                    "label": ("Exemplo Django/DRF · alterado" if source == "demo-next" else "Exemplo Django/DRF") if source.startswith("demo") else payload["repo"].removeprefix("https://github.com/"),
                    "error": None}
             self.items[job_id] = job
-        self.pool.submit(self.run, job_id, dict(payload))
+        self.pool.submit(self.run, job_id, dict(payload), provider)
         return self.get(job_id)
 
     def update(self, job_id, **fields):
@@ -106,7 +112,7 @@ class Jobs:
             history = [entry for entry in self.list() if entry.get("repository_id") == job.get("repository_id") and entry["status"] == "completed"]
             previous = next((entry for entry in history if entry["id"] != job_id and entry["created_at"] < job["created_at"] and entry.get("fingerprint") != job.get("fingerprint")), None)
             return {"analysis": job["ir"], "documents": job["documents"], "ai": job["ai_result"],
-                    "insights": job["insights"], "history": history, "previous_id": previous["id"] if previous else None, "storage_error": job.get("storage_error")}
+                    "insights": {k: v for k, v in job["insights"].items() if k != "guide"}, "history": history, "previous_id": previous["id"] if previous else None, "storage_error": job.get("storage_error")}
         return None
 
     def visual_context(self, job_id, base_id=None):
@@ -123,7 +129,7 @@ class Jobs:
             diff.update(base_id=base_id, after_id=job_id)
         return result, diff
 
-    def run(self, job_id, payload):
+    def run(self, job_id, payload, provider=None):
         try:
             self.update(job_id, status="running", progress=10, stage="Lendo snapshot do repositório")
             if payload.get("source", "").startswith("demo"):
@@ -144,9 +150,9 @@ class Jobs:
             insights = build_insights(ir, source)
             ai_result = {"status": "disabled"}
             if payload.get("use_ai"):
-                self.update(job_id, progress=85, stage="Gerando explicações com Gemini e validando referências")
+                self.update(job_id, progress=85, stage="Gerando explicações com IA e validando referências")
                 try:
-                    ai_result = self.ai_engine.generate(ir, GeminiProvider())
+                    ai_result = self.ai_engine.generate(ir, provider)
                 except AIError as exc:
                     ai_result = {"status": "failed", "error": str(exc)}
             self.update(job_id, progress=95, stage="Preparando documentos para exportação")
@@ -183,6 +189,7 @@ class LocalServer(ThreadingHTTPServer):
         super().__init__(("127.0.0.1", port), Handler)
         self.jobs = Jobs(HistoryStore(data_dir) if data_dir is not None else None)
         self.csrf = secrets.token_urlsafe(32)
+        self.ai_test_lock = threading.Lock()
         port = self.server_address[1]
         self.hosts = {f"127.0.0.1:{port}", f"localhost:{port}"}
 
@@ -243,7 +250,7 @@ class Handler(BaseHTTPRequestHandler):
             self.json(200, {"jobs": self.server.jobs.list()})
             return
         if path == "/api/config":
-            self.json(200, {"ai": settings(), "persistent_history": self.server.jobs.store is not None})
+            self.json(200, {"ai": self.server.jobs.ai_configuration.public(), "persistent_history": self.server.jobs.store is not None})
             return
         parts = path.strip("/").split("/")
         if len(parts) in {3, 4, 5} and parts[:2] == ["api", "jobs"]:
@@ -305,7 +312,8 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         if not self.trusted():
             return
-        if urlsplit(self.path).path != "/api/jobs":
+        path = urlsplit(self.path).path
+        if path not in {"/api/jobs", "/api/ai/config", "/api/ai/test"}:
             self.json(404, {"error": "Página não encontrada."})
             return
         if not secrets.compare_digest(self.headers.get("X-OctorGit-Token", ""), self.server.csrf):
@@ -319,7 +327,28 @@ class Handler(BaseHTTPRequestHandler):
             if not 0 < size <= 4096:
                 raise ValueError("Requisição inválida ou muito grande.")
             payload = json.loads(self.rfile.read(size))
+            if path == "/api/ai/config":
+                config = self.server.jobs.ai_configuration.apply(payload)
+                self.json(200, {"ai": config})
+                return
+            if path == "/api/ai/test":
+                if payload != {}:
+                    raise ValueError("O teste usa apenas a configuração aplicada na sessão.")
+                if not self.server.ai_test_lock.acquire(blocking=False):
+                    raise BusyError("Um teste de IA já está em andamento.")
+                try:
+                    provider = create_provider(self.server.jobs.ai_configuration.snapshot())
+                    context = {"facts": [{"id": "TEST0001", "kind": "test", "data": {"purpose": "connection test, no repository data"}, "evidence": []}], "partial": True}
+                    result, usage = provider.generate(context)
+                    validate_response(result, context)
+                    self.json(200, {"success": True, "model": provider.model, "usage": usage})
+                finally:
+                    self.server.ai_test_lock.release()
+                return
             job = self.server.jobs.submit(payload)
+        except AIError as exc:
+            self.json(422, {"error": str(exc)})
+            return
         except (ValueError, UnicodeDecodeError) as exc:
             self.json(400, {"error": str(exc)})
             return

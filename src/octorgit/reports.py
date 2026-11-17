@@ -43,7 +43,7 @@ def edge(x1, y1, x2, y2, marker):
     return f'<path d="M{x1} {y1} C{x1 + 35} {y1}, {x2 - 35} {y2}, {x2} {y2}" stroke="{BLUE}" stroke-width="1.6" fill="none" marker-end="url(#{marker})" opacity=".8"/>'
 
 
-def architecture_svg(ir):
+def imports_svg(ir):
     directories = defaultdict(list)
     for file in ir["files"]:
         if file["language"] == "python":
@@ -87,17 +87,103 @@ def architecture_svg(ir):
     return "".join(parts) + "</svg>"
 
 
-def guide_svg(insights):
-    steps = insights["guide"]
-    parts, marker = svg_start("Guia de primeiro contato · ordem sugerida de leitura", 1000, max(190, ((len(steps) + 2) // 3) * 120 + 70))
-    parts.append(label(25, 30, "ORDEM SUGERIDA DE LEITURA · INFERIDA", 12, weight="600"))
-    for i, step in enumerate(steps):
-        x, y = 25 + i % 3 * 330, 55 + i // 3 * 120
-        if i % 3:
-            parts.append(edge(x - 40, y + 33, x, y + 33, marker))
-        parts.append(node(x, y, f"{i + 1:02d} · {step['title']}", step["file"], 285, "#eaf5fc" if not i else "white"))
-    if not steps:
-        parts.append(label(25, 90, "Pontos de entrada insuficientes. Consulte os símbolos e os diagnósticos."))
+def technology_svg(ir):
+    tech = ir.get("technology")
+    if not tech:
+        from .technology import detect_technology
+        tech = detect_technology({}, ir["schema_version"], ir["parser_version"], ir["files"])
+    components = tech["components"]
+    language = " · ".join(item["name"] for item in tech["languages"][:4]) or "Linguagem não confirmada"
+    frameworks = " · ".join(c["name"] for c in components if c["kind"] == "framework") or "Framework não confirmado"
+    has_compose = any(c["name"] == "Docker Compose" for c in components)
+    selected = [c for c in components if c["kind"] not in {"framework", "driver", "library", "ci"} and not (c["kind"] in {"worker", "queue", "cache"} and c["scope"] in {"import", "dependency"}) and not (has_compose and c["name"] == "Docker")][:20]
+    if not any(c["kind"] == "database" for c in selected):
+        selected.append({"id": "unknown-db", "kind": "database", "name": "Banco não confirmado", "scope": "unconfirmed", "evidence_chain": []})
+    if not any(c["kind"] == "cloud" for c in selected):
+        selected.append({"id": "unknown-cloud", "kind": "cloud", "name": "Hospedagem não confirmada", "scope": "unconfirmed", "evidence_chain": []})
+    positions, lanes, services, proxies = {}, {"left": [], "middle": [], "right": []}, [], []
+    for item in selected:
+        if item["kind"] == "application":
+            positions[item["id"]] = (535, 275)
+        elif item["kind"] == "proxy":
+            proxies.append(item)
+        elif item["kind"] == "service":
+            services.append(item)
+        elif item["kind"] in {"database", "cache"}:
+            lanes["left"].append(item)
+        elif item["kind"] in {"queue", "worker"}:
+            lanes["middle"].append(item)
+        else:
+            lanes["right"].append(item)
+    proxies = proxies[:3]
+    for i, item in enumerate(proxies):
+        start = (1400 - (330 * len(proxies) + 105 * (len(proxies) - 1))) / 2
+        positions[item["id"]] = (start + i * 435, 70)
+    for name, items in lanes.items():
+        for i, item in enumerate(items):
+            positions[item["id"]] = ({"left": 55, "middle": 535, "right": 1015}[name], (435 if name == "middle" else 275) + i * 150)
+    service_top = max(620, 465 + 150 * max(len(v) for v in lanes.values()))
+    for i, item in enumerate(services):
+        row_count = min(3, len(services) - i // 3 * 3)
+        start = (1400 - (330 * row_count + 105 * (row_count - 1))) / 2
+        positions[item["id"]] = (start + i % 3 * 435, service_top + i // 3 * 150)
+    height = max(service_top + 80, service_top + ((len(services) + 2) // 3) * 150 + 70)
+    parts, marker = svg_start("Arquitetura declarada · linguagem, banco e infraestrutura", 1400, height)
+    parts[2] = f'<rect width="1400" height="{height}" rx="14" fill="#fcf5e9"/>'
+    parts.append(label(35, 35, "ARQUITETURA DETECTADA NO REPOSITÓRIO", 16, "#193c43", "600"))
+    parts.append(label(35, 58, "Declarações estáticas; não comprova infraestrutura em execução.", 11, "#728082"))
+    for relation in tech["relations"]:
+        if relation["source"] not in positions or relation["target"] not in positions:
+            continue
+        a, b = positions[relation["source"]], positions[relation["target"]]
+        if a[0] == b[0]:
+            x1, y1, x2, y2 = a[0] + 330, a[1] + 50, b[0] + 330, b[1] + 50
+            control = x1 + 90
+            d = f"M{x1} {y1} C{control} {y1}, {control} {y2}, {x2} {y2}"
+        else:
+            x1 = a[0] if a[0] > b[0] else a[0] + 330
+            x2 = b[0] + 330 if a[0] > b[0] else b[0]
+            y1, y2 = a[1] + 50, b[1] + 50
+            center = (x1 + x2) / 2
+            d = f"M{x1} {y1} C{center} {y1}, {center} {y2}, {x2} {y2}"
+        dashed = ' stroke-dasharray="6 5"' if relation["kind"] == "declared_dependency" else ""
+        parts.append(f'<path d="{d}" stroke="#326f83" stroke-width="2" fill="none" marker-end="url(#{marker})"{dashed}/>')
+    scopes = {"dependency": "Dependência declarada", "import": "Import encontrado", "compose_service": "Serviço declarado no Compose", "django_settings": "Configuração DATABASES", "build_configuration": "Configuração de build", "terraform_declaration": "Declaração Terraform", "manifest": "Manifesto", "deployment_manifest": "Manifesto de deploy", "compose_manifest": "Manifesto Compose", "ci_configuration": "Configuração de CI", "repository": "Inventário do código", "unconfirmed": "Sem evidência suficiente"}
+    for item in selected:
+        if item["id"] not in positions:
+            continue
+        x, y = positions[item["id"]]
+        unknown = item["scope"] == "unconfirmed"
+        kind = item["kind"]
+        fill = "#fffdf8" if unknown else ("#f3bd63" if kind in {"application", "service", "worker"} else "#75bac1")
+        dash = ' stroke-dasharray="5 4"' if unknown else ""
+        parts.append(f'<g><title>{h(item["name"])} · {h(scopes.get(item["scope"], item["scope"]))}</title><rect x="{x}" y="{y}" width="330" height="105" rx="10" fill="#fffbf4" stroke="#d7d6cb"{dash}/>')
+        sx, sy = x + 18, y + 22
+        if kind in {"database", "cache"}:
+            parts.append(f'<path d="M{sx} {sy + 8} V{sy + 43} C{sx} {sy + 55} {sx + 44} {sy + 55} {sx + 44} {sy + 43} V{sy + 8}" fill="{fill}" stroke="#193c43" stroke-width="2"/><ellipse cx="{sx + 22}" cy="{sy + 8}" rx="22" ry="8" fill="{fill}" stroke="#193c43" stroke-width="2"/><path d="M{sx} {sy + 24} C{sx} {sy + 34} {sx + 44} {sy + 34} {sx + 44} {sy + 24}" fill="none" stroke="#193c43" stroke-width="2"/>')
+        elif kind in {"cloud", "infrastructure", "ci"}:
+            parts.append(f'<path d="M{sx + 6} {sy + 44} C{sx - 10} {sy + 24} {sx + 2} {sy + 12} {sx + 14} {sy + 17} C{sx + 20} {sy - 9} {sx + 47} {sy - 3} {sx + 47} {sy + 18} C{sx + 69} {sy + 14} {sx + 69} {sy + 43} {sx + 50} {sy + 44} Z" fill="{fill}" stroke="#193c43" stroke-width="2"{dash}/>')
+        elif kind == "queue":
+            for dx, dy in [(9, 0), (37, 5), (21, 25), (0, 43), (44, 44)]:
+                parts.append(f'<line x1="{sx + 22}" y1="{sy + 25}" x2="{sx + dx}" y2="{sy + dy}" stroke="#193c43" stroke-width="2"/><circle cx="{sx + dx}" cy="{sy + dy}" r="6" fill="{fill}" stroke="#193c43" stroke-width="2"/>')
+        else:
+            parts.append(f'<rect x="{sx}" y="{sy}" width="49" height="36" rx="5" fill="{fill}" stroke="#193c43" stroke-width="2"/><path d="M{sx + 24} {sy + 37} v10 m-12 0 h24" stroke="#193c43" stroke-width="2"/>')
+            parts.append(label(sx + 10, sy + 25, "↔" if kind == "proxy" else "⚙", 25, "#193c43"))
+        title = item["name"]
+        if kind == "application":
+            title = language
+        parts.append(label(x + 88, y + 32, title if len(title) <= 31 else title[:28] + "…", 13, "#193c43", "600"))
+        detail = frameworks if kind == "application" else scopes.get(item["scope"], item["scope"])
+        parts.append(label(x + 88, y + 55, detail[:34], 10, "#6f8183"))
+        if item["evidence_chain"]:
+            ref = item["evidence_chain"][0]
+            path = ref["file"]
+            parts.append(label(x + 15, y + 89, (path if len(path) < 48 else "…" + path[-45:]) + ":" + str(ref["start_line"]), 9, "#79898a"))
+        elif kind == "application":
+            parts.append(label(x + 15, y + 89, "Linguagens por extensão; framework por sinais declarados.", 9, "#79898a"))
+        parts.append("</g>")
+    parts.append(label(35, height - 32, "Linha contínua: configuração/build declarado. Linha tracejada: depends_on; não equivale a tráfego real.", 11, "#6f8183"))
+    parts.append(label(35, height - 12, "Até 20 componentes visuais (máximo 3 proxies). Bibliotecas e CI ficam na tabela; não comprovam serviço em execução.", 11, "#6f8183"))
     return "".join(parts) + "</svg>"
 
 
@@ -180,7 +266,7 @@ def comparison_svg(diff):
 
 
 def diagrams(ir, insights, history=None, diff=None):
-    return {"arquitetura": architecture_svg(ir), "primeiro-contato": guide_svg(insights), "endpoints": endpoint_svg(ir),
+    return {"arquitetura": technology_svg(ir), "arquivos": imports_svg(ir), "endpoints": endpoint_svg(ir),
             "cobertura": coverage_svg(insights), "historico": history_svg(history or []), "comparacao": comparison_svg(diff)}
 
 
@@ -195,18 +281,24 @@ def report_html(ir, insights=None, history=None, diff=None, ai=None):
              '<header><div class="muted">OCTORGIT · RELATÓRIO VISUAL COM EVIDÊNCIAS</div><h1>Entenda o projeto,<br>confira cada origem.</h1>',
              f'<p>{h(title)}</p><p class="muted">Commit: {h(repo.get("commit_sha") or "não disponível — fixture local")} · Parser {h(ir["parser_version"])} · IR {h(ir["schema_version"])}</p>',
              '<p class="notice">Análise estática: o código não foi executado. Diagramas mostram fatos e agrupamentos indicados, sem prometer arquitetura de runtime. Abra este HTML no navegador e use Ctrl+P → Salvar como PDF para exportar com as imagens.</p><nav>']
-    sections = [("guia", "Guia"), ("codigo", "Código e evidências"), ("arquitetura", "Arquitetura"), ("endpoints", "Endpoints"), ("historico", "Histórico"), ("comparacao", "Comparação"), ("cobertura", "Cobertura")]
+    sections = [("tecnologias", "Tecnologias"), ("codigo", "Código e evidências"), ("arquitetura", "Arquitetura"), ("endpoints", "Endpoints"), ("historico", "Histórico"), ("comparacao", "Comparação"), ("cobertura", "Cobertura")]
     parts.extend(f'<a href="#{key}">{h(name)}</a>' for key, name in sections)
-    parts.append('</nav></header><section id="guia"><h2>01 · Guia de primeiro contato</h2><p>Uma ordem sugerida de leitura. A organização é inferida a partir dos arquivos e referências encontrados.</p><div class="chart">' + charts["primeiro-contato"] + '</div>')
+    parts.append('</nav></header><section id="tecnologias"><h2>01 · Arquitetura e tecnologias detectadas</h2><p>Linguagens identificadas por extensão, dependências e configurações declaradas. Componentes sem evidência aparecem como não confirmados. O diagrama não comprova implantação em produção.</p>' + charts["arquitetura"])
     included_snippets = {s["id"] for s in list(insights["snippets"].values())[:80]}
     def evidence(ref):
         snippet = reference_key(ref)
         if snippet not in included_snippets:
             return f'<span>{h(ref["file"])}:{ref["start_line"]}–{ref["end_line"]} (trecho fora do recorte)</span>'
         return f'<a href="#snippet-{snippet}">{h(ref["file"])}:{ref["start_line"]}–{ref["end_line"]}</a>'
-    for step in insights["guide"]:
-        parts.append(f'<h3>{step["order"]}. {h(step["title"])}</h3><p>{h(step["explanation"])}</p><p class="evidence">Inferido · {evidence(step["evidence"])}</p>')
-    parts.append('</section><section id="arquitetura"><h2>02 · Mapa da organização</h2><p>Arquivos agrupados por diretório. As setas representam imports locais resolvidos, não chamadas de runtime ou serviços de nuvem.</p>' + charts["arquitetura"] + '</section>')
+    tech = ir.get("technology", {"languages": [], "components": [], "relations": []})
+    parts.append('<h3>Linguagens</h3><ul>')
+    parts.extend(f'<li>{h(item["name"])}: {item["files"]} arquivos · inferido por extensão</li>' for item in tech["languages"])
+    parts.append('</ul><div class="table-wrap"><table><thead><tr><th>Componente</th><th>Tipo</th><th>Sinal declarado</th><th>Evidências</th></tr></thead><tbody>')
+    for item in tech["components"]:
+        if item["kind"] == "application":
+            continue
+        parts.append('<tr>' + ''.join('<td>' + h(item[key]) + '</td>' for key in ("name", "kind", "scope")) + '<td>' + '<br>'.join(evidence(r) for r in item["evidence_chain"]) + '</td></tr>')
+    parts.append('</tbody></table></div></section><section id="arquitetura"><h2>02 · Arquivos e imports</h2><p>Grupos por diretório e imports locais resolvidos; não são chamadas de runtime.</p>' + charts["arquivos"] + '</section>')
     parts.append('<section id="endpoints"><h2>03 · Mapa de endpoints</h2><p>Do caminho à view e às configurações declaradas. “Não confirmado” não significa que não exista autenticação ou serializer.</p>' + charts["endpoints"])
     parts.append('<div class="table-wrap"><table><thead><tr><th>Método / rota</th><th>View</th><th>Serializer</th><th>Permissões</th><th>Autenticação</th><th>Evidência</th></tr></thead><tbody>')
     for endpoint in ir["endpoints"][:500]:
@@ -249,7 +341,7 @@ def report_html(ir, insights=None, history=None, diff=None, ai=None):
         parts.append('</article>')
     parts.append(f'<p class="muted">{len(snippets)} trechos incluídos no HTML. {h(insights["snippets_note"])}</p></section>')
     if ai and ai.get("status") == "completed":
-        parts.append('<section><h2>08 · Explicações do Gemini</h2><p class="notice">Explicações inferidas. Referências por IDs foram validadas; a semântica das afirmações não é automaticamente comprovada.</p>')
+        parts.append('<section><h2>08 · Explicações da IA</h2><p class="notice">Explicações inferidas. Referências por IDs foram validadas; a semântica das afirmações não é automaticamente comprovada.</p>')
         for section in ai["sections"]:
             parts.append('<h3>' + h(section["title"]) + '</h3><ul>')
             for claim in section["claims"]:

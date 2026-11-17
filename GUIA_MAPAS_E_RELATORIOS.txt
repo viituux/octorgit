@@ -1,9 +1,9 @@
-OCTORGIT 0.5.0 - MAPAS VISUAIS E DOCUMENTO COM DIAGRAMAS
+OCTORGIT 0.6.0 - MAPAS VISUAIS E DOCUMENTO COM DIAGRAMAS
 
 1. Extraia este ZIP em uma pasta nova.
 2. Dê dois cliques em ABRIR_OCTORGIT.bat.
 3. Clique em Experimentar um exemplo.
-4. Explore Primeiro contato: clique numa etapa e leia o trecho ao lado.
+4. Em Arquitetura, veja linguagem, banco e infraestrutura e clique nas evidencias.
 5. Em Endpoints, clique numa rota para conferir campos e evidencias.
 6. Em Arquitetura, troque o tipo de mapa e use + / - ou baixe o SVG.
 7. Em Cobertura, veja parsing, exclusoes e campos desconhecidos.
@@ -29,7 +29,7 @@ Informe uma URL publica Python/Django/DRF e a branch ou SHA nas opcoes.
 Analise dois SHAs do mesmo projeto para comparar as versoes.
 Os exemplos integrados sao fixtures sem commit SHA, identificados como tal.
 
-Os mapas seguem a referencia de grupos, caixas e conexoes azuis.
-Sao SVGs gerados dos fatos detectados no codigo. Gemini pode complementar
+O mapa usa icones de aplicacao, banco, fila e infraestrutura.
+Sao SVGs gerados dos fatos detectados no codigo. A IA pode complementar
 o texto, mas nao e necessario para gerar imagens ou exportar documentos.
 Campos dinamicos ainda ficam como nao confirmados.

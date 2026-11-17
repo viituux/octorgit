@@ -16,7 +16,7 @@ def main(argv=None):
     source.add_argument("--local", type=Path, help="Diretório de fixture local; sem SHA de commit")
     parser.add_argument("--branch", help="Branch/tag/ref; padrão: branch padrão do GitHub")
     parser.add_argument("--root-urlconf", help="Módulo raiz de URLs, por exemplo config.urls; evita prefixos ambíguos")
-    parser.add_argument("--gemini", action="store_true", help="Enviar contexto selecionado da IR ao Google Gemini (exige GEMINI_API_KEY)")
+    parser.add_argument("--ia", dest="use_ai", action="store_true", help="Enviar contexto selecionado da IR à API de IA configurada por variáveis de ambiente")
     parser.add_argument("--output", type=Path, required=True, help="Diretório novo ou vazio para os resultados")
     args = parser.parse_args(argv)
     try:
@@ -31,17 +31,18 @@ def main(argv=None):
         validate(ir, files)
         export(ir, args.output)
         ai_result = None
-        if args.gemini:
+        if args.use_ai:
             import json
-            from .ai_engine import AIError, DocumentationEngine, GeminiProvider, render_markdown
+            from .ai_engine import AIError, DocumentationEngine, render_markdown
+            from .ai_config import AIConfiguration, create_provider
             try:
-                result = DocumentationEngine().generate(ir, GeminiProvider())
+                result = DocumentationEngine().generate(ir, create_provider(AIConfiguration().snapshot()))
                 ai_result = result
                 (args.output / "AI.md").write_text(render_markdown(result, repo), encoding="utf-8")
                 (args.output / "AI.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-                print("Documentação Gemini gerada com referências verificadas; afirmações continuam inferidas.")
+                print("Documentação de IA gerada com referências verificadas; afirmações continuam inferidas.")
             except AIError as exc:
-                print(f"Gemini: {exc} A exportação estática está disponível.", file=sys.stderr)
+                print(f"IA: {exc} A exportação estática está disponível.", file=sys.stderr)
         from .insights import build_insights
         from .reports import report_html, diagrams
         insights = build_insights(ir, files)

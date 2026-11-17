@@ -138,7 +138,7 @@ class WebTests(unittest.TestCase):
                 config_bytes = response.read()
             self.assertTrue(json.loads(config_bytes)["ai"]["configured"])
             self.assertNotIn(b"test-http-private-key", config_bytes)
-            with patch("octorgit.web.GeminiProvider", return_value=FakeProvider()):
+            with patch("octorgit.web.create_provider", return_value=FakeProvider()):
                 with self.request("/api/jobs", {"source": "demo", "use_ai": True}) as response:
                     job = json.load(response)
                 self.assertEqual(self.finished(job["id"])["status"], "completed")
@@ -238,6 +238,53 @@ class WebTests(unittest.TestCase):
                     self.assertTrue(result["insights"]["snippets"])
                 finally:
                     server.shutdown(); server.server_close(); thread.join(timeout=3)
+
+    def test_user_ai_settings_over_http_do_not_return_or_save_key(self):
+        with tempfile.TemporaryDirectory() as directory:
+            server = LocalServer(0, data_dir=directory)
+            thread = threading.Thread(target=server.serve_forever, daemon=True)
+            thread.start()
+            base = f"http://127.0.0.1:{server.server_address[1]}"
+            def request(path, payload=None, token=True):
+                data = json.dumps(payload).encode() if payload is not None else None
+                headers = {"Content-Type": "application/json"}
+                if token:
+                    headers["X-OctorGit-Token"] = server.csrf
+                return urlopen(Request(base + path, data=data, headers=headers), timeout=5)
+            try:
+                payload = {"provider": "openai-compatible", "base_url": "https://api.example.test/v1", "model": "test-model", "api_key": "dummy-http-session-key"}
+                with self.assertRaises(HTTPError) as caught:
+                    request("/api/ai/config", payload, token=False)
+                self.assertEqual(caught.exception.code, 403)
+                with request("/api/ai/config", payload) as response:
+                    raw = response.read()
+                self.assertNotIn(b"dummy-http-session-key", raw)
+                self.assertTrue(json.loads(raw)["ai"]["configured"])
+                with request("/api/config") as response:
+                    self.assertNotIn(b"dummy-http-session-key", response.read())
+                self.assertNotIn("dummy-http-session-key", (Path(directory) / "ai-settings.json").read_text())
+                structured = {"sections": [{"title": "Teste", "claims": [{"text": "Teste de API.", "confidence": "unconfirmed", "evidence_ids": []}]}]}
+                upstream = {"choices": [{"finish_reason": "stop", "message": {"content": json.dumps(structured)}}], "usage": {"total_tokens": 10}}
+                with patch("octorgit.ai_engine.urlopen", return_value=io.BytesIO(json.dumps(upstream).encode())):
+                    with request("/api/ai/test", {}) as response:
+                        result = json.load(response)
+                self.assertTrue(result["success"])
+                with request("/api/ai/config", {"clear_key": True}) as response:
+                    self.assertFalse(json.load(response)["ai"]["key_present"])
+            finally:
+                server.shutdown(); server.server_close(); thread.join(timeout=3)
+
+    def test_ui_has_ai_settings_and_no_first_contact_or_gemini_branding(self):
+        with self.request("/") as response:
+            html = response.read().decode()
+        with self.request("/app.js") as response:
+            js = response.read().decode()
+        self.assertIn('data-page="settings"', html)
+        self.assertIn('id="ai-api-key" type="password"', html)
+        self.assertNotIn('data-page="guide"', html)
+        self.assertNotIn("Primeiro contato", html)
+        self.assertNotIn("Gemini", html)
+        self.assertNotIn("Gemini", js)
 
 
 if __name__ == "__main__":

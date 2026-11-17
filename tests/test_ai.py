@@ -138,7 +138,7 @@ class AITests(unittest.TestCase):
         jobs = Jobs()
         try:
             with patch.dict("os.environ", {"GEMINI_API_KEY": "test-private-key"}, clear=True):
-                with patch("octorgit.web.GeminiProvider", side_effect=AIError("Cota indisponível")):
+                with patch.object(jobs.ai_engine, "generate", side_effect=AIError("Cota indisponível")):
                     job = jobs.submit({"source": "demo", "use_ai": True})
                     deadline = time.monotonic() + 3
                     while time.monotonic() < deadline and jobs.get(job["id"])["status"] not in {"completed", "failed"}:
@@ -155,7 +155,7 @@ class AITests(unittest.TestCase):
         jobs = Jobs()
         try:
             with patch.dict("os.environ", {"GEMINI_API_KEY": "test-private-key"}, clear=True):
-                with patch("octorgit.web.GeminiProvider", return_value=FakeProvider()):
+                with patch("octorgit.web.create_provider", return_value=FakeProvider()):
                     job = jobs.submit({"source": "demo", "use_ai": True})
                     deadline = time.monotonic() + 3
                     while time.monotonic() < deadline and jobs.get(job["id"])["status"] not in {"completed", "failed"}:

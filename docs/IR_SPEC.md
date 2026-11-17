@@ -1,6 +1,6 @@
-# IR 0.2.0
+# IR 0.3.0
 
-Contrato inicial de rotas introduzido em 0.1.0: endpoints podem representar pares método/rota completos ou rotas com método desconhecido. Parser atual: 0.5.0. Cada registro de domínio e evidência leva `schema_version` e `parser_version`; métricas são agregados.
+Contrato inicial de rotas introduzido em 0.1.0: endpoints podem representar pares método/rota completos ou rotas com método desconhecido. Parser atual: 0.6.0. Cada registro de domínio e evidência leva `schema_version` e `parser_version`; métricas são agregados.
 
 | Campo | Conteúdo |
 | --- | --- |
@@ -35,7 +35,7 @@ Import resolvido significa arquivo local encontrado, não prova de resolução d
 
 `file`, `symbol` (ou null), `start_line`, `end_line` inclusivas e `confidence`. O validador percorre também `evidence_chain` e verifica arquivo, linhas e existência do símbolo na IR. Não prova semanticamente que a inferência é verdadeira em runtime. Hash do arquivo usa texto UTF-8 sem normalização de linhas.
 
-Alterações incompatíveis futuras exigem nova versão e atualização dos consumidores. Ainda não há integração com IA.
+Alterações incompatíveis futuras exigem nova versão e atualização dos consumidores.
 
 ## Mudança em 0.2.0
 
@@ -43,4 +43,8 @@ Alterações incompatíveis futuras exigem nova versão e atualização dos cons
 
 Getters dinâmicos e expressões não resolvidas continuam com value null. Defaults globais só são aplicados como declaração quando REST_FRAMEWORK é literal/único e a view é reconhecida como DRF, sem override dinâmico. Não importar configurações do alvo.
 
-Guia, cobertura, snippets, timeline e comparação são artefatos derivados do resultado. Ficam fora da IR para não misturar observações de código com apresentação, persistência ou sugestões de leitura. Os resultados API incluem insights, history e previous_id; o SQLite preserva o payload vinculado às versões.
+Cobertura, snippets, timeline e comparação são artefatos derivados do resultado. Ficam fora da IR para não misturar observações de código com apresentação, persistência ou sugestões de leitura. Os resultados API incluem insights, history e previous_id; o SQLite preserva o payload vinculado às versões.
+
+## Mudança em 0.3.0
+
+`technology` contém `languages`, `components`, `relations` e notas de limite. Componentes incluem kind, scope, confidence e evidence_chain. Relações distinguem configuração literal de banco, depends_on e contexto de build. Dependência de driver/cliente não confirma servidor em execução. Extensões identificam linguagens, sem habilitar novos parsers de endpoints. O capítulo/tela de primeiro contato foi removido; resultados antigos devem ser reanalisados para obter este contrato.
