@@ -5,7 +5,7 @@
 - Inicializadores separados: ABRIR_OCTORGIT.bat (CRLF) e ABRIR_OCTORGIT.sh (LF, executável, Bash).
 - Python 3.11+ e navegador são necessários. Não são binários .exe/AppImage independentes de Python.
 - Histórico respeita LOCALAPPDATA no Windows e XDG_DATA_HOME/fallback .local/share no Linux.
-- Workflow GitHub Actions adicionado para Windows/Linux com Python 3.11 e 3.14; execução remota será conferida após publicação.
+- Workflow GitHub Actions adicionado para Windows/Linux com Python 3.11 e 3.14; execução remota aprovada nas quatro combinações, no commit fde9e94e3acfca1a6fade8c435a72a44f68f55b6. Run: https://github.com/viituux/octorgit/actions/runs/44146982322.
 - Teste de links simbólicos pode ser pulado no Windows se o sistema não conceder a permissão específica; as demais verificações continuam.
 
 Verificações da versão anterior, com seus próprios escopos:

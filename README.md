@@ -2,6 +2,8 @@
 
 Understand code. Generate knowledge.
 
+[**Baixar Windows e Linux**](https://github.com/viituux/octorgit/releases/latest) · [Testes automáticos](https://github.com/viituux/octorgit/actions/workflows/tests.yml)
+
 OctorGit lê projetos Python sem importar ou executar código, registra um snapshot de commit do GitHub e produz um inventário verificável. Versão **0.5.1**: mapas visuais, relatório com diagramas, guia de leitura, trechos de código, histórico SQLite e comparação por snapshot. Gemini continua opcional. IR **0.2.0**. A interface foi acrescentada por solicitação do usuário; o gate de qualidade do MVP continua pendente.
 
 ## Windows e Linux

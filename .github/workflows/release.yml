@@ -1,0 +1,43 @@
+name: Pacotes Windows e Linux
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Tag da Release existente (ex. v0.5.1)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      RELEASE_TAG: ${{ inputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Conferir tag e versão
+        run: python -c "import os, tomllib; assert os.environ['RELEASE_TAG'] == 'v' + tomllib.load(open('pyproject.toml', 'rb'))['project']['version']"
+      - name: Testes
+        env:
+          PYTHONPATH: src
+        run: python -m unittest discover -s tests -v
+      - name: Ferramenta de build
+        run: python -m pip install build
+      - name: Wheel Python universal
+        run: python -m build --wheel --outdir dist
+      - name: Pacotes de fontes e checksums
+        run: python scripts/package_release.py --output dist
+      - name: Anexar arquivos à Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$RELEASE_TAG" dist/* --clobber --repo "$GITHUB_REPOSITORY"
