@@ -1,5 +1,6 @@
-# Visual Stitch 0.9.0 — 20/11/2026
+# Visual Stitch 0.9.1 — 20/11/2026
 
+- Leitura dos arquivos dos testes explicitamente em UTF-8 para compatibilidade com a configuração padrão do Windows.
 - 110 testes Python passaram, incluindo estrutura HTML, seletores, fontes locais, proteção de caminhos e contratos anteriores.
 - Unidades DOM em Node passaram para canvas, painéis de evidências, busca, abas, índice de documentação e preparação da exportação. O harness não é um navegador e não valida CSS/layout.
 - JavaScript e Bash passaram na verificação de sintaxe. Fluxo HTTP de demo, imagem, relatório com seis SVGs e ZIP conferido.

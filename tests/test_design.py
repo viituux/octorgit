@@ -23,8 +23,8 @@ class Markup(HTMLParser):
 
 class DesignTests(unittest.TestCase):
     def test_markup_is_balanced_and_all_javascript_ids_exist(self):
-        html=files('octorgit').joinpath('static/index.html').read_text()
-        js=files('octorgit').joinpath('static/app.js').read_text()
+        html=files('octorgit').joinpath('static/index.html').read_text(encoding="utf-8")
+        js=files('octorgit').joinpath('static/app.js').read_text(encoding="utf-8")
         parsed=Markup();parsed.feed(html)
         self.assertEqual(parsed.stack,[])
         self.assertEqual(len(parsed.ids),len(set(parsed.ids)))
@@ -35,8 +35,8 @@ class DesignTests(unittest.TestCase):
         self.assertIn('settings-usage-panel',parsed.ids)
 
     def test_stitch_is_reference_not_remote_runtime_or_inline_scripts(self):
-        html=files('octorgit').joinpath('static/index.html').read_text()
-        css=files('octorgit').joinpath('static/style.css').read_text()
+        html=files('octorgit').joinpath('static/index.html').read_text(encoding="utf-8")
+        css=files('octorgit').joinpath('static/style.css').read_text(encoding="utf-8")
         parsed=Markup();parsed.feed(html)
         for tag,attrs in parsed.attrs:
             self.assertFalse(any(key.startswith('on') for key in attrs))
