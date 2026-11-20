@@ -52,3 +52,7 @@ Cobertura, snippets, timeline e comparação são artefatos derivados do resulta
 ## Parser 0.6.1 — contrato IR 0.3.0 preservado
 
 Diagnóstico `auxiliary_file_excluded_from_endpoints` identifica arquivos de pastas auxiliares omitidos da resolução Django. Inventário e símbolos permanecem disponíveis; imports/rotas são resolvidos somente nos arquivos da aplicação. Tecnologia usa scope `sqlite_connection` e relação `database_configuration` para chamadas SQLite estaticamente reconhecidas, sem alegar execução.
+
+## Parser 0.8.0
+
+`repository.private` informa a visibilidade confirmada na API GitHub quando autenticado; resultados antigos/fixtures podem omitir esse campo. Conteúdo privado só pode alimentar IA na interface após consentimento explícito por análise. Nenhuma credencial integra a IR.

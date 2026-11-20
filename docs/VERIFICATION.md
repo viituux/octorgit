@@ -1,3 +1,7 @@
+# Conexão GitHub 0.8.0 — 20/11/2026
+
+107 testes locais passaram. Novos testes cobrem conexão/desconexão, token em header, hosts e redirects, paginação, snapshot privado por SHA com branch explícita, proteção HTTP, consentimento de IA e ausência da credencial no histórico/exports. Foram usados tokens e respostas sintéticos; não foi usado um token pessoal real nem baixado um repositório privado real nesta versão. Não houve inspeção interativa do navegador.
+
 # Administração de IA 0.7.1 — 20/11/2026
 
 100 testes locais passaram, com regressão de timestamps idênticos para ordenação determinística no Windows, incluindo consumo/custo Decimal, dados desconhecidos, persistência sem segredo, troca de tarifas/perfil, pausa, cache, raciocínio, falhas com tokens reportados e API HTTP protegida. Integrações usam transporte/respostas simulados, sem chamada autenticada real nem verificação de fatura. A inspeção interativa do navegador não foi executada nesta versão.

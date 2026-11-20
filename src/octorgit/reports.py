@@ -281,6 +281,8 @@ def report_html(ir, insights=None, history=None, diff=None, ai=None):
              '<header><div class="muted">OCTORGIT · RELATÓRIO VISUAL COM EVIDÊNCIAS</div><h1>Entenda o projeto,<br>confira cada origem.</h1>',
              f'<p>{h(title)}</p><p class="muted">Commit: {h(repo.get("commit_sha") or "não disponível — fixture local")} · Parser {h(ir["parser_version"])} · IR {h(ir["schema_version"])}</p>',
              '<p class="notice">Análise estática: o código não foi executado. Diagramas mostram fatos e agrupamentos indicados, sem prometer arquitetura de runtime. Abra este HTML no navegador e use Ctrl+P → Salvar como PDF para exportar com as imagens.</p><nav>']
+    if repo.get("private"):
+        parts.append('<p class="notice">REPOSITÓRIO PRIVADO — este relatório pode conter informações e trechos internos. A exportação não torna o projeto público no GitHub.</p>')
     sections = [("tecnologias", "Tecnologias"), ("codigo", "Código e evidências"), ("arquitetura", "Arquitetura"), ("endpoints", "Endpoints"), ("historico", "Histórico"), ("comparacao", "Comparação"), ("cobertura", "Cobertura")]
     parts.extend(f'<a href="#{key}">{h(name)}</a>' for key, name in sections)
     parts.append('</nav></header><section id="tecnologias"><h2>01 · Arquitetura e tecnologias detectadas</h2><p>Linguagens identificadas por extensão, dependências e configurações declaradas. Componentes sem evidência aparecem como não confirmados. O diagrama não comprova implantação em produção.</p>' + charts["arquitetura"])

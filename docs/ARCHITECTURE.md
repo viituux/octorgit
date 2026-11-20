@@ -18,7 +18,7 @@ SQLite local persiste análises; não há banco ou fila externos. O provedor de 
 
 ## Interface local
 
-`web.py` usa ThreadingHTTPServer ligado exclusivamente a 127.0.0.1. Um ThreadPoolExecutor com um worker executa a mesma aquisição, parser e validação da CLI. Estados reais: queued/running/completed/failed, com progresso por etapa (não por percentual de bytes). Nenhum diretório arbitrário do computador é exposto; entradas são GitHub público ou demo integrada.
+`web.py` usa ThreadingHTTPServer ligado exclusivamente a 127.0.0.1. Um ThreadPoolExecutor com um worker executa a mesma aquisição, parser e validação da CLI. Estados reais: queued/running/completed/failed, com progresso por etapa (não por percentual de bytes). Nenhum diretório arbitrário do computador é exposto; entradas são GitHub (público ou privado autorizado) ou demo integrada.
 
 `static/` contém HTML, CSS, JavaScript e uma fixture JSON. Não existem CDNs, scripts externos ou dependências npm. O provedor é acessado apenas pelo servidor Python, se ativado. Dados do repositório são inseridos por textContent/nós DOM, nunca por innerHTML. Os SVGs são derivados de fatos detectados, com grupos, cartões e conexões azuis. Limites de apresentação são declarados; o mapa de tecnologias mostra até 20 componentes.
 
@@ -70,3 +70,7 @@ A IR 0.2.0 inclui permissions e configuration com evidências por campo. São re
 ## Administração de consumo — 0.7.0
 
 `ai_usage.py` mantém ledger SQLite separado, com tarifas por hash de provedor/endereço/modelo e política global de orçamento/pausa. `MeteredProvider` registra antes da chamada e finaliza com tokens numéricos normalizados, inclusive quando o adaptador rejeita uma resposta após receber metadados. O cache de DocumentationEngine evita chamar o wrapper novamente. Tokens não fornecidos ficam null. Eventos interrompidos permanecem started, sem alegar cobrança zero. Custos usam Decimal e a tarifa capturada na abertura. O painel usa mês UTC e distingue subtotal conhecido de registros sem custo. Chamadas da CLI não são instrumentadas. GET /api/ai/usage retorna resumo mensal e 50 eventos; POST protegido salva tarifas/política com verificação de perfil para evitar salvar preços no destino errado.
+
+## GitHub autenticado — 0.8.0
+
+`github_connection.py` gerencia token de sessão, identidade verificada e lista paginada. `repositories.request` restringe hosts e redirects quando autenticado. Snapshot privado usa API /tarball/{sha} após verificar metadata e resolver o commit, mantendo filtros e limites anteriores. `repository.private` é um campo adicional compatível com a IR 0.3.0. O servidor captura credencial em argumento do worker; só facts/resultados vão ao SQLite. Listagem e conexão têm rotas próprias, sem aceitar destinos HTTP externos.

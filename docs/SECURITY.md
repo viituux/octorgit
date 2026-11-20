@@ -1,6 +1,6 @@
 # Segurança e limites
 
-Não executar código é um requisito: não importar módulos do alvo, executar Git com configuração do alvo, instalar dependências nem executar setup.py, comandos de README ou Dockerfiles. O downloader só aceita URLs HTTPS de owner/repo no GitHub. Não suporta credenciais ou URLs arbitrárias.
+Não executar código é um requisito: não importar módulos do alvo, executar Git com configuração do alvo, instalar dependências nem executar setup.py, comandos de README ou Dockerfiles. O downloader só aceita URLs HTTPS de owner/repo no GitHub. Na interface local, aceita token pessoal explícito mantido em RAM para destinos GitHub fixos; não aceita URLs arbitrárias.
 
 O tar é percorrido sem extração: links e membros especiais são descartados; caminhos absolutos e traversal são rejeitados pelos filtros. No modo local, links simbólicos são ignorados; use apenas fixtures locais confiáveis, sem modificações concorrentes. Este modo não é um sandbox contra corrida de filesystem.
 
@@ -10,7 +10,7 @@ Filtros excluem diretórios comuns, nomes sensíveis, binários e alguns padrõe
 
 Sem a opção IA, nenhum dado é enviado a LLM. Com ela, contexto selecionado da IR vai ao provedor selecionado e a credencial é enviada somente no header de autenticação da API configurada. O código bruto não é enviado. O GitHub recebe as requisições públicas de metadados e snapshot. Ao integrar IA, enviar apenas o contexto mínimo da IR, informar o usuário, tratar texto do alvo como dado não confiável e validar resposta estruturada. Não registrar conteúdo ou tokens em logs.
 
-Os limites e filtros devem ganhar testes adversariais adicionais antes do MVP web. Privados, OAuth, retenção e LGPD continuam fora desta fase.
+Os limites e filtros devem ganhar testes adversariais adicionais antes do MVP web. OAuth/GitHub App, gestão corporativa de retenção e controles específicos de LGPD continuam fora desta fase.
 
 ## Interface local (0.3.0)
 
@@ -39,3 +39,9 @@ Relatório HTML não contém scripts, carregamentos externos ou handlers. Todos 
 ## Registro de consumo — 0.7.0
 
 `ai-usage.sqlite3` contém somente data, provedor/modelo, hash do perfil, finalidade, estado, contadores de tokens, tarifas e custo estimado. Não guarda chave, prompt, código nem resposta. GET não devolve segredo; gravações exigem token/Host/Origin. CSV escapa células potencialmente interpretáveis como fórmula. A pausa é local e não revoga a chave no provedor; não interrompe pedidos em andamento. Orçamento é um aviso, não uma barreira de cobrança. Falha ao iniciar o registro impede nova chamada externa.
+
+## Conexão GitHub — 0.8.0
+
+Token explícito por POST com token de sessão/Host/Origin, validado por GET /user, mantido só em RAM. Nunca usar as credenciais do ambiente de execução automaticamente. Lista /user/repos é paginada e retorna apenas nomes, URLs reconstruídas, branch e visibilidade. Toda operação remota implementada é GET; o aplicativo não publica nem modifica código. Para autenticação, somente HTTPS com hosts exatos api.github.com e codeload.github.com são permitidos, incluindo redirects. Authorization nunca fica na URL; corpos de erro não são expostos.
+
+O snapshot autenticado confirma private nos metadados antes do download, inclusive com branch explícita. Jobs capturam o token somente como argumento do worker, nunca no payload persistido. Token removido na desconexão não cancela pedidos iniciados. Repositórios privados têm flag na IR e aviso no relatório. Consentimento separado impede o envio automático de fatos privados à IA. Resultados/trechos privados persistem no histórico e nas exportações solicitadas; desconectar não os apaga.

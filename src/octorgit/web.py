@@ -23,6 +23,7 @@ from . import __version__
 from .code_parser import analyze
 from .documentation import export, validate
 from .repositories import github_snapshot
+from .github_connection import GitHubConnection
 from .ai_engine import AIError, DocumentationEngine, render_markdown, validate_response
 from .ai_usage import UsageStore, MeteredProvider
 from .ai_config import AIConfiguration, create_provider
@@ -43,6 +44,7 @@ class Jobs:
         self.items = {}
         self.pool = ThreadPoolExecutor(max_workers=1, thread_name_prefix="octorgit")
         self.ai_engine = DocumentationEngine()
+        self.github = GitHubConnection()
         self.store = store
         self.usage = UsageStore(store.directory / "ai-usage.sqlite3" if store else None)
         self.ai_configuration = ai_configuration or AIConfiguration(store.directory / "ai-settings.json" if store else None)
@@ -50,11 +52,13 @@ class Jobs:
     def submit(self, payload):
         if not isinstance(payload, dict):
             raise ValueError("Informe os dados da análise em JSON.")
-        if set(payload) - {"source", "repo", "branch", "root_urlconf", "use_ai"}:
+        if set(payload) - {"source", "repo", "branch", "root_urlconf", "use_ai", "private_ai_consent"}:
             raise ValueError("Opção de análise não reconhecida.")
         source = payload.get("source", "github")
         if not isinstance(payload.get("use_ai", False), bool):
             raise ValueError("A opção IA deve ser verdadeira ou falsa.")
+        if type(payload.get("private_ai_consent", False)) is not bool:
+            raise ValueError("A autorização de IA para repositório privado deve ser booleana.")
         provider = None
         if payload.get("use_ai"):
             try:
@@ -70,7 +74,7 @@ class Jobs:
         if source == "github":
             import re
             if not re.fullmatch(r"https://github\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+(?:/)?", payload.get("repo", "")):
-                raise ValueError("Use uma URL pública no formato https://github.com/autor/repositorio.")
+                raise ValueError("Use uma URL no formato https://github.com/autor/repositorio.")
         with self.lock:
             if any(j["status"] in {"queued", "running"} for j in self.items.values()):
                 raise BusyError("Uma análise já está em andamento. Aguarde sua conclusão.")
@@ -82,7 +86,7 @@ class Jobs:
                    "label": ("Exemplo Django/DRF · alterado" if source == "demo-next" else "Exemplo Django/DRF") if source.startswith("demo") else payload["repo"].removeprefix("https://github.com/"),
                    "error": None}
             self.items[job_id] = job
-        self.pool.submit(self.run, job_id, dict(payload), provider)
+        self.pool.submit(self.run, job_id, dict(payload), provider, self.github.snapshot())
         return self.get(job_id)
 
     def update(self, job_id, **fields):
@@ -132,7 +136,7 @@ class Jobs:
             diff.update(base_id=base_id, after_id=job_id)
         return result, diff
 
-    def run(self, job_id, payload, provider=None):
+    def run(self, job_id, payload, provider=None, github_token=None):
         try:
             self.update(job_id, status="running", progress=10, stage="Lendo snapshot do repositório")
             if payload.get("source", "").startswith("demo"):
@@ -144,7 +148,7 @@ class Jobs:
                     source["api/views.py"] = source["api/views.py"].replace("permission_classes = [IsAuthenticated]", "permission_classes = [AllowAny]")
                 root_urlconf = "config.urls"
             else:
-                repository, source, skipped = github_snapshot(payload["repo"], payload.get("branch") or None)
+                repository, source, skipped = github_snapshot(payload["repo"], payload.get("branch") or None, token=github_token) if github_token else github_snapshot(payload["repo"], payload.get("branch") or None)
                 root_urlconf = payload.get("root_urlconf") or None
             self.update(job_id, progress=45, stage="Extraindo símbolos e resolvendo rotas")
             ir = analyze(repository, source, skipped, root_urlconf=root_urlconf)
@@ -155,6 +159,8 @@ class Jobs:
             if payload.get("use_ai"):
                 self.update(job_id, progress=85, stage="Gerando explicações com IA e validando referências")
                 try:
+                    if repository.get("private") and not payload.get("private_ai_consent", False):
+                        raise AIError("IA não acionada: autorize explicitamente o envio de fatos do repositório privado ao provedor. A análise estática está disponível.")
                     ai_result = self.ai_engine.generate(ir, provider)
                 except AIError as exc:
                     ai_result = {"status": "failed", "error": str(exc)}
@@ -170,8 +176,9 @@ class Jobs:
                         repository_id=repository_identity(ir), repository_url=repository.get("url"), commit_sha=repository.get("commit_sha"), fingerprint=snapshot_fingerprint(ir),
                         summary={"files": len(ir["files"]), "symbols": len(ir["symbols"]), "endpoints": len(ir["endpoints"]), "diagnostics": len(ir["diagnostics"])})
         except HTTPError as exc:
-            message = {403: "O GitHub limitou as requisições. Aguarde e tente novamente.",
-                       404: "Repositório público ou branch não encontrado.",
+            message = {403: "O GitHub negou acesso ou limitou requisições. Confira permissões, SSO e cota.",
+                       401: "O GitHub não aceitou o token. Reconecte sua conta.",
+                       404: "Repositório/branch não encontrado ou sem acesso com este token.",
                        429: "Limite de requisições do GitHub atingido. Tente mais tarde."}.get(exc.code, "O GitHub não conseguiu fornecer o snapshot. Tente novamente.")
             self.update(job_id, status="failed", stage="Análise interrompida", error=message)
         except ValueError as exc:
@@ -183,6 +190,7 @@ class Jobs:
 
     def close(self):
         self.pool.shutdown(wait=True, cancel_futures=True)
+        self.github.disconnect()
         self.usage.close()
 
 
@@ -259,6 +267,18 @@ class Handler(BaseHTTPRequestHandler):
             except sqlite3.Error:
                 self.json(503, {"error": "Não foi possível consultar o histórico de consumo."})
             return
+        if path == "/api/github/connection":
+            self.json(200, self.server.jobs.github.public())
+            return
+        if path == "/api/github/repos":
+            try:
+                query = parse_qs(urlsplit(self.path).query)
+                if set(query) - {"page"} or len(query.get("page", ["1"])) != 1:
+                    raise ValueError("Página inválida.")
+                self.json(200, self.server.jobs.github.repositories(int(query.get("page", ["1"])[0])))
+            except ValueError as exc:
+                self.json(400, {"error": str(exc)})
+            return
         if path == "/api/config":
             self.json(200, {"ai": self.server.jobs.ai_configuration.public(), "persistent_history": self.server.jobs.store is not None})
             return
@@ -323,7 +343,7 @@ class Handler(BaseHTTPRequestHandler):
         if not self.trusted():
             return
         path = urlsplit(self.path).path
-        if path not in {"/api/jobs", "/api/ai/config", "/api/ai/test", "/api/ai/usage"}:
+        if path not in {"/api/jobs", "/api/ai/config", "/api/ai/test", "/api/ai/usage", "/api/github/connect", "/api/github/disconnect"}:
             self.json(404, {"error": "Página não encontrada."})
             return
         if not secrets.compare_digest(self.headers.get("X-OctorGit-Token", ""), self.server.csrf):
@@ -337,6 +357,14 @@ class Handler(BaseHTTPRequestHandler):
             if not 0 < size <= 4096:
                 raise ValueError("Requisição inválida ou muito grande.")
             payload = json.loads(self.rfile.read(size))
+            if path == "/api/github/connect":
+                self.json(200, self.server.jobs.github.connect(payload))
+                return
+            if path == "/api/github/disconnect":
+                if payload != {}:
+                    raise ValueError("Pedido de desconexão inválido.")
+                self.json(200, self.server.jobs.github.disconnect())
+                return
             if path == "/api/ai/usage":
                 self.json(200, self.server.jobs.usage.configure(payload, self.server.jobs.ai_configuration.public()))
                 return

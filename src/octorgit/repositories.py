@@ -1,4 +1,4 @@
-"""Read public GitHub snapshots without extracting or executing project files."""
+"""Read GitHub snapshots without extracting or executing project files."""
 
 import io
 import json
@@ -15,7 +15,7 @@ MAX_FILE = 512 * 1024
 MAX_FILES = 10000
 EXCLUDED = {".git", ".venv", "venv", "node_modules", "vendor", "__pycache__", "dist", "build", ".aws", ".ssh"}
 SENSITIVE = re.compile(r"(^\.env($|\.)|secret|credential|token|private.?key|^id_rsa|^id_ed25519|\.(pem|key|p12|pfx)$)", re.I)
-SECRET_CONTENT = re.compile(rb"-----BEGIN [A-Z ]*PRIVATE KEY-----|(?:gh[pousr]_[A-Za-z0-9]{20,})|AKIA[0-9A-Z]{16}|(?:password|secret|api_key|access_token)\s*[:=]\s*[\"'][^\"'\r\n]{8,}[\"']", re.I)
+SECRET_CONTENT = re.compile(rb"-----BEGIN [A-Z ]*PRIVATE KEY-----|(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})|AKIA[0-9A-Z]{16}|(?:password|secret|api_key|access_token)\s*[:=]\s*[\"'][^\"'\r\n]{8,}[\"']", re.I)
 
 
 def allowed(path: str) -> bool:
@@ -32,28 +32,56 @@ def safe_text(data: bytes) -> str | None:
         return None
 
 
-def request(url: str, limit: int) -> bytes:
-    req = urllib.request.Request(url, headers={"User-Agent": "OctorGit/0.1", "Accept": "application/vnd.github+json"})
-    with urllib.request.urlopen(req, timeout=30) as response:
+class GitHubRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        parsed = urllib.parse.urlsplit(newurl)
+        if parsed.scheme != "https" or parsed.netloc not in {"api.github.com", "codeload.github.com"}:
+            raise ValueError("Redirecionamento GitHub fora dos destinos permitidos.")
+        # urllib may copy headers; forwarding is allowed only between these exact hosts.
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+def request(url: str, limit: int, token=None) -> bytes:
+    headers = {"User-Agent": "OctorGit", "Accept": "application/vnd.github+json"}
+    if token:
+        parsed = urllib.parse.urlsplit(url)
+        if parsed.scheme != "https" or parsed.netloc not in {"api.github.com", "codeload.github.com"}:
+            raise ValueError("Destino GitHub inválido para autenticação.")
+        headers["Authorization"] = "Bearer " + token
+        opener = urllib.request.build_opener(GitHubRedirect()).open
+    else:
+        opener = urllib.request.urlopen
+    req = urllib.request.Request(url, headers=headers)
+    with opener(req, timeout=30) as response:
         data = response.read(limit + 1)
     if len(data) > limit:
         raise ValueError("Resposta excede o limite de tamanho.")
     return data
 
 
-def github_snapshot(url: str, branch: str | None = None):
+def github_snapshot(url: str, branch: str | None = None, token=None):
     match = re.fullmatch(r"https://github\.com/([A-Za-z0-9_.-]+)/([A-Za-z0-9_.-]+?)(?:\.git)?/?", url)
     if not match or any(x in {".", ".."} for x in match.groups()):
-        raise ValueError("Use https://github.com/owner/repo para um repositório público.")
+        raise ValueError("Use https://github.com/owner/repo para um repositório.")
     owner, repo = match.groups()
     base = f"https://api.github.com/repos/{owner}/{repo}"
+    private = False
+    metadata = None
+    if token:
+        metadata = json.loads(request(base, 1024 * 1024, token=token))
+        if not isinstance(metadata, dict) or type(metadata.get("private")) is not bool:
+            raise ValueError("O GitHub não confirmou a visibilidade do repositório.")
+        private = metadata["private"]
     if branch is None:
-        branch = json.loads(request(base, 1024 * 1024))["default_branch"]
-    commit = json.loads(request(base + "/commits/" + urllib.parse.quote(branch, safe=""), 1024 * 1024))
+        branch = (metadata if metadata is not None else json.loads(request(base, 1024 * 1024)))["default_branch"]
+    def fetch(target, limit):
+        return request(target, limit, token=token) if token else request(target, limit)
+    commit = json.loads(fetch(base + "/commits/" + urllib.parse.quote(branch, safe=""), 1024 * 1024))
     sha = commit["sha"]
     if not re.fullmatch(r"[0-9a-f]{40}", sha):
         raise ValueError("SHA inválido retornado pelo GitHub.")
-    data = request(f"https://codeload.github.com/{owner}/{repo}/tar.gz/{sha}", MAX_ARCHIVE)
+    archive_url = f"https://api.github.com/repos/{owner}/{repo}/tarball/{sha}" if token else f"https://codeload.github.com/{owner}/{repo}/tar.gz/{sha}"
+    data = fetch(archive_url, MAX_ARCHIVE)
     files, skipped, total, count = {}, [], 0, 0
     with tarfile.open(fileobj=io.BytesIO(data), mode="r|gz") as archive:
         for member in archive:
@@ -76,7 +104,7 @@ def github_snapshot(url: str, branch: str | None = None):
                 skipped.append({"path": path, "reason": "binary_encoding_size_or_secret"})
             else:
                 files[path] = text
-    return {"url": f"https://github.com/{owner}/{repo}", "branch": branch, "commit_sha": sha, "source": "github"}, files, skipped
+    return {"url": f"https://github.com/{owner}/{repo}", "branch": branch, "commit_sha": sha, "source": "github", "private": private}, files, skipped
 
 
 def local_snapshot(root: Path):

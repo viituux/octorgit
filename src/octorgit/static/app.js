@@ -2,8 +2,8 @@
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 const state = {job: null, data: null, page: "overview", document: "README.md", history: [], busy: false, endpointPage: 0};
-const pageNames = {overview: "Visão geral", endpoints: "Endpoints", architecture: "Arquitetura", documents: "Documentação", history: "Histórico salvo", coverage: "Relatório de cobertura", compare: "Comparar versões", report: "Relatório visual", settings: "Administração de IA"};
-const descriptions = {overview: "Transforme um repositório Python em um mapa que você pode verificar.", endpoints: "Do método à view, com as referências que sustentam cada descoberta.", architecture: "Linguagens, bancos e infraestrutura identificados com evidências.", documents: "Consulte, confira e exporte o conhecimento extraído do repositório.", history: "Retome snapshots e evidências salvos no seu computador.", coverage: "Veja o que foi lido, filtrado e permaneceu desconhecido.", compare: "Rotas, configurações e documentos que precisam de revisão.", report: "Compartilhe explicações e diagramas em um documento independente.", settings: "Escolha seu provedor, modelo, endereço de API e chave para esta sessão."};
+const pageNames = {github: "Conexão GitHub",overview: "Visão geral", endpoints: "Endpoints", architecture: "Arquitetura", documents: "Documentação", history: "Histórico salvo", coverage: "Relatório de cobertura", compare: "Comparar versões", report: "Relatório visual", settings: "Administração de IA"};
+const descriptions = {github: "Conecte sua conta e escolha repositórios públicos ou privados com acesso permitido.",overview: "Transforme um repositório Python em um mapa que você pode verificar.", endpoints: "Do método à view, com as referências que sustentam cada descoberta.", architecture: "Linguagens, bancos e infraestrutura identificados com evidências.", documents: "Consulte, confira e exporte o conhecimento extraído do repositório.", history: "Retome snapshots e evidências salvos no seu computador.", coverage: "Veja o que foi lido, filtrado e permaneceu desconhecido.", compare: "Rotas, configurações e documentos que precisam de revisão.", report: "Compartilhe explicações e diagramas em um documento independente.", settings: "Escolha seu provedor, modelo, endereço de API e chave para esta sessão."};
 const confidenceNames = {extracted: "Extraído", inferred: "Inferido", unconfirmed: "Não confirmado"};
 const gaps = {auxiliary_file_excluded_from_endpoints: "Arquivo de teste, exemplo ou documentação excluído da análise de endpoints",default_router_api_root_and_format_suffix_not_enumerated: "API root e sufixos de formato do DefaultRouter não enumerados", include_module_not_found: "Módulo de URLs não encontrado no snapshot", view_symbol_not_resolved: "Não foi possível resolver o símbolo da view", custom_lookup_not_supported: "Lookup personalizado ainda não suportado", nested_regex_not_supported: "Montagem de regex aninhado não suportada", regex_include_not_supported: "Include com regex não suportado", include_cycle_or_depth_limit: "Include cíclico ou limite de profundidade atingido", dynamic_urlpatterns_not_supported: "urlpatterns construído de forma dinâmica", dynamic_route_not_supported: "Declaração dinâmica de rota não suportada", relative_import_outside_package: "Import relativo fora do pacote selecionado", root_urlconf_module_not_found: "Módulo raiz de URLs não encontrado", multiple_root_urlconfs_select_explicitly: "Várias raízes de URLs encontradas; selecione uma nas opções", python_parse_failed: "Arquivo incompatível com o parser Python", custom_action_not_supported: "Configuração de ação personalizada não suportada", dynamic_include_not_supported: "Include dinâmico não suportado", custom_dispatch_not_supported: "Dispatch personalizado exige análise adicional", viewset_base_not_supported: "Base do ViewSet não reconhecida", as_view_overrides_not_supported: "Opções de as_view ainda não suportadas"};
 
@@ -49,6 +49,7 @@ function page(name) {
   $("#new-analysis").hidden = !state.data && name === "overview";
   if (name === "history") loadHistory();
   if (name === "settings") loadAIUsage();
+  if (name === "github") loadGitHub();
 }
 function setBusy(busy) {
   state.busy = busy;
@@ -81,6 +82,7 @@ async function start(source) {
   message(""); setBusy(true);
   const payload = source.startsWith("demo") ? {source} : {source: "github", repo: $("#repository").value.trim(), branch: $("#branch").value.trim(), root_urlconf: $("#root-urlconf").value.trim()};
   payload.use_ai = $("#use-ai").checked;
+  payload.private_ai_consent = $("#private-ai-consent").checked;
   try {
     const job = await api("/api/jobs", payload);
     state.job = job.id;
@@ -110,7 +112,7 @@ function renderResult() {
   else if (ai?.status === "failed") notice.textContent = `A análise estática foi concluída, mas a IA não gerou o documento: ${ai.error}`;
   $("#welcome").hidden = true; $("#overview-results").hidden = false; $("#repository-bar").hidden = false;
   $("#repository-name").textContent = repo.url ? repo.url.replace("https://github.com/", "") : "Exemplo integrado · Django/DRF";
-  $("#repository-meta").textContent = repo.commit_sha ? `${repo.branch || "ref"} · commit ${repo.commit_sha.slice(0, 12)}` : "Fixture local · sem commit SHA · dados de demonstração";
+  $("#repository-meta").textContent = repo.commit_sha ? `${repo.private ? "Privado · " : ""}${repo.branch || "ref"} · commit ${repo.commit_sha.slice(0, 12)}` : "Fixture local · sem commit SHA · dados de demonstração";
   $("#download-all").href = `/api/jobs/${state.job}/download`;
   $("#stat-files").textContent = ir.files.length;
   $("#stat-files-detail").textContent = `${ir.metrics.python_files_parsed} Python analisados · ${ir.metrics.skipped_files} excluídos`;
@@ -395,6 +397,81 @@ function showTechnology(component, scope) {
   showCode(code, component.evidence_chain[0]);
   if (!$("#endpoint-dialog").open) $("#endpoint-dialog").showModal();
 }
+
+let githubGeneration = 0;
+let githubBusy = false;
+function githubButtons() {
+  const connected = state.github?.connected;
+  $("#github-connect").disabled = githubBusy;
+  $("#github-disconnect").disabled = githubBusy || !connected;
+  $("#github-refresh").disabled = githubBusy || !connected;
+  $("#github-prev").disabled = githubBusy || !connected || (state.githubPage || 1) <= 1;
+  $("#github-next").disabled = githubBusy || !connected || !state.githubHasMore;
+}
+function showGitHubConnection(data) {
+  state.github = data;
+  $("#github-state").textContent = data.connected ? `Conectado · ${data.login}` : "Desconectado";
+  githubButtons();
+}
+async function loadGitHub() {
+  try { showGitHubConnection(await api("/api/github/connection")); }
+  catch (error) { $("#github-message").textContent = error.message; }
+}
+function renderGitHubRepos() {
+  const container = $("#github-repositories"); container.replaceChildren();
+  const filter = $("#github-repo-filter").value;
+  const rows = (state.githubRepos || []).filter(row => filter === "all" || row.private === (filter === "private"));
+  rows.forEach(repo => {
+    const card = element("div", "github-repo-card");
+    card.append(element("strong", "", repo.full_name), pill(repo.private ? "Privado" : "Público"), element("span", "small-muted", `Branch padrão: ${repo.default_branch || "não informada"}`));
+    const select = element("button", "button secondary", "Usar este repositório"); select.type = "button";
+    select.addEventListener("click", () => { $("#repository").value = repo.url; $("#branch").value = repo.default_branch; $("#private-ai-consent").checked = false; page("overview"); $("#analysis-form-card").hidden = false; $("#repository").focus(); });
+    card.append(select); container.append(card);
+  });
+  if (!rows.length) container.append(element("p", "empty-state", "Nenhum repositório nesta página/filtro. Confira os repositórios selecionados no token e aprovações da organização."));
+  $("#github-page").textContent = `Página ${state.githubPage || 1}`;
+  githubButtons();
+}
+async function listGitHubRepos(number = 1) {
+  if (githubBusy) return;
+  githubBusy = true; githubButtons();
+  const generation = githubGeneration;
+  $("#github-message").textContent = "Consultando repositórios permitidos…";
+  try {
+    const data = await api(`/api/github/repos?page=${number}`);
+    if (generation !== githubGeneration) return;
+    state.githubRepos = data.repositories; state.githubPage = data.page; state.githubHasMore = data.has_more;
+    renderGitHubRepos(); $("#github-message").textContent = "Lista carregada. Selecione um repositório para preencher a análise.";
+  } catch (error) { $("#github-message").textContent = error.message; }
+  finally { githubBusy = false; githubButtons(); }
+}
+$("#github-connect-form").addEventListener("submit", async event => {
+  event.preventDefault(); if (githubBusy) return;
+  githubBusy = true; githubButtons(); githubGeneration++;
+  try {
+    const data = await api("/api/github/connect", {token: $("#github-token").value.trim()});
+    showGitHubConnection(data); state.githubRepos = []; state.githubPage = 1;
+    $("#github-message").textContent = `Conta ${data.login} verificada. O acesso a cada repositório depende das permissões do token.`;
+  } catch (error) { $("#github-message").textContent = error.message; }
+  finally { $("#github-token").value = ""; githubBusy = false; githubButtons(); }
+  if (state.github?.connected) await listGitHubRepos(1);
+});
+$("#github-disconnect").addEventListener("click", async () => {
+  if (githubBusy) return;
+  githubBusy = true; githubButtons(); githubGeneration++;
+  try {
+    showGitHubConnection(await api("/api/github/disconnect", {}));
+    $("#github-token").value = ""; $("#private-ai-consent").checked = false;
+    state.githubRepos = []; state.githubPage = 1; state.githubHasMore = false;
+    $("#github-repositories").replaceChildren(element("p", "empty-state", "Conta desconectada. As análises já salvas continuam no histórico local."));
+    $("#github-message").textContent = "Token removido da sessão. Pedidos em andamento podem terminar.";
+  } catch (error) { $("#github-message").textContent = error.message; }
+  finally { githubBusy = false; githubButtons(); }
+});
+$("#github-refresh").addEventListener("click", () => listGitHubRepos(state.githubPage || 1));
+$("#github-prev").addEventListener("click", () => listGitHubRepos((state.githubPage || 1)-1));
+$("#github-next").addEventListener("click", () => listGitHubRepos((state.githubPage || 1)+1));
+$("#github-repo-filter").addEventListener("change", renderGitHubRepos);
 
 const usageNumber = value => value === null || value === undefined ? "Desconhecido" : new Intl.NumberFormat("pt-BR").format(value);
 const usageMoney = value => value === null || value === undefined ? "Desconhecido" : new Intl.NumberFormat("pt-BR", {style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 6}).format(Number(value));

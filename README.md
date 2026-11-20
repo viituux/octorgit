@@ -4,7 +4,15 @@ Understand code. Generate knowledge.
 
 [**Baixar Windows e Linux**](https://github.com/viituux/octorgit/releases/latest) · [Testes automáticos](https://github.com/viituux/octorgit/actions/workflows/tests.yml)
 
-OctorGit lê projetos Python sem importar ou executar código, registra um snapshot de commit do GitHub e produz um inventário verificável. Versão **0.7.1**: mapas visuais, relatório com diagramas, trechos de código, histórico SQLite e comparação por snapshot. IA configurável continua opcional. IR **0.3.0**. A interface foi acrescentada por solicitação do usuário; o gate de qualidade do MVP continua pendente.
+OctorGit lê projetos Python sem importar ou executar código, registra um snapshot de commit do GitHub e produz um inventário verificável. Versão **0.8.0**: mapas visuais, relatório com diagramas, trechos de código, histórico SQLite e comparação por snapshot. IA configurável continua opcional. IR **0.3.0**. A interface foi acrescentada por solicitação do usuário; o gate de qualidade do MVP continua pendente.
+
+## Conexão GitHub e repositórios privados — 0.8.0
+
+Abra **Conexão GitHub**, informe um token de acesso pessoal e clique em **Conectar e verificar conta**. Prefira um token **fine-grained** com os repositórios desejados e permissão **Contents: Read-only** (Metadata: Read-only é incluída pelo GitHub). A lista mostra os repositórios acessíveis ao token, paginados e identificados como públicos ou privados. Escolha **Usar este repositório** e inicie a análise. Organizações podem exigir aprovação do token/SSO, e um token não garante acesso a todos os repositórios da conta.
+
+O token fica apenas na memória do servidor local, nunca em arquivos, histórico, documentos ou pacotes. Reiniciar exige conectar novamente. **Desconectar** remove o token da sessão para novos pedidos; análises já iniciadas podem terminar. Isso não revoga o token no GitHub nem apaga os resultados já salvos. A conexão do ChatGPT não é transferida ao aplicativo. OctorGit não reutiliza automaticamente credenciais do `gh`, `GH_TOKEN` ou `GITHUB_TOKEN`.
+
+Projetos privados também são salvos no histórico local, com trechos filtrados, e podem ser exportados pelo usuário. O envio de fatos privados à IA exige as opções **Usar IA** e **Autorizar IA em repositórios privados**. Sem a segunda autorização, a parte estática é concluída e a IA não é chamada para aquele projeto. Não há OAuth/GitHub App nesta versão; a conexão usa token pessoal informado na tela. A CLI permanece anônima.
 
 ## Administração de IA — 0.7.1
 
@@ -28,8 +36,8 @@ O mesmo programa funciona nos dois sistemas, com inicializadores próprios. Requ
 
 | Sistema | Pacote | Iniciar |
 | --- | --- | --- |
-| Windows | `octorgit-0.7.1-windows.zip` | Dois cliques em `ABRIR_OCTORGIT.bat` |
-| Linux | `octorgit-0.7.1-linux.tar.gz` | `bash ABRIR_OCTORGIT.sh` |
+| Windows | `octorgit-0.8.0-windows.zip` | Dois cliques em `ABRIR_OCTORGIT.bat` |
+| Linux | `octorgit-0.8.0-linux.tar.gz` | `bash ABRIR_OCTORGIT.sh` |
 
 ### Linux: início rápido
 
@@ -53,7 +61,7 @@ Requisito: Python 3.11 ou superior, com o Python Launcher (`py`). Não precisa i
 2. Entre na pasta `octorgit`, onde estão este README e o arquivo `ABRIR_OCTORGIT.bat`.
 3. Dê dois cliques em **ABRIR_OCTORGIT.bat**.
 4. O navegador abrirá em **http://127.0.0.1:8765**. Mantenha a janela do programa aberta.
-5. Clique em **Experimentar um exemplo** para testar sem internet, ou informe a URL de um repositório público.
+5. Clique em **Experimentar um exemplo** para testar sem internet, ou informe a URL de um repositório; para privados, conecte primeiro sua conta.
 
 O inicializador usa diretamente o código da nova pasta: não é necessário instalar novamente o pacote para usá-lo. Ele funciona mesmo com a versão antiga instalada. Não é necessário executar como administrador.
 
@@ -144,7 +152,7 @@ octorgit --repo https://github.com/SEU_USUARIO/SEU_REPOSITORIO --output results/
 octorgit --repo https://github.com/SEU_USUARIO/SEU_REPOSITORIO --branch main --output results/main
 ```
 
-Use um diretório de saída novo ou vazio, fora da entrada local. O GitHub pode aplicar rate limit a requisições anônimas. O protótipo não aceita tokens nem repositórios privados.
+Use um diretório de saída novo ou vazio, fora da entrada local. O GitHub pode aplicar rate limit a requisições anônimas. Na CLI, o acesso continua anônimo. Na interface local, use Conexão GitHub para acessar repositórios privados.
 
 Sem instalar o pacote, no Linux/macOS:
 
@@ -180,7 +188,7 @@ python -m octorgit.benchmark --public-manifest docs/benchmarks/rest-framework-tu
 
 O benchmark recusa sobrescrever um relatório existente. Gabaritos são JSONs revisáveis, escritos por inspeção das declarações, não gerados pelo parser. O teste público baixa apenas o SHA fixado e não executa o projeto. Execute os comandos a partir da raiz do OctorGit após instalar; sem instalar, prefixe com `PYTHONPATH=src` no Linux/macOS.
 
-Verificações desta versão: **100 testes**, **20/20 pares método/rota em três fixtures**, **9/9 endpoints de negócio em um projeto público**, com zero falsos positivos nos escopos dos gabaritos. Isso **não valida o MVP**: as fixtures são sintéticas, o gabarito público é parcial e ainda não foi revisado por uma pessoa independente. Consulte `docs/VERIFICATION.md` e os relatórios em `docs/benchmarks/`.
+Verificações desta versão: **107 testes**, **20/20 pares método/rota em três fixtures**, **9/9 endpoints de negócio em um projeto público**, com zero falsos positivos nos escopos dos gabaritos. Isso **não valida o MVP**: as fixtures são sintéticas, o gabarito público é parcial e ainda não foi revisado por uma pessoa independente. Consulte `docs/VERIFICATION.md` e os relatórios em `docs/benchmarks/`.
 
 ## Próximas entregas
 

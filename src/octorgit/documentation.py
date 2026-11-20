@@ -57,6 +57,8 @@ def export(ir, output):
         architecture.append(f"- `{item['source']}` importa `{item['target']}`. {destination}. {ref(item['evidence'], repo)}.")
     (output / "ARCHITECTURE.md").write_text("\n".join(architecture) + "\n", encoding="utf-8")
     readme = ["# Documentação extraída pelo OctorGit", "", f"Commit: `{repo.get('commit_sha') or 'não disponível — fixture local'}`.", "", "Exportação determinística, sem IA. Instruções para executar o projeto não confirmadas.", "", "## Símbolos extraídos", ""]
+    if repo.get("private"):
+        readme.insert(2, "Repositório privado: este documento pode conter informações internas.")
     for s in ir["symbols"]:
         readme.append(f"- `{s['name']}` ({s['kind']}) — {ref(s['evidence'], repo)}.")
     readme.extend(["", "## Cobertura", "", f"Arquivos Python lidos: {ir['metrics']['python_files_parsed']}/{ir['metrics']['python_files_accepted']}.", f"Arquivos excluídos: {ir['metrics']['skipped_files']}.", f"Lacunas registradas: {len(ir['diagnostics'])}. Consulte `analysis.json`."])
