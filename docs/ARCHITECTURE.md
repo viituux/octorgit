@@ -74,3 +74,7 @@ A IR 0.2.0 inclui permissions e configuration com evidências por campo. São re
 ## GitHub autenticado — 0.8.0
 
 `github_connection.py` gerencia token de sessão, identidade verificada e lista paginada. `repositories.request` restringe hosts e redirects quando autenticado. Snapshot privado usa API /tarball/{sha} após verificar metadata e resolver o commit, mantendo filtros e limites anteriores. `repository.private` é um campo adicional compatível com a IR 0.3.0. O servidor captura credencial em argumento do worker; só facts/resultados vão ao SQLite. Listagem e conexão têm rotas próprias, sem aceitar destinos HTTP externos.
+
+## Interface Stitch — 0.9.0
+
+Mantém servidor local e dependências Python anteriores. static/fonts contém fontes locais com licenças; três rotas explícitas servem somente esses TTFs. Não serve caminhos arbitrários. Canvas de tecnologias é construído por DOM/SVG a partir da IR e seleciona evidências em painel adjacente. Exportação mantém SVG determinístico no servidor. Busca é local sobre o resultado em memória. Abas e índice usam nós DOM e atributos acessíveis. PDF continua via relatório independente e impressão manual. Testes DOM Node usam harness limitado, sem navegador ou layout.

@@ -30,6 +30,8 @@ jobs:
           node-version: '24'
       - name: Sintaxe do JavaScript
         run: node --check src/octorgit/static/app.js
+      - name: Interações da interface (unidades DOM)
+        run: node tests/frontend_interactions.cjs
       - name: Sintaxe do inicializador Linux
         if: runner.os == 'Linux'
         run: bash -n ABRIR_OCTORGIT.sh

@@ -4,7 +4,20 @@ Understand code. Generate knowledge.
 
 [**Baixar Windows e Linux**](https://github.com/viituux/octorgit/releases/latest) · [Testes automáticos](https://github.com/viituux/octorgit/actions/workflows/tests.yml)
 
-OctorGit lê projetos Python sem importar ou executar código, registra um snapshot de commit do GitHub e produz um inventário verificável. Versão **0.8.0**: mapas visuais, relatório com diagramas, trechos de código, histórico SQLite e comparação por snapshot. IA configurável continua opcional. IR **0.3.0**. A interface foi acrescentada por solicitação do usuário; o gate de qualidade do MVP continua pendente.
+OctorGit lê projetos Python sem importar ou executar código, registra um snapshot de commit do GitHub e produz um inventário verificável. Versão **0.9.0**: mapas visuais, relatório com diagramas, trechos de código, histórico SQLite e comparação por snapshot. IA configurável continua opcional. IR **0.3.0**. A interface foi acrescentada por solicitação do usuário; o gate de qualidade do MVP continua pendente.
+
+## Novo visual — 0.9.0
+
+Interface adaptada das cinco telas do Stitch fornecidas pelo usuário: fundo branco, navegação clara, cores neutras, cartões monocromáticos e tipografia Geist/JetBrains Mono incluída no pacote, sem CDN em runtime.
+
+- Visão geral organiza tecnologias e diagnósticos em colunas com dados da análise, sem métricas fictícias.
+- Arquitetura tem canvas de componentes clicáveis e painel adjacente com evidências/código. Zoom, ajuste e exportação SVG continuam disponíveis; imagens exportadas usam o mesmo estilo monocromático.
+- Endpoints abrem evidências e código ao lado da tabela.
+- Documentação tem índice derivado dos títulos e acesso à preparação do relatório para PDF.
+- Administração de IA separa configuração e consumo em abas; conexão GitHub, consentimento privado, histórico e comparação continuam disponíveis.
+- Busca global por componentes, endpoints e arquivos da análise, com atalho Ctrl+K (ou ⌘K).
+
+**Exportar PDF** abre as orientações e o relatório completo: use Ctrl+P → Salvar como PDF no navegador. Não há geração direta de um binário PDF. Os dados e indicadores do protótipo do Stitch não são copiados como resultados reais.
 
 ## Conexão GitHub e repositórios privados — 0.8.0
 
@@ -36,8 +49,8 @@ O mesmo programa funciona nos dois sistemas, com inicializadores próprios. Requ
 
 | Sistema | Pacote | Iniciar |
 | --- | --- | --- |
-| Windows | `octorgit-0.8.0-windows.zip` | Dois cliques em `ABRIR_OCTORGIT.bat` |
-| Linux | `octorgit-0.8.0-linux.tar.gz` | `bash ABRIR_OCTORGIT.sh` |
+| Windows | `octorgit-0.9.0-windows.zip` | Dois cliques em `ABRIR_OCTORGIT.bat` |
+| Linux | `octorgit-0.9.0-linux.tar.gz` | `bash ABRIR_OCTORGIT.sh` |
 
 ### Linux: início rápido
 
@@ -51,7 +64,7 @@ Acesse **http://127.0.0.1:8765**. Instruções de instalação, histórico e IA:
 
 ![Exemplo de diagrama de arquitetura](examples/relatorio-visual/PREVIA-ARQUITETURA.png)
 
-O mapa acima é uma fixture demonstrativa, não um screenshot da interface inteira. O aplicativo tem menu lateral, diagramas SVG, evidências com código, filtros de endpoints, comparação e relatório independente. O arquivo `VER_EXEMPLO_VISUAL.html` pode ser aberto diretamente no navegador após baixar o projeto.
+O mapa acima é uma fixture demonstrativa, não um screenshot da interface inteira. O aplicativo tem menu lateral claro, canvas interativo, evidências ao lado do código, filtros de endpoints, administração de IA/GitHub e relatório independente. O arquivo `VER_EXEMPLO_VISUAL.html` pode ser aberto diretamente no navegador após baixar o projeto.
 
 ## Abrir as telas no Windows
 
@@ -106,7 +119,7 @@ Depois de analisar, abra **Relatório visual**. O botão **Relatório visual** n
 
 O documento contém organização, endpoints/configuração, histórico, comparação, cobertura e trechos de código. Limites de exibição acompanham cada seção; as listas completas permanecem no JSON. Há um exemplo pronto em `examples/relatorio-visual/RELATORIO-EXEMPLO.html` para abrir sem iniciar o aplicativo.
 
-O mapa de tecnologias usa fundo claro e ícones de aplicação, banco, fila e infraestrutura inspirados na referência fornecida. As conexões representam configurações e dependências declaradas, não tráfego observado. Hospedagem e banco não detectados aparecem como não confirmados. As imagens SVG não dependem de IA.
+O mapa de tecnologias usa fundo claro e ícones monocromáticos de aplicação, banco, fila e infraestrutura. As conexões representam configurações e dependências declaradas, não tráfego observado. Hospedagem e banco não detectados aparecem como não confirmados. As imagens SVG não dependem de IA.
 
 ## Histórico e comparação
 
@@ -188,7 +201,7 @@ python -m octorgit.benchmark --public-manifest docs/benchmarks/rest-framework-tu
 
 O benchmark recusa sobrescrever um relatório existente. Gabaritos são JSONs revisáveis, escritos por inspeção das declarações, não gerados pelo parser. O teste público baixa apenas o SHA fixado e não executa o projeto. Execute os comandos a partir da raiz do OctorGit após instalar; sem instalar, prefixe com `PYTHONPATH=src` no Linux/macOS.
 
-Verificações desta versão: **107 testes**, **20/20 pares método/rota em três fixtures**, **9/9 endpoints de negócio em um projeto público**, com zero falsos positivos nos escopos dos gabaritos. Isso **não valida o MVP**: as fixtures são sintéticas, o gabarito público é parcial e ainda não foi revisado por uma pessoa independente. Consulte `docs/VERIFICATION.md` e os relatórios em `docs/benchmarks/`.
+Verificações desta versão: **110 testes**, **20/20 pares método/rota em três fixtures**, **9/9 endpoints de negócio em um projeto público**, com zero falsos positivos nos escopos dos gabaritos. Isso **não valida o MVP**: as fixtures são sintéticas, o gabarito público é parcial e ainda não foi revisado por uma pessoa independente. Consulte `docs/VERIFICATION.md` e os relatórios em `docs/benchmarks/`.
 
 ## Próximas entregas
 

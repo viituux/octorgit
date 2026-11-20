@@ -1,3 +1,11 @@
+# Visual Stitch 0.9.0 — 20/11/2026
+
+- 110 testes Python passaram, incluindo estrutura HTML, seletores, fontes locais, proteção de caminhos e contratos anteriores.
+- Unidades DOM em Node passaram para canvas, painéis de evidências, busca, abas, índice de documentação e preparação da exportação. O harness não é um navegador e não valida CSS/layout.
+- JavaScript e Bash passaram na verificação de sintaxe. Fluxo HTTP de demo, imagem, relatório com seis SVGs e ZIP conferido.
+- Não houve inspeção interativa em navegador: o ambiente não disponibiliza o controlador de preview. Não foi instalado um navegador alternativo.
+- Cinco PNGs e HTMLs do ZIP do Stitch foram inspecionados como referência. Código remoto, handlers inline e dados fictícios do protótipo não foram incorporados ao runtime.
+
 # Conexão GitHub 0.8.0 — 20/11/2026
 
 107 testes locais passaram. Novos testes cobrem conexão/desconexão, token em header, hosts e redirects, paginação, snapshot privado por SHA com branch explícita, proteção HTTP, consentimento de IA e ausência da credencial no histórico/exports. Foram usados tokens e respostas sintéticos; não foi usado um token pessoal real nem baixado um repositório privado real nesta versão. Não houve inspeção interativa do navegador.

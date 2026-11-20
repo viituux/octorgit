@@ -42,11 +42,12 @@ function page(name) {
   $$(".nav-item").forEach(button => { const current = button.dataset.page === name; button.classList.toggle("active", current); if (current) button.setAttribute("aria-current", "page"); else button.removeAttribute("aria-current"); });
   $("#breadcrumb-page").textContent = pageNames[name];
   $("#page-title").replaceChildren();
-  if (name === "overview" && !state.data) { $("#page-title").append(document.createTextNode("Conheça o código."), element("br"), element("span", "", "Encontre as evidências.")); }
+  if (name === "overview" && !state.data) { $("#page-title").textContent = "Conheça seu repositório."; }
   else $("#page-title").textContent = pageNames[name];
   $("#page-description").textContent = descriptions[name];
   $("#analysis-form-card").hidden = name !== "overview" || Boolean(state.data);
   $("#new-analysis").hidden = !state.data && name === "overview";
+  document.body.dataset.page = name;
   if (name === "history") loadHistory();
   if (name === "settings") loadAIUsage();
   if (name === "github") loadGitHub();
@@ -56,6 +57,7 @@ function setBusy(busy) {
   ["#analyze-button", "#demo-button", "#welcome-demo", "#demo-next-button"].forEach(id => $(id).disabled = busy);
   $("#analyze-button").textContent = busy ? "Analisando…" : "Analisar repositório ↗";
   $("#new-analysis").disabled = busy;
+  $("#top-new-analysis").disabled = busy;
   ["#save-ai-settings", "#test-ai-settings", "#clear-ai-key"].forEach(id => $(id).disabled = busy);
   if (state.aiConfigured !== undefined) $("#use-ai").disabled = busy || !state.aiConfigured;
 }
@@ -94,7 +96,8 @@ async function start(source) {
 }
 async function openResult(id) {
   const data = await api(`/api/jobs/${id}/result`);
-  state.job = id; state.data = data; state.endpointPage = 0; state.baseId = data.previous_id;
+  state.job = id; state.data = data; state.endpointPage = 0; state.componentId = null;
+  $("#endpoint-detail").hidden = true; $("#architecture-detail").hidden = true; state.baseId = data.previous_id;
   try { sessionStorage.setItem("octorgit-job", id); } catch {}
   $("#progress-card").hidden = true;
   $("#endpoint-search").value = ""; $("#method-filter").value = ""; $("#confidence-filter").value = "";
@@ -104,6 +107,11 @@ function renderResult() {
   const ir = state.data.analysis;
   if (state.data.storage_error) message(state.data.storage_error);
   const repo = ir.repository;
+  $("#context-repo").textContent = repo.url?.split("/").slice(-2).join("/") || "Exemplo integrado";
+  $("#context-branch").textContent = repo.branch || "Fixture local";
+  $("#open-export").disabled = false;
+  renderDiscoveryBoard();
+  $("#project-stack").textContent = (ir.technology?.languages || []).map(l => l.name).slice(0,3).join(" / ") || "Inventário";
   const ai = state.data.ai;
   const notice = $("#ai-result-notice");
   notice.hidden = !ai || ai.status === "disabled";
@@ -156,7 +164,7 @@ function renderEndpoints() {
     configurationCell.append(element("code", "", e.serializer || "Serializer não confirmado"), element("div", "small-muted", `Permissões: ${displayValue(e.permissions)}`), element("div", "small-muted", `Autenticação: ${displayValue(e.authentication)}`));
     const confidenceCell = element("td"); confidenceCell.append(pill(confidenceNames[e.confidence], e.confidence === "extracted" ? "success" : e.confidence));
     const originCell = element("td"); originCell.append(sourceRef(e.evidence));
-    const detailCell = element("td"); const detail = element("button", "text-button", "↗"); detail.type = "button"; detail.setAttribute("aria-label", `Ver evidências de ${e.method || "método desconhecido"} ${e.route || "raiz"}`); detail.addEventListener("click", () => showEvidence(e)); detailCell.append(detail);
+    const detailCell = element("td"); const detail = element("button", "text-button", "Ver"); detail.type = "button"; detail.setAttribute("aria-label", `Ver evidências de ${e.method || "método desconhecido"} ${e.route || "raiz"}`); detail.addEventListener("click", () => showEvidence(e)); detailCell.append(detail);
     row.append(methodCell, routeCell, viewCell, configurationCell, confidenceCell, originCell, detailCell); $("#endpoint-rows").append(row);
   });
   $("#endpoint-pagination").hidden = count <= 40;
@@ -165,8 +173,9 @@ function renderEndpoints() {
   $("#endpoint-page-label").textContent = `Página ${state.endpointPage + 1} de ${Math.max(1, Math.ceil(count / 40))}`;
 }
 function showEvidence(endpoint) {
-  $("#dialog-title").textContent = `${endpoint.method || "?"} ${endpoint.route || "(raiz)"}`;
-  const content = $("#dialog-content"); content.replaceChildren();
+  $("#endpoint-detail").hidden = false;
+  $("#endpoint-detail-title").textContent = `${endpoint.method || "?"} ${endpoint.route || "(raiz)"}`;
+  const content = $("#endpoint-detail-content"); content.replaceChildren();
   [["View / ação", endpoint.view], ["Escopo", {explicit_root: "Raiz selecionada explicitamente", configured_root: "Raiz detectada em ROOT_URLCONF", local_urlconf: "URLconf local — prefixo não confirmado"}[endpoint.scope]], ["Confiança", confidenceNames[endpoint.confidence]]].forEach(([label, value]) => { const row = element("div", "detail-row"); row.append(element("span", "", label), element("code", "", value)); content.append(row); });
   for (const [field, title] of [["serializer", "Serializer declarado"], ["permissions", "Permissões declaradas"], ["authentication", "Autenticação declarada"]]) {
     const row = element("div", "detail-row"); row.append(element("span", "", title), element("code", "", displayValue(endpoint[field]))); content.append(row);
@@ -176,12 +185,13 @@ function showEvidence(endpoint) {
   const seen = new Set();
   const detailRefs = [...endpoint.evidence_chain, ...Object.values(endpoint.configuration || {}).flatMap(c => c.evidence_chain)];
   const codePanel = element("div", "code-panel evidence-code");
-  detailRefs.forEach(ref => { const key = `${ref.file}:${ref.start_line}:${ref.end_line}`; if (seen.has(key)) return; seen.add(key); const item = element("li"); item.append(sourceRef(ref)); const viewCode = element("button", "text-button", "Ver trecho →"); viewCode.type = "button"; viewCode.addEventListener("click", () => showCode(codePanel, ref)); item.append(document.createTextNode(" · "), viewCode); if (ref.symbol) item.append(element("div", "small-muted", ref.symbol)); list.append(item); });
+  detailRefs.forEach(ref => { const key = `${ref.file}:${ref.start_line}:${ref.end_line}`; if (seen.has(key)) return; seen.add(key); const item = element("li"); item.append(sourceRef(ref)); const viewCode = element("button", "text-button", "Ver trecho"); viewCode.type = "button"; viewCode.addEventListener("click", () => showCode(codePanel, ref)); item.append(document.createTextNode(" · "), viewCode); if (ref.symbol) item.append(element("div", "small-muted", ref.symbol)); list.append(item); });
   content.append(list);
   content.append(codePanel); showCode(codePanel, [...detailRefs].reverse().find(r => r.symbol) || endpoint.evidence);
   const labels = {permissions: "permissões", serializer: "serializer", authentication: "autenticação", method: "método HTTP", mounted_prefix: "prefixo de montagem"};
   content.append(element("p", "detail-notice", `Ainda não confirmado: ${endpoint.unknown_fields.map(k => labels[k] || k).join(", ")}. Rotas de router seguem convenções estáticas do DRF. Em exemplos locais, as referências indicam arquivos da fixture e não abrem código no GitHub.`));
-  if (!$("#endpoint-dialog").open) $("#endpoint-dialog").showModal();
+  $("#endpoint-detail-title").focus({preventScroll:true});
+  if (matchMedia("(max-width:1250px)").matches) $("#endpoint-detail").scrollIntoView({block:"nearest"});
 }
 function svgElement(tag, attributes = {}, text) {
   const node = document.createElementNS("http://www.w3.org/2000/svg", tag);
@@ -193,7 +203,7 @@ function renderArchitecture() {
   if (!state.data) return;
   const ir = state.data.analysis;
   renderMainDiagram(); renderTechnology();
-  $("#graph-caption").textContent = "Diagramas SVG com relações detectadas e grupos por diretório. Use o seletor para trocar de mapa; limites de exibição acompanham cada imagem.";
+  $("#graph-caption").textContent = "Linhas contínuas: configuração/build. Tracejadas: depends_on; não comprovam tráfego real. Clique nos componentes para conferir evidências. Até 20 componentes no canvas; inventário completo abaixo.";
   $("#mermaid-source").textContent = state.data.documents["ARCHITECTURE.md"].split("```mermaid\n")[1]?.split("```")[0] || "Nenhum diagrama disponível.";
   $("#imports-count").textContent = `${ir.imports.length} imports`;
   $("#import-rows").replaceChildren();
@@ -217,6 +227,7 @@ function renderDocument() {
   if (!state.data) return;
   const text = state.data.documents[state.document];
   const content = $("#document-content"); content.replaceChildren();
+  $("#document-outline").replaceChildren();
   if (text === undefined) {
     $("#download-document").hidden = true;
     content.append(element("p", "empty-state", state.data.ai?.status === "failed" ? `A IA não gerou documentação: ${state.data.ai.error}` : "Ative Usar IA ao iniciar uma nova análise para gerar este documento."));
@@ -236,6 +247,7 @@ function renderDocument() {
     else { const p = element("p"); appendInline(p, line.trim()); content.append(p); list = null; }
   }
   if (fenced && code.length) content.append(element("pre", "", code.join("\n")));
+  content.querySelectorAll("h1,h2,h3").forEach((heading, index) => { heading.id = `doc-section-${index}`; const button = element("button", "", heading.textContent); button.type = "button"; button.addEventListener("click", () => heading.scrollIntoView({block:"start", behavior:"smooth"})); $("#document-outline").append(button); });
 }
 async function loadHistory() {
   try { const response = await api("/api/jobs"); state.history = response.jobs; renderHistory(); }
@@ -277,6 +289,7 @@ function renderMainDiagram() {
   if (!state.data) return;
   const kind = $("#diagram-kind").value;
   const graph = $("#architecture-graph"); graph.replaceChildren();
+  if (kind === "arquitetura" && state.data.analysis.technology) { renderInteractiveArchitecture(graph); $("#download-svg").href = visualUrl(kind, true); return; }
   const image = element("img", "visual-diagram"); image.alt = `Diagrama visual: ${kind}`; image.src = visualUrl(kind); image.width = state.diagramWidth || 1000;
   graph.append(image); $("#download-svg").href = visualUrl(kind, true);
 }
@@ -387,15 +400,59 @@ function renderTechnology() {
   const note = element("p", "card-note", tech.limits.join(" ")); list.append(note);
 }
 function showTechnology(component, scope) {
-  $("#dialog-title").textContent = component.name;
-  const content = $("#dialog-content"); content.replaceChildren();
-  [["Tipo", component.kind], ["Origem da detecção", scope || component.scope], ["Confiança", confidenceNames[component.confidence] || component.confidence]].forEach(([label, value]) => { const row = element("div", "detail-row"); row.append(element("span", "", label), element("code", "", value)); content.append(row); });
+  const inArchitecture = state.page === "architecture";
+  if (inArchitecture) { $("#architecture-detail").hidden = false; state.componentId = component.id; $$(".architecture-node").forEach(node => node.classList.toggle("selected", node.dataset.component === component.id)); }
+  const title = $(inArchitecture ? "#architecture-detail-title" : "#dialog-title"); title.textContent = component.name;
+  const content = $(inArchitecture ? "#architecture-detail-content" : "#dialog-content"); content.replaceChildren();
+  [["Tipo", technologyKinds[component.kind] || component.kind], ["Origem", scope || technologyScopes[component.scope] || component.scope], ["Confiança", confidenceNames[component.confidence] || component.confidence]].forEach(([label, value]) => { const row = element("div", "detail-row"); row.append(element("span", "", label), element("code", "", value)); content.append(row); });
   const code = element("div", "code-panel evidence-code");
-  content.append(element("h3", "", "Evidências")); const refs = element("ol", "evidence-list");
-  component.evidence_chain.forEach(ref => { const li = element("li"); const button = element("button", "text-button", "Ver código →"); button.type = "button"; button.addEventListener("click", () => showCode(code, ref)); li.append(sourceRef(ref), document.createTextNode(" · "), button); refs.append(li); });
-  content.append(refs, code, element("p", "detail-notice", "Esta é uma declaração encontrada no repositório. Bibliotecas, arquivos de build e manifests não comprovam serviço implantado ou tráfego real."));
+  content.append(element("h3", "", "Evidências no repositório")); const refs = element("ol", "evidence-list");
+  component.evidence_chain.forEach(ref => { const li = element("li"); const button = element("button", "text-button", "Ver código"); button.type = "button"; button.addEventListener("click", () => showCode(code, ref)); li.append(sourceRef(ref), document.createTextNode(" · "), button); refs.append(li); });
+  content.append(refs, code, element("p", "detail-notice", component.confidence === "unconfirmed" ? "Não foram encontradas declarações suficientes. Isso não comprova ausência desta tecnologia." : "Declaração encontrada no repositório. Bibliotecas, manifests e arquivos de build não comprovam serviço implantado ou tráfego real."));
   showCode(code, component.evidence_chain[0]);
-  if (!$("#endpoint-dialog").open) $("#endpoint-dialog").showModal();
+  if (!inArchitecture && !$("#endpoint-dialog").open) $("#endpoint-dialog").showModal();
+  if (inArchitecture) { title.focus({preventScroll:true}); if (matchMedia("(max-width:1250px)").matches) $("#architecture-detail").scrollIntoView({block:"nearest"}); }
+}
+
+const technologyKinds = {application:"Aplicação", framework:"Framework", database:"Banco de dados", cache:"Cache", queue:"Fila", service:"Serviço", cloud:"Hospedagem", infrastructure:"Infraestrutura", driver:"Driver", library:"Biblioteca", worker:"Worker", proxy:"Proxy", ci:"Integração contínua"};
+const technologyScopes = {repository:"Inventário de código", dependency:"Dependência", import:"Import", compose_service:"Serviço Compose", django_settings:"Configuração Django", sqlite_connection:"Conexão SQLite declarada", manifest:"Manifesto", build_configuration:"Build", compose_manifest:"Compose", deployment_manifest:"Deploy declarado", terraform_declaration:"Terraform", ci_configuration:"CI declarada", unconfirmed:"Sem evidência suficiente"};
+function renderDiscoveryBoard() {
+  const ir = state.data.analysis, tech = ir.technology, board = $("#discovery-board"); board.replaceChildren();
+  const categories = [["Código e frameworks", ["framework","library"]], ["Bancos e dados", ["database","driver","cache","queue"]], ["Infraestrutura", ["infrastructure","cloud","proxy","service","worker","ci"]]];
+  categories.forEach(([title,kinds]) => {
+    const column = element("section", "discovery-column"), components = (tech?.components || []).filter(c => kinds.includes(c.kind));
+    const heading = element("h2", "discovery-heading", title); heading.append(element("span", "", components.length)); column.append(heading);
+    if (title === "Código e frameworks" && tech?.languages.length) { const card = element("button", "discovery-card"); card.type="button"; card.append(element("strong", "", tech.languages.map(l=>l.name).join(" / ")), element("p", "", "Linguagens identificadas pelas extensões dos arquivos."), pill("Inventário de código")); card.addEventListener("click",()=>page("architecture")); column.append(card); }
+    components.slice(0,3).forEach(component => { const card = element("button","discovery-card"); card.type="button"; card.append(element("strong","",component.name), element("p","",technologyScopes[component.scope] || component.scope), pill(`${component.evidence_chain.length} referência(s)`)); card.addEventListener("click",()=>showTechnology(component)); column.append(card); });
+    if (!components.length && title!=="Código e frameworks") { const card=element("div","discovery-card"); card.append(element("strong","","Não confirmado"),element("p","","Nenhuma declaração reconhecida neste recorte.")); column.append(card); }
+    board.append(column);
+  });
+  const column=element("section","discovery-column"), heading=element("h2","discovery-heading","Pontos para revisar"); heading.append(element("span","",ir.diagnostics.length)); column.append(heading);
+  const explore=element("button","discovery-card dark-card"); explore.type="button"; explore.append(element("strong","","Explorar arquitetura"),element("p","","Conecte cada descoberta ao arquivo e às linhas que sustentam a análise.")); explore.addEventListener("click",()=>page("architecture")); column.append(explore);
+  ir.diagnostics.slice(0,2).forEach(gap=>{const card=element("button","discovery-card");card.type="button";card.append(element("strong","",gaps[gap.reason] || gap.reason),element("p","",gap.file));card.addEventListener("click",()=>page("coverage"));column.append(card);}); board.append(column);
+  const counts = ir.technology?.languages.map(l=>l.files) || [];
+  const spark=element("div","stat-spark"); spark.setAttribute("aria-hidden","true");
+  const largest=Math.max(1,...counts); counts.slice(0,8).forEach(value=>{const bar=element("span");bar.style.height=`${Math.max(4,value/largest*30)}px`;spark.append(bar);});
+  $("#stat-files").parentElement.querySelector(".stat-spark")?.remove(); if(counts.length) $("#stat-files").parentElement.append(spark);
+}
+function renderInteractiveArchitecture(graph) {
+  const tech=state.data.analysis.technology;
+  const selected=tech.components.filter(c=>c.kind==="application" || (!["framework","driver","library","ci"].includes(c.kind) && !["dependency","import"].includes(c.scope))).filter(c=>c.name!=="Docker" || !tech.components.some(x=>x.name==="Docker Compose")).slice(0,20);
+  if(!selected.some(c=>c.kind==="database")) selected.push({id:"unknown-database",kind:"database",name:"Banco não confirmado",scope:"unconfirmed",confidence:"unconfirmed",evidence_chain:[]});
+  if(!selected.some(c=>c.kind==="cloud")) selected.push({id:"unknown-cloud",kind:"cloud",name:"Hospedagem não confirmada",scope:"unconfirmed",confidence:"unconfirmed",evidence_chain:[]});
+  const canvas=element("div","graph-workspace"); canvas.style.width=`${state.diagramWidth || 1000}px`;
+  const positions=new Map(), columnRows=[0,0,0], columnX=[30,350,670];
+  selected.forEach(component=>{const column=component.kind==="application" || component.kind==="service" ? 1 : ["database","cache","proxy"].includes(component.kind) ? 0 : 2;positions.set(component.id,{x:columnX[column],y:55+columnRows[column]++*195});});
+  const height=Math.max(480,Math.max(...columnRows)*195+90); canvas.style.height=`${height}px`;
+  const lines=svgElement("svg",{viewBox:`0 0 1000 ${height}`,preserveAspectRatio:"none","aria-hidden":"true"});
+  const defs=svgElement("defs"),marker=svgElement("marker",{id:"connection-arrow",viewBox:"0 0 10 10",refX:9,refY:5,markerWidth:5,markerHeight:5,orient:"auto-start-reverse"});marker.append(svgElement("path",{d:"M 0 0 L 10 5 L 0 10 z",fill:"#62625a"}));defs.append(marker);lines.append(defs);
+  tech.relations.forEach(relation=>{const a=positions.get(relation.source),b=positions.get(relation.target);if(!a||!b)return;const left=a.x>b.x;const sameColumn=a.x===b.x;const fromX=a.x+(left?0:236),toX=b.x+(sameColumn?236:left?236:0),fromY=a.y+65,toY=b.y+65;const bend=sameColumn?a.x+295:(fromX+toX)/2;
+    const path=svgElement("path",{d:`M ${fromX} ${fromY} C ${bend} ${fromY}, ${bend} ${toY}, ${toX} ${toY}`,stroke:"#77776b","stroke-width":1.3,fill:"none","marker-end":"url(#connection-arrow)"});if(relation.kind==="declared_dependency")path.setAttribute("stroke-dasharray","5 5");lines.append(path);
+  }); canvas.append(lines);
+  selected.forEach(component=>{const pos=positions.get(component.id),card=element("button",`architecture-node${state.componentId===component.id?" selected":""}`);card.type="button";card.dataset.component=component.id;card.style.left=`${pos.x/10}%`;card.style.top=`${pos.y}px`;card.style.width="23.6%";
+    card.append(element("span","node-icon",{application:"⌘",database:"▱",cache:"▤",queue:"⋈",proxy:"⇄",cloud:"☁",infrastructure:"▦",service:"▣",worker:"⚙"}[component.kind] || "▣"),pill(confidenceNames[component.confidence],component.confidence==="unconfirmed"?"unconfirmed":"neutral"),element("strong","",component.kind==="application"?(tech.languages.map(l=>l.name).join(" / ")||component.name):component.name));
+    const ref=component.evidence_chain[0];card.append(element("span","small-muted",component.kind==="application" ? tech.components.filter(c=>c.kind==="framework").map(c=>c.name).join(" · ") || "Inventário de código" : technologyKinds[component.kind] || component.kind),element("span","small-muted",ref?`${ref.file}:${ref.start_line}`:"Sem evidência suficiente"));card.addEventListener("click",()=>showTechnology(component));canvas.append(card);
+  }); graph.append(canvas);
 }
 
 let githubGeneration = 0;
@@ -514,6 +571,37 @@ $("#export-ai-usage").addEventListener("click", () => {
   const csv = rows.map(row => row.map(value => { let text = value === null ? "desconhecido" : String(value); if (/^[=+@\-]/.test(text)) text = "'" + text; return '"' + text.replaceAll('"', '""') + '"'; }).join(";")).join("\r\n");
   const url = URL.createObjectURL(new Blob(["\uFEFF" + csv], {type: "text/csv;charset=utf-8"})); const link = element("a"); link.href = url; link.download = "octorgit-consumo-ia.csv"; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
+
+function prepareExport() {
+  if(!state.data){message("Faça uma análise para exportar um relatório.");return;}
+  const query=`base=${encodeURIComponent(state.baseId || "none")}`;
+  $("#export-repository").textContent=`${state.data.analysis.repository.url || "Exemplo integrado"} · ${state.data.analysis.repository.commit_sha || "Fixture sem SHA"}`;
+  $("#export-open-report").href=`/api/jobs/${state.job}/report?${query}`;
+  $("#export-download-html").href=`/api/jobs/${state.job}/report?${query}&download=1`;
+  $("#export-dialog").showModal();
+}
+["#open-export","#document-export"].forEach(id=>$(id).addEventListener("click",prepareExport));
+$("#close-export").addEventListener("click",()=>$("#export-dialog").close());
+$("#top-new-analysis").addEventListener("click",()=>$("#new-analysis").click());
+$("#close-endpoint-detail").addEventListener("click",()=>{$("#endpoint-detail").hidden=true;$("#endpoint-search").focus();});
+$("#close-architecture-detail").addEventListener("click",()=>{$("#architecture-detail").hidden=true;state.componentId=null;$$(".architecture-node").forEach(node=>node.classList.remove("selected"));$("#diagram-kind").focus();});
+$("#diagram-fit").addEventListener("click",()=>{state.diagramWidth=1000;renderMainDiagram();});
+function searchAnalysis(){
+  const results=$("#search-results");results.replaceChildren();const query=$("#global-search").value.trim().toLocaleLowerCase();
+  if(!state.data){results.append(element("p","empty-state","Faça uma análise para buscar componentes, rotas e arquivos."));return;}
+  if(!query){results.append(element("p","empty-state","Digite para buscar na análise atual."));return;}
+  const ir=state.data.analysis;
+  const hits=[...(ir.technology?.components || []).filter(c=>c.name.toLocaleLowerCase().includes(query)).map(c=>({name:c.name,type:"Componente",action:()=>{page("architecture");showTechnology(c);}})),...ir.endpoints.filter(e=>`${e.route} ${e.view}`.toLocaleLowerCase().includes(query)).map(e=>({name:`${e.method||"?"} ${e.route || "(raiz)"}`,type:"Endpoint",action:()=>{page("endpoints");showEvidence(e);}})),...ir.files.filter(f=>f.path.toLocaleLowerCase().includes(query)).map(f=>({name:f.path,type:"Arquivo",action:()=>{const ref=Object.values(state.data.insights.snippets).find(s=>s.file===f.path)?.evidence;$("#dialog-title").textContent=f.path;showCode($("#dialog-content"),ref);$("#endpoint-dialog").showModal();}}))];
+  hits.slice(0,20).forEach(hit=>{const button=element("button","search-hit");button.type="button";button.append(element("strong","",hit.name),element("span","",hit.type));button.addEventListener("click",()=>{$("#search-dialog").close();hit.action();});results.append(button);});
+  if(!hits.length)results.append(element("p","empty-state","Nenhum resultado encontrado."));
+  if(hits.length>20)results.append(element("p","small-muted","Mostrando 20 resultados. Refine sua busca."));
+}
+$("#open-search").addEventListener("click",()=>{$("#search-dialog").showModal();searchAnalysis();$("#global-search").focus();});
+$("#close-search").addEventListener("click",()=>$("#search-dialog").close());
+$("#global-search").addEventListener("input",searchAnalysis);
+document.addEventListener("keydown",event=>{if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==="k"){event.preventDefault();if(!document.querySelector("dialog[open]"))$("#open-search").click();}});
+const settingsTabs=$$("[data-settings-tab]");
+settingsTabs.forEach((button,index)=>{button.tabIndex=button.getAttribute("aria-selected")==="true"?0:-1;button.addEventListener("click",()=>{settingsTabs.forEach(tab=>{const selected=tab===button;tab.setAttribute("aria-selected",String(selected));tab.tabIndex=selected?0:-1;});$$("[data-settings-panel]").forEach(panel=>panel.hidden=panel.dataset.settingsPanel!==button.dataset.settingsTab);if(button.dataset.settingsTab==="usage")loadAIUsage();});button.addEventListener("keydown",event=>{if(!["ArrowLeft","ArrowRight","Home","End"].includes(event.key))return;event.preventDefault();const next=event.key==="Home"?0:event.key==="End"?settingsTabs.length-1:(index+(event.key==="ArrowRight"?1:-1)+settingsTabs.length)%settingsTabs.length;settingsTabs[next].click();settingsTabs[next].focus();});});
 
 $("#analysis-form").addEventListener("submit", event => { event.preventDefault(); start("github"); });
 $("#demo-button").addEventListener("click", () => start("demo"));

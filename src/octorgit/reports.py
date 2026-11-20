@@ -7,7 +7,7 @@ import json
 
 from .insights import build_insights, reference_key
 
-BLUE = "#4285f4"
+ACCENT = "#222222"
 
 
 def h(value):
@@ -26,21 +26,21 @@ def value_text(value):
 def svg_start(title, width, height):
     marker = "arrow-" + hashlib.sha256(title.encode()).hexdigest()[:8]
     return [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" role="img" aria-label="{h(title)}"><title>{h(title)}</title>',
-            f'<defs><marker id="{marker}" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="{BLUE}"/></marker></defs>',
-            f'<rect width="{width}" height="{height}" rx="12" fill="#f2f5f8"/>'], marker
+            f'<defs><marker id="{marker}" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="{ACCENT}"/></marker></defs>',
+            f'<rect width="{width}" height="{height}" rx="12" fill="#f7f6f0"/>'], marker
 
 
-def label(x, y, text, size=12, color="#334452", weight="400"):
+def label(x, y, text, size=12, color="#33332e", weight="400"):
     return f'<text x="{x}" y="{y}" font-family="Segoe UI,Arial,sans-serif" font-size="{size}" fill="{color}" font-weight="{weight}">{h(text)}</text>'
 
 
 def node(x, y, title, subtitle="", width=235, color="#ffffff"):
     title, subtitle = str(title), str(subtitle)
-    return f'<g><title>{h(title + ": " + subtitle)}</title><rect x="{x}" y="{y}" width="{width}" height="65" rx="7" fill="{color}" stroke="#cfdbe5"/>' + label(x + 12, y + 26, title if len(title) <= 31 else "…" + title[-30:], 12, weight="600") + label(x + 12, y + 48, subtitle if len(subtitle) <= 36 else subtitle[:33] + "…", 10, "#6c8192") + "</g>"
+    return f'<g><title>{h(title + ": " + subtitle)}</title><rect x="{x}" y="{y}" width="{width}" height="65" rx="7" fill="{color}" stroke="#deded7"/>' + label(x + 12, y + 26, title if len(title) <= 31 else "…" + title[-30:], 12, weight="600") + label(x + 12, y + 48, subtitle if len(subtitle) <= 36 else subtitle[:33] + "…", 10, "#74746b") + "</g>"
 
 
 def edge(x1, y1, x2, y2, marker):
-    return f'<path d="M{x1} {y1} C{x1 + 35} {y1}, {x2 - 35} {y2}, {x2} {y2}" stroke="{BLUE}" stroke-width="1.6" fill="none" marker-end="url(#{marker})" opacity=".8"/>'
+    return f'<path d="M{x1} {y1} C{x1 + 35} {y1}, {x2 - 35} {y2}, {x2} {y2}" stroke="{ACCENT}" stroke-width="1.6" fill="none" marker-end="url(#{marker})" opacity=".8"/>'
 
 
 def imports_svg(ir):
@@ -56,11 +56,11 @@ def imports_svg(ir):
     positions = {}
     for i, (directory, paths) in enumerate(groups):
         x, y = 20 + i % columns * 330, 55 + i // columns * group_height
-        parts.append(f'<rect x="{x}" y="{y}" width="305" height="395" rx="8" fill="#e3f3fb" stroke="#fff" stroke-width="2"/>')
-        parts.append(label(x + 15, y + 25, directory[:38], 12, "#5c7a8d", "600"))
+        parts.append(f'<rect x="{x}" y="{y}" width="305" height="395" rx="8" fill="#eeeee9" stroke="#fff" stroke-width="2"/>')
+        parts.append(label(x + 15, y + 25, directory[:38], 12, "#66665e", "600"))
         for j, path in enumerate(paths[:4]):
             positions[path] = (x + 30, y + 45 + j * 78)
-        parts.append(label(x + 15, y + 380, f"{min(4, len(paths))} de {len(paths)} arquivos mostrados", 10, "#78909f"))
+        parts.append(label(x + 15, y + 380, f"{min(4, len(paths))} de {len(paths)} arquivos mostrados", 10, "#73736b"))
     edges_seen = set()
     for relation in ir["relations"]:
         pair = relation["source"], relation["target"]
@@ -77,13 +77,13 @@ def imports_svg(ir):
         else:
             x1, x2 = a[0], b[0] + 235
             control = (x1 + x2) / 2
-        parts.append(f'<path d="M{x1} {a[1] + 33} C{control} {a[1] + 33}, {control} {b[1] + 33}, {x2} {b[1] + 33}" stroke="{BLUE}" stroke-width="1.6" fill="none" marker-end="url(#{marker})" opacity=".85"/>')
+        parts.append(f'<path d="M{x1} {a[1] + 33} C{control} {a[1] + 33}, {control} {b[1] + 33}, {x2} {b[1] + 33}" stroke="{ACCENT}" stroke-width="1.6" fill="none" marker-end="url(#{marker})" opacity=".85"/>')
     for path, (x, y) in positions.items():
         parts.append(node(x, y, "▱ " + path.rsplit("/", 1)[-1], path))
     if not groups:
         parts.append(label(30, 90, "Nenhum arquivo Python aceito no snapshot."))
-    parts.append(label(25, height - 30, "Grupos por diretório; não são camadas confirmadas.", 9, "#78909f"))
-    parts.append(label(25, height - 12, "Setas: imports locais. Até 8 grupos e 4 arquivos por grupo.", 9, "#78909f"))
+    parts.append(label(25, height - 30, "Grupos por diretório; não são camadas confirmadas.", 9, "#73736b"))
+    parts.append(label(25, height - 12, "Setas: imports locais. Até 8 grupos e 4 arquivos por grupo.", 9, "#73736b"))
     return "".join(parts) + "</svg>"
 
 
@@ -129,9 +129,9 @@ def technology_svg(ir):
         positions[item["id"]] = (start + i % 3 * 435, service_top + i // 3 * 150)
     height = max(service_top + 80, service_top + ((len(services) + 2) // 3) * 150 + 70)
     parts, marker = svg_start("Arquitetura declarada · linguagem, banco e infraestrutura", 1400, height)
-    parts[2] = f'<rect width="1400" height="{height}" rx="14" fill="#fcf5e9"/>'
-    parts.append(label(35, 35, "ARQUITETURA DETECTADA NO REPOSITÓRIO", 16, "#193c43", "600"))
-    parts.append(label(35, 58, "Declarações estáticas; não comprova infraestrutura em execução.", 11, "#728082"))
+    parts[2] = f'<rect width="1400" height="{height}" rx="14" fill="#fafaf7"/>'
+    parts.append(label(35, 35, "ARQUITETURA DETECTADA NO REPOSITÓRIO", 16, "#242421", "600"))
+    parts.append(label(35, 58, "Declarações estáticas; não comprova infraestrutura em execução.", 11, "#73736b"))
     for relation in tech["relations"]:
         if relation["source"] not in positions or relation["target"] not in positions:
             continue
@@ -147,7 +147,7 @@ def technology_svg(ir):
             center = (x1 + x2) / 2
             d = f"M{x1} {y1} C{center} {y1}, {center} {y2}, {x2} {y2}"
         dashed = ' stroke-dasharray="6 5"' if relation["kind"] == "declared_dependency" else ""
-        parts.append(f'<path d="{d}" stroke="#326f83" stroke-width="2" fill="none" marker-end="url(#{marker})"{dashed}/>')
+        parts.append(f'<path d="{d}" stroke="#62625a" stroke-width="2" fill="none" marker-end="url(#{marker})"{dashed}/>')
     scopes = {"dependency": "Dependência declarada", "import": "Import encontrado", "compose_service": "Serviço declarado no Compose", "django_settings": "Configuração DATABASES", "build_configuration": "Configuração de build", "terraform_declaration": "Declaração Terraform", "manifest": "Manifesto", "deployment_manifest": "Manifesto de deploy", "compose_manifest": "Manifesto Compose", "ci_configuration": "Configuração de CI", "repository": "Inventário do código", "unconfirmed": "Sem evidência suficiente"}
     for item in selected:
         if item["id"] not in positions:
@@ -155,24 +155,24 @@ def technology_svg(ir):
         x, y = positions[item["id"]]
         unknown = item["scope"] == "unconfirmed"
         kind = item["kind"]
-        fill = "#fffdf8" if unknown else ("#f3bd63" if kind in {"application", "service", "worker"} else "#75bac1")
+        fill = "#ffffff" if unknown else ("#e2e2db" if kind in {"application", "service", "worker"} else "#eeeee8")
         dash = ' stroke-dasharray="5 4"' if unknown else ""
-        parts.append(f'<g><title>{h(item["name"])} · {h(scopes.get(item["scope"], item["scope"]))}</title><rect x="{x}" y="{y}" width="330" height="105" rx="10" fill="#fffbf4" stroke="#d7d6cb"{dash}/>')
+        parts.append(f'<g><title>{h(item["name"])} · {h(scopes.get(item["scope"], item["scope"]))}</title><rect x="{x}" y="{y}" width="330" height="105" rx="10" fill="#ffffff" stroke="#deded5"{dash}/>')
         sx, sy = x + 18, y + 22
         if kind in {"database", "cache"}:
-            parts.append(f'<path d="M{sx} {sy + 8} V{sy + 43} C{sx} {sy + 55} {sx + 44} {sy + 55} {sx + 44} {sy + 43} V{sy + 8}" fill="{fill}" stroke="#193c43" stroke-width="2"/><ellipse cx="{sx + 22}" cy="{sy + 8}" rx="22" ry="8" fill="{fill}" stroke="#193c43" stroke-width="2"/><path d="M{sx} {sy + 24} C{sx} {sy + 34} {sx + 44} {sy + 34} {sx + 44} {sy + 24}" fill="none" stroke="#193c43" stroke-width="2"/>')
+            parts.append(f'<path d="M{sx} {sy + 8} V{sy + 43} C{sx} {sy + 55} {sx + 44} {sy + 55} {sx + 44} {sy + 43} V{sy + 8}" fill="{fill}" stroke="#242421" stroke-width="2"/><ellipse cx="{sx + 22}" cy="{sy + 8}" rx="22" ry="8" fill="{fill}" stroke="#242421" stroke-width="2"/><path d="M{sx} {sy + 24} C{sx} {sy + 34} {sx + 44} {sy + 34} {sx + 44} {sy + 24}" fill="none" stroke="#242421" stroke-width="2"/>')
         elif kind in {"cloud", "infrastructure", "ci"}:
-            parts.append(f'<path d="M{sx + 6} {sy + 44} C{sx - 10} {sy + 24} {sx + 2} {sy + 12} {sx + 14} {sy + 17} C{sx + 20} {sy - 9} {sx + 47} {sy - 3} {sx + 47} {sy + 18} C{sx + 69} {sy + 14} {sx + 69} {sy + 43} {sx + 50} {sy + 44} Z" fill="{fill}" stroke="#193c43" stroke-width="2"{dash}/>')
+            parts.append(f'<path d="M{sx + 6} {sy + 44} C{sx - 10} {sy + 24} {sx + 2} {sy + 12} {sx + 14} {sy + 17} C{sx + 20} {sy - 9} {sx + 47} {sy - 3} {sx + 47} {sy + 18} C{sx + 69} {sy + 14} {sx + 69} {sy + 43} {sx + 50} {sy + 44} Z" fill="{fill}" stroke="#242421" stroke-width="2"{dash}/>')
         elif kind == "queue":
             for dx, dy in [(9, 0), (37, 5), (21, 25), (0, 43), (44, 44)]:
-                parts.append(f'<line x1="{sx + 22}" y1="{sy + 25}" x2="{sx + dx}" y2="{sy + dy}" stroke="#193c43" stroke-width="2"/><circle cx="{sx + dx}" cy="{sy + dy}" r="6" fill="{fill}" stroke="#193c43" stroke-width="2"/>')
+                parts.append(f'<line x1="{sx + 22}" y1="{sy + 25}" x2="{sx + dx}" y2="{sy + dy}" stroke="#242421" stroke-width="2"/><circle cx="{sx + dx}" cy="{sy + dy}" r="6" fill="{fill}" stroke="#242421" stroke-width="2"/>')
         else:
-            parts.append(f'<rect x="{sx}" y="{sy}" width="49" height="36" rx="5" fill="{fill}" stroke="#193c43" stroke-width="2"/><path d="M{sx + 24} {sy + 37} v10 m-12 0 h24" stroke="#193c43" stroke-width="2"/>')
-            parts.append(label(sx + 10, sy + 25, "↔" if kind == "proxy" else "⚙", 25, "#193c43"))
+            parts.append(f'<rect x="{sx}" y="{sy}" width="49" height="36" rx="5" fill="{fill}" stroke="#242421" stroke-width="2"/><path d="M{sx + 24} {sy + 37} v10 m-12 0 h24" stroke="#242421" stroke-width="2"/>')
+            parts.append(label(sx + 10, sy + 25, "↔" if kind == "proxy" else "⚙", 25, "#242421"))
         title = item["name"]
         if kind == "application":
             title = language
-        parts.append(label(x + 88, y + 32, title if len(title) <= 31 else title[:28] + "…", 13, "#193c43", "600"))
+        parts.append(label(x + 88, y + 32, title if len(title) <= 31 else title[:28] + "…", 13, "#242421", "600"))
         detail = frameworks if kind == "application" else scopes.get(item["scope"], item["scope"])
         parts.append(label(x + 88, y + 55, detail[:34], 10, "#6f8183"))
         if item["evidence_chain"]:
@@ -197,7 +197,7 @@ def endpoint_svg(ir):
     selected = list(grouped.values())[:14]
     parts, marker = svg_start("Mapa de endpoints · configuração declarada", 1250, max(200, len(selected) * 115 + 95))
     for i, title in enumerate(("MÉTODO / ROTA", "VIEW / AÇÃO", "SERIALIZER", "PERMISSÕES / AUTENTICAÇÃO")):
-        parts.append(label(22 + i * 310, 32, title, 11, "#6c8192", "600"))
+        parts.append(label(22 + i * 310, 32, title, 11, "#74746b", "600"))
     for i, group in enumerate(selected):
         endpoint, y = group["endpoint"], 55 + i * 115
         values = [(endpoint["route"] or "(raiz)", " · ".join(dict.fromkeys(group["methods"]))),
@@ -211,7 +211,7 @@ def endpoint_svg(ir):
             parts.append(node(x, y, title, subtitle, 275, "#e6f3fc" if j == 0 else "white"))
     if not selected:
         parts.append(label(25, 95, "Nenhum endpoint detectado; isso não prova que o projeto não tenha rotas."))
-    parts.append(label(25, max(180, len(selected) * 115 + 80), f"{len(selected)} de {len(grouped)} grupos visuais. Configurações não comprovam comportamento em runtime; consulte as evidências.", 11, "#78909f"))
+    parts.append(label(25, max(180, len(selected) * 115 + 80), f"{len(selected)} de {len(grouped)} grupos visuais. Configurações não comprovam comportamento em runtime; consulte as evidências.", 11, "#73736b"))
     return "".join(parts) + "</svg>"
 
 
@@ -227,8 +227,8 @@ def coverage_svg(insights):
         split = 0 if not total else round(900 * first / total, 2)
         parts.append(label(25, y - 20, title, 13, weight="600"))
         parts.append(f'<rect x="25" y="{y}" width="900" height="25" rx="4" fill="#e2e7eb"/>')
-        parts.append(f'<rect x="25" y="{y}" width="{split}" height="25" rx="4" fill="{BLUE}"/>')
-        parts.append(label(25, y + 48, f"{first} {first_label} · {second} {second_label} · total {total}", 12, "#6c8192"))
+        parts.append(f'<rect x="25" y="{y}" width="{split}" height="25" rx="4" fill="{ACCENT}"/>')
+        parts.append(label(25, y + 48, f"{first} {first_label} · {second} {second_label} · total {total}", 12, "#74746b"))
     return "".join(parts) + "</svg>"
 
 
@@ -261,7 +261,7 @@ def comparison_svg(diff):
         before = diff.get("before_sha") or diff["before_fingerprint"]
         after = diff.get("after_sha") or diff["after_fingerprint"]
         parts.append(label(25, 205, str(before)[:16] + " → " + str(after)[:16], 13, weight="600"))
-        parts.append(label(25, 238, "Revisar: configuração ou arquivo de evidência mudou; não prova alteração em cada função.", 11, "#78909f"))
+        parts.append(label(25, 238, "Revisar: configuração ou arquivo de evidência mudou; não prova alteração em cada função.", 11, "#73736b"))
     return "".join(parts) + "</svg>"
 
 
@@ -277,7 +277,7 @@ def report_html(ir, insights=None, history=None, diff=None, ai=None):
     title = repo.get("url") or "Exemplo / fixture local"
     parts = ['<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">',
              '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; style-src \'unsafe-inline\'; img-src data:; base-uri \'none\'; form-action \'none\'">',
-             '<title>OctorGit · Relatório visual</title><style>body{font:15px/1.7 "Segoe UI",Arial,sans-serif;background:#f4f7fa;color:#233744;margin:0}main{max-width:1160px;margin:auto;padding:35px}header{border-top:5px solid #4285f4;padding:30px;background:white}h1{font-size:34px;line-height:1.2;margin:12px 0}h2{font-size:25px;margin:10px 0}h3{font-size:17px}section{margin:28px 0;padding:28px;background:white;border:1px solid #e0e7ef;border-radius:8px;break-before:auto}svg{width:100%;height:auto}p,li{overflow-wrap:anywhere}a{color:#286bd3}nav{display:flex;flex-wrap:wrap;gap:15px;font-size:13px;margin-top:20px}.muted{font-size:12px;color:#718594}.notice{padding:15px;background:#eef5fd;border-left:3px solid #4285f4}.chart{margin:20px 0}.table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:11px}th,td{padding:9px;border-bottom:1px solid #e2eaf1;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#f1f5fa}code,pre{font:12px/1.7 Consolas,monospace}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#142630;color:#dfecf4;padding:18px;border-radius:7px}.code-row{display:block}.number{display:inline-block;width:35px;color:#83a5bd;user-select:none}.evidence{font-size:12px;color:#5c788d}details{margin:12px 0}.stat{font-size:28px;color:#286bd3}@media print{body{background:white}main{padding:0;max-width:none}section{border:0;padding:12px 0;margin:14px 0}nav{display:none}svg{max-height:250mm}header{padding:15px 0}tr,pre{break-inside:avoid}details{display:block}a{color:#233744}h2,h3{break-after:avoid}a:after{content:none}}@page{size:A4;margin:14mm}</style></head><body><main>',
+             '<title>OctorGit · Relatório visual</title><style>body{font:15px/1.7 "Segoe UI",Arial,sans-serif;background:#fafaf8;color:#242421;margin:0}main{max-width:1160px;margin:auto;padding:35px}header{border-top:5px solid #222222;padding:30px;background:white}h1{font-size:34px;line-height:1.2;margin:12px 0}h2{font-size:25px;margin:10px 0}h3{font-size:17px}section{margin:28px 0;padding:28px;background:white;border:1px solid #e5e5dc;border-radius:8px;break-before:auto}svg{width:100%;height:auto}p,li{overflow-wrap:anywhere}a{color:#242421}nav{display:flex;flex-wrap:wrap;gap:15px;font-size:13px;margin-top:20px}.muted{font-size:12px;color:#73736a}.notice{padding:15px;background:#f5f5ef;border-left:3px solid #222222}.chart{margin:20px 0}.table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:11px}th,td{padding:9px;border-bottom:1px solid #e4e4dd;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#f5f5f1}code,pre{font:12px/1.7 Consolas,monospace}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#191919;color:#edede6;padding:18px;border-radius:7px}.code-row{display:block}.number{display:inline-block;width:35px;color:#a7a79b;user-select:none}.evidence{font-size:12px;color:#747469}details{margin:12px 0}.stat{font-size:28px;color:#242421}@media print{body{background:white}main{padding:0;max-width:none}section{border:0;padding:12px 0;margin:14px 0}nav{display:none}svg{max-height:250mm}header{padding:15px 0}tr,pre{break-inside:avoid}details{display:block}a{color:#242421}h2,h3{break-after:avoid}a:after{content:none}}@page{size:A4;margin:14mm}</style></head><body><main>',
              '<header><div class="muted">OCTORGIT · RELATÓRIO VISUAL COM EVIDÊNCIAS</div><h1>Entenda o projeto,<br>confira cada origem.</h1>',
              f'<p>{h(title)}</p><p class="muted">Commit: {h(repo.get("commit_sha") or "não disponível — fixture local")} · Parser {h(ir["parser_version"])} · IR {h(ir["schema_version"])}</p>',
              '<p class="notice">Análise estática: o código não foi executado. Diagramas mostram fatos e agrupamentos indicados, sem prometer arquitetura de runtime. Abra este HTML no navegador e use Ctrl+P → Salvar como PDF para exportar com as imagens.</p><nav>']

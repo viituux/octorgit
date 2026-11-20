@@ -250,6 +250,10 @@ class Handler(BaseHTTPRequestHandler):
         if not self.trusted():
             return
         path = urlsplit(self.path).path
+        if path in {"/fonts/geist-regular.ttf", "/fonts/geist-semibold.ttf", "/fonts/jetbrains-mono.ttf"}:
+            body = resources("octorgit").joinpath("static" + path).read_bytes()
+            self.respond(200, body, "font/ttf")
+            return
         if path in {"/", "/app.js", "/style.css"}:
             name = {"/": "index.html", "/app.js": "app.js", "/style.css": "style.css"}[path]
             body = resources("octorgit").joinpath("static/" + name).read_text(encoding="utf-8")
