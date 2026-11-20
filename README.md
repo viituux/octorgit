@@ -4,7 +4,13 @@ Understand code. Generate knowledge.
 
 [**Baixar Windows e Linux**](https://github.com/viituux/octorgit/releases/latest) · [Testes automáticos](https://github.com/viituux/octorgit/actions/workflows/tests.yml)
 
-OctorGit lê projetos Python sem importar ou executar código, registra um snapshot de commit do GitHub e produz um inventário verificável. Versão **0.6.0**: mapas visuais, relatório com diagramas, trechos de código, histórico SQLite e comparação por snapshot. IA configurável continua opcional. IR **0.3.0**. A interface foi acrescentada por solicitação do usuário; o gate de qualidade do MVP continua pendente.
+OctorGit lê projetos Python sem importar ou executar código, registra um snapshot de commit do GitHub e produz um inventário verificável. Versão **0.6.1**: mapas visuais, relatório com diagramas, trechos de código, histórico SQLite e comparação por snapshot. IA configurável continua opcional. IR **0.3.0**. A interface foi acrescentada por solicitação do usuário; o gate de qualidade do MVP continua pendente.
+
+## Correções de precisão — 0.6.1
+
+- Endpoints ignoram subpastas `tests`, `test`, `fixtures`, `examples` e `docs`, evitando misturar demonstrações com a aplicação. Os arquivos continuam no inventário; cada exclusão tem diagnóstico. Para analisar uma fixture intencionalmente, selecione sua pasta como raiz da entrada local.
+- Compose reconhece `image`, `build` e `depends_on` somente como propriedades diretas do serviço, sem confundir variáveis de ambiente. Aceita diferentes larguras de indentação no subconjunto suportado; não é um interpretador YAML completo.
+- SQLite é identificado por chamadas estáticas a `sqlite3.connect`, incluindo aliases e funções locais, com evidência. Um import isolado não confirma uso do banco; variáveis sobrescritas ou parâmetros com o mesmo nome são tratados conservadoramente. Isso não comprova execução da conexão.
 
 ## Windows e Linux
 
@@ -12,8 +18,8 @@ O mesmo programa funciona nos dois sistemas, com inicializadores próprios. Requ
 
 | Sistema | Pacote | Iniciar |
 | --- | --- | --- |
-| Windows | `octorgit-0.6.0-windows.zip` | Dois cliques em `ABRIR_OCTORGIT.bat` |
-| Linux | `octorgit-0.6.0-linux.tar.gz` | `bash ABRIR_OCTORGIT.sh` |
+| Windows | `octorgit-0.6.1-windows.zip` | Dois cliques em `ABRIR_OCTORGIT.bat` |
+| Linux | `octorgit-0.6.1-linux.tar.gz` | `bash ABRIR_OCTORGIT.sh` |
 
 ### Linux: início rápido
 
@@ -164,7 +170,7 @@ python -m octorgit.benchmark --public-manifest docs/benchmarks/rest-framework-tu
 
 O benchmark recusa sobrescrever um relatório existente. Gabaritos são JSONs revisáveis, escritos por inspeção das declarações, não gerados pelo parser. O teste público baixa apenas o SHA fixado e não executa o projeto. Execute os comandos a partir da raiz do OctorGit após instalar; sem instalar, prefixe com `PYTHONPATH=src` no Linux/macOS.
 
-Verificações desta versão: **83 testes**, **20/20 pares método/rota em três fixtures**, **9/9 endpoints de negócio em um projeto público**, com zero falsos positivos nos escopos dos gabaritos. Isso **não valida o MVP**: as fixtures são sintéticas, o gabarito público é parcial e ainda não foi revisado por uma pessoa independente. Consulte `docs/VERIFICATION.md` e os relatórios em `docs/benchmarks/`.
+Verificações desta versão: **89 testes**, **20/20 pares método/rota em três fixtures**, **9/9 endpoints de negócio em um projeto público**, com zero falsos positivos nos escopos dos gabaritos. Isso **não valida o MVP**: as fixtures são sintéticas, o gabarito público é parcial e ainda não foi revisado por uma pessoa independente. Consulte `docs/VERIFICATION.md` e os relatórios em `docs/benchmarks/`.
 
 ## Próximas entregas
 

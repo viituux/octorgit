@@ -24,6 +24,72 @@ IMAGES = {"postgres": ("database", "PostgreSQL"), "mysql": ("database", "MySQL")
           "nginx": ("proxy", "Nginx"), "traefik": ("proxy", "Traefik"), "haproxy": ("proxy", "HAProxy")}
 
 
+AUXILIARY_DIRS = {"tests", "test", "fixtures", "examples", "docs"}
+
+
+def auxiliary_source(path):
+    return any(part.lower() in AUXILIARY_DIRS for part in PurePosixPath(path).parts[:-1])
+
+
+def sqlite_connections(tree):
+    """Find statically bound sqlite3.connect calls; imports alone prove no DB use."""
+    class Calls(ast.NodeVisitor):
+        def __init__(self):
+            self.bindings = {}
+            self.calls = []
+
+        def scope(self, node):
+            previous = self.bindings
+            bindings = dict(previous)
+            # Collect only this lexical scope, never sibling/nested function bodies.
+            nodes = []
+            def collect(item):
+                nodes.append(item)
+                if item is not node and isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef, ast.Lambda)):
+                    return
+                for child in ast.iter_child_nodes(item):
+                    collect(child)
+            collect(node)
+            shadowed = {item.id for item in nodes if isinstance(item, ast.Name) and isinstance(item.ctx, (ast.Store, ast.Del))}
+            shadowed.update(item.arg for item in nodes if isinstance(item, ast.arg))
+            shadowed.update(item.name for item in nodes if item is not node and isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)))
+            for item in nodes:
+                if isinstance(item, ast.Import):
+                    for alias in item.names:
+                        name = alias.asname or alias.name.split('.')[0]
+                        bindings.pop(name, None)
+                        if alias.name == "sqlite3":
+                            bindings[name] = "module"
+                elif isinstance(item, ast.ImportFrom):
+                    for alias in item.names:
+                        name = alias.asname or alias.name
+                        bindings.pop(name, None)
+                        if item.module == "sqlite3" and item.level == 0 and alias.name == "connect":
+                            bindings[name] = "connect"
+            for name in shadowed:
+                bindings.pop(name, None)
+            self.bindings = bindings
+            for child in ast.iter_child_nodes(node):
+                self.visit(child)
+            self.bindings = previous
+
+        visit_Module = scope
+        visit_FunctionDef = scope
+        visit_AsyncFunctionDef = scope
+        visit_ClassDef = scope
+        def visit_Lambda(self, node):
+            pass
+        def visit_Call(self, node):
+            fn = node.func
+            if (isinstance(fn, ast.Attribute) and fn.attr == "connect" and isinstance(fn.value, ast.Name) and self.bindings.get(fn.value.id) == "module"
+                    or isinstance(fn, ast.Name) and self.bindings.get(fn.id) == "connect"):
+                self.calls.append(node)
+            self.generic_visit(node)
+    visitor = Calls()
+    visitor.visit(tree)
+    return visitor.calls
+
+
 def detect_technology(sources, schema_version, parser_version, inventory=None):
     components, relations, indexes = [], [], {}
     def ref(path, start, end=None):
@@ -63,7 +129,7 @@ def detect_technology(sources, schema_version, parser_version, inventory=None):
             add(kind, name, ref(path, line), "dependency")
 
     for path, text in sorted(sources.items()):
-        if any(part.lower() in {"tests", "test", "fixtures", "examples", "docs"} for part in PurePosixPath(path).parts[:-1]):
+        if auxiliary_source(path):
             continue
         lines = text.splitlines()
         basename = PurePosixPath(path).name.lower()
@@ -94,6 +160,10 @@ def detect_technology(sources, schema_version, parser_version, inventory=None):
                 tree = ast.parse(text)
             except (ValueError, SyntaxError, RecursionError):
                 continue
+            for call in sqlite_connections(tree):
+                evidence = ref(path, call.lineno, call.end_lineno)
+                target = add("database", "SQLite", evidence, "sqlite_connection")
+                connect(app_id, target, evidence, "database_configuration")
             for statement in tree.body:
                 if isinstance(statement, ast.ImportFrom) and statement.module:
                     module = statement.module.split(".")[0]
@@ -170,10 +240,15 @@ def detect_technology(sources, schema_version, parser_version, inventory=None):
                 blocks[current] = {"line": number, "rows": []}
             elif current:
                 blocks[current]["rows"].append((number, line, indent))
+        # Service properties must be direct children, not environment/build labels.
+        for block in blocks.values():
+            block["property_indent"] = min((indent for _, _, indent in block["rows"]), default=None)
         ids = {}
         for name, block in blocks.items():
             kind, display, evidence = "service", name, ref(path, block["line"])
-            for number, line, _ in block["rows"]:
+            for number, line, indent in block["rows"]:
+                if indent != block["property_indent"]:
+                    continue
                 image = re.match(r"\s*image:\s*['\"]?([^\s'\"#$]+)", line)
                 if image:
                     base = image[1].split("@", 1)[0].split(":", 1)[0].rsplit("/", 1)[-1]
@@ -185,11 +260,12 @@ def detect_technology(sources, schema_version, parser_version, inventory=None):
         for name, block in blocks.items():
             depends_indent = None
             for number, line, indent in block["rows"]:
-                if re.fullmatch(r"\s*build:\s*['\"]?\./?['\"]?\s*", line) and str(PurePosixPath(path).parent) == "." and "Dockerfile" in sources:
+                if indent == block["property_indent"] and re.fullmatch(r"\s*build:\s*['\"]?\./?['\"]?\s*", line) and str(PurePosixPath(path).parent) == "." and "Dockerfile" in sources:
                     connect(app_id, ids[name], ref(path, number), "build_context")
-                match = re.match(r"\s*depends_on:\s*(.*)", line)
+                match = re.match(r"\s*depends_on:\s*(.*)", line) if indent == block["property_indent"] else None
                 if match:
                     depends_indent = indent
+                    dependency_indent = None
                     inline = match[1].strip().strip("[]")
                     for target in inline.split(",") if inline else []:
                         target = target.strip().strip("'\"")
@@ -201,7 +277,9 @@ def detect_technology(sources, schema_version, parser_version, inventory=None):
                         depends_indent = None
                         continue
                     match = re.match(r"\s*(?:-\s*([A-Za-z0-9_.-]+)|([A-Za-z0-9_.-]+):\s*)$", line)
-                    if match and indent <= depends_indent + 2:
+                    if dependency_indent is None:
+                        dependency_indent = indent
+                    if match and indent == dependency_indent:
                         target = match[1] or match[2]
                         if target in ids:
                             connect(ids[name], ids[target], ref(path, number))

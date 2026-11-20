@@ -1,3 +1,7 @@
+# Correções de precisão 0.6.1 — 20/11/2026
+
+89 testes passaram localmente, incluindo seis novos testes de regressão com variações: separação de endpoints auxiliares, fixture como raiz, Compose com chaves aninhadas/indentação diferente e SQLite com aliases/sombreamento/import isolado. Nenhuma chamada de IA foi necessária.
+
 # Verificações 0.6.0 — 17/11/2026
 
 - 83 testes unittest passaram localmente: tecnologias/evidências, mapas/relatórios, configurações sem persistir chave, transporte simulado dos três adaptadores, isolamento de cache e API local.

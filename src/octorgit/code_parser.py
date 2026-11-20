@@ -3,7 +3,7 @@
 import ast
 import hashlib
 from pathlib import PurePosixPath
-from .technology import LANGUAGES, detect_technology
+from .technology import LANGUAGES, detect_technology, auxiliary_source
 from . import SCHEMA_VERSION, __version__
 
 
@@ -70,6 +70,9 @@ def analyze(repository, files, skipped, root_urlconf=None):
         trees[path] = tree
     result["metrics"] = {"python_files_accepted": python_count, "python_files_parsed": parsed, "parsing_coverage": parsed / python_count if python_count else None, "skipped_files": len(skipped)}
     from .django_parser import DjangoParser
-    DjangoParser(trees, result).run(root_urlconf)
+    application_trees = {path: tree for path, tree in trees.items() if not auxiliary_source(path)}
+    for path in sorted(trees.keys() - application_trees.keys()):
+        result["diagnostics"].append(record(file=path, reason="auxiliary_file_excluded_from_endpoints"))
+    DjangoParser(application_trees, result).run(root_urlconf)
     result["technology"] = detect_technology(files, SCHEMA_VERSION, __version__)
     return result

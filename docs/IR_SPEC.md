@@ -48,3 +48,7 @@ Cobertura, snippets, timeline e comparação são artefatos derivados do resulta
 ## Mudança em 0.3.0
 
 `technology` contém `languages`, `components`, `relations` e notas de limite. Componentes incluem kind, scope, confidence e evidence_chain. Relações distinguem configuração literal de banco, depends_on e contexto de build. Dependência de driver/cliente não confirma servidor em execução. Extensões identificam linguagens, sem habilitar novos parsers de endpoints. O capítulo/tela de primeiro contato foi removido; resultados antigos devem ser reanalisados para obter este contrato.
+
+## Parser 0.6.1 — contrato IR 0.3.0 preservado
+
+Diagnóstico `auxiliary_file_excluded_from_endpoints` identifica arquivos de pastas auxiliares omitidos da resolução Django. Inventário e símbolos permanecem disponíveis; imports/rotas são resolvidos somente nos arquivos da aplicação. Tecnologia usa scope `sqlite_connection` e relação `database_configuration` para chamadas SQLite estaticamente reconhecidas, sem alegar execução.
