@@ -97,8 +97,8 @@ class UsageStore:
         with self.lock:
             policy = self.setting('policy', {'monthly_budget': None, 'paused': False})
             prices = self.setting('price:'+profile(config)['id'], {'input_per_million': None, 'output_per_million': None})
-            monthly = [json.loads(r[0]) for r in self.db.execute('SELECT payload FROM events WHERE created_at >= ? AND created_at < ? ORDER BY created_at DESC', (month+'-01', month+'~')).fetchall()]
-            recent = [json.loads(r[0]) for r in self.db.execute('SELECT payload FROM events ORDER BY created_at DESC LIMIT 50').fetchall()]
+            monthly = [json.loads(r[0]) for r in self.db.execute('SELECT payload FROM events WHERE created_at >= ? AND created_at < ? ORDER BY created_at DESC, rowid DESC', (month+'-01', month+'~')).fetchall()]
+            recent = [json.loads(r[0]) for r in self.db.execute('SELECT payload FROM events ORDER BY created_at DESC, rowid DESC LIMIT 50').fetchall()]
         subtotal = sum((Decimal(e['estimated_cost']) for e in monthly if e['estimated_cost'] is not None), Decimal(0))
         return {'currency': 'USD', 'month': month, 'timezone': 'UTC', 'profile': profile(config), 'prices': prices, 'policy': policy,
                 'totals': {'requests': len(monthly), 'errors': sum(e['status']=='error' for e in monthly),

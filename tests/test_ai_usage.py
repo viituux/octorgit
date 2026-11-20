@@ -1,4 +1,5 @@
 import io
+from datetime import datetime, timezone
 import json
 from pathlib import Path
 import tempfile
@@ -49,7 +50,9 @@ class UsageTests(unittest.TestCase):
         MeteredProvider(Fake(), self.store, CONFIG, 'connection_test').generate({})
         self.assertEqual(self.store.summary(CONFIG)['totals']['requests'], 2)
 
-    def test_unknown_prices_are_not_zero_and_new_rates_do_not_reprice_old_calls(self):
+    @patch("octorgit.ai_usage.datetime")
+    def test_unknown_prices_are_not_zero_and_new_rates_do_not_reprice_old_calls(self, clock):
+        clock.now.return_value = datetime(2026, 11, 20, tzinfo=timezone.utc)
         wrapped = MeteredProvider(Fake(), self.store, CONFIG, 'analysis')
         wrapped.generate({})
         self.store.configure(policy(), CONFIG)
@@ -88,7 +91,9 @@ class UsageTests(unittest.TestCase):
         self.assertEqual(summary['totals']['total_tokens'], 1500)
         self.assertEqual(summary['totals']['estimated_cost'], '0.004')
 
-    def test_inflight_prices_and_interrupted_calls_remain_auditable(self):
+    @patch("octorgit.ai_usage.datetime")
+    def test_inflight_prices_and_interrupted_calls_remain_auditable(self, clock):
+        clock.now.return_value = datetime(2026, 11, 20, tzinfo=timezone.utc)
         self.store.configure(policy(), CONFIG)
         event = self.store.begin(CONFIG, 'analysis')
         self.store.configure(policy(input_per_million='20', output_per_million='40'), CONFIG)
