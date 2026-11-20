@@ -84,3 +84,7 @@ Mantém servidor local e dependências Python anteriores. static/fonts contém f
 `ai_engine.CATEGORIES` define nove títulos/IDs e orientações fixas. Esquema de resposta restringe títulos, e o validador exige todas as categorias exatamente uma vez, 1–2 afirmações por categoria, até 320 caracteres por afirmação e 4.800 no total, sem quebras de linha. O resultado reordena as categorias, resolve evidências e inclui template_version=project-summary-v1. SYSTEM integra a chave do cache; o padrão não reutiliza gerações antigas.
 
 Contexto inclui linguagens e recortes de organização sem fontes brutas; símbolos auxiliares são omitidos. A IA interpreta fatos da análise estática, não substitui o parser por execução. `PROJECT.md` é o resumo e `AI.md` seu alias. `report_html` usa resumo com três diagramas por padrão quando há resultado do template; detailed=True mantém o inventário de seis diagramas. /report?view=technical e RELATORIO-TECNICO.html dão acesso ao anexo. A interface mostra categorias e índice, com evidências recolhidas. Histórico legado continua com seu renderizador anterior.
+
+## Catálogo de ícones — 0.11.0
+
+`technology_icons.py` carrega um catálogo JSON empacotado, valida identificadores, cores e comandos de paths e resolve aliases. /technology-icons.json serve o catálogo local. O cliente constrói SVG por nós DOM; nomes do repositório não viram markup, URL ou path. O exportador inclui os mesmos paths diretamente no SVG, sem imagens externas. Logos identificam marcas já detectadas, e o fallback é genérico.

@@ -6,6 +6,7 @@ import hashlib
 import json
 
 from .insights import build_insights, reference_key
+from .technology_icons import svg_mark
 
 ACCENT = "#222222"
 
@@ -159,7 +160,10 @@ def technology_svg(ir):
         dash = ' stroke-dasharray="5 4"' if unknown else ""
         parts.append(f'<g><title>{h(item["name"])} · {h(scopes.get(item["scope"], item["scope"]))}</title><rect x="{x}" y="{y}" width="330" height="105" rx="10" fill="#ffffff" stroke="#deded5"{dash}/>')
         sx, sy = x + 18, y + 22
-        if kind in {"database", "cache"}:
+        brand = svg_mark(tech["languages"][0]["name"] if kind == "application" and tech["languages"] else item["name"], sx, sy, 46) if not unknown else ""
+        if brand:
+            parts.append(brand)
+        elif kind in {"database", "cache"}:
             parts.append(f'<path d="M{sx} {sy + 8} V{sy + 43} C{sx} {sy + 55} {sx + 44} {sy + 55} {sx + 44} {sy + 43} V{sy + 8}" fill="{fill}" stroke="#242421" stroke-width="2"/><ellipse cx="{sx + 22}" cy="{sy + 8}" rx="22" ry="8" fill="{fill}" stroke="#242421" stroke-width="2"/><path d="M{sx} {sy + 24} C{sx} {sy + 34} {sx + 44} {sy + 34} {sx + 44} {sy + 24}" fill="none" stroke="#242421" stroke-width="2"/>')
         elif kind in {"cloud", "infrastructure", "ci"}:
             parts.append(f'<path d="M{sx + 6} {sy + 44} C{sx - 10} {sy + 24} {sx + 2} {sy + 12} {sx + 14} {sy + 17} C{sx + 20} {sy - 9} {sx + 47} {sy - 3} {sx + 47} {sy + 18} C{sx + 69} {sy + 14} {sx + 69} {sy + 43} {sx + 50} {sy + 44} Z" fill="{fill}" stroke="#242421" stroke-width="2"{dash}/>')

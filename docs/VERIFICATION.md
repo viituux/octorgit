@@ -1,3 +1,7 @@
+# Ícones de tecnologias 0.11.0 — 20/11/2026
+
+118 testes Python e unidades DOM passaram localmente. Casos novos verificam aliases, marcas conhecidas, fallback desconhecido, paths reais nos SVGs exportados e entrega do catálogo local. JS/Bash conferidos. Não houve inspeção interativa do navegador nesta sessão. Diagramas foram renderizados com Inkscape para inspeção como imagem.
+
 # Resumo estruturado 0.10.0 — 20/11/2026
 
 115 testes Python passaram localmente, incluindo categorias obrigatórias, duplicatas, tamanho, ordem, evidências, contexto, exportação do resumo/anexo e rotas HTTP. Unidades DOM Node passaram também para as nove categorias e seu índice. Transportes de IA foram simulados: não houve chamada autenticada real nem avaliação humana da qualidade semântica dos resumos. Não houve inspeção interativa do navegador nesta sessão.

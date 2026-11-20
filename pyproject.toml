@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "octorgit"
-version = "0.10.0"
+version = "0.11.0"
 description = "Understand code. Generate knowledge. Evidence-first static Python analysis."
 requires-python = ">=3.11"
 dependencies = []
@@ -17,4 +17,4 @@ octorgit-web = "octorgit.web:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-octorgit = ["static/*.html", "static/*.css", "static/*.js", "static/*.json", "static/fonts/*.ttf", "static/fonts/*-OFL.txt"]
+octorgit = ["static/*.html", "static/*.css", "static/*.js", "static/*.json", "static/fonts/*.ttf", "static/fonts/*-OFL.txt", "static/icons/*.json", "static/icons/*.md"]

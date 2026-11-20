@@ -38,6 +38,12 @@ vm.runInContext(source,sandbox);
 const run=code=>vm.runInContext(code,sandbox);
 run(String.raw`state.job='test-job';state.data={analysis:{repository:{url:'https://github.com/test/repo',branch:'main',commit_sha:'a'.repeat(40)},files:[{path:'app.py'}],endpoints:[{method:'GET',route:'health/',view:'views.health',scope:'explicit_root',confidence:'extracted',serializer:null,permissions:null,authentication:null,configuration:{},unknown_fields:[],evidence:{file:'app.py',start_line:1,end_line:1,symbol:null},evidence_chain:[{file:'app.py',start_line:1,end_line:1,symbol:null}]}],technology:{languages:[{name:'Python',files:1}],components:[{id:'application',kind:'application',name:'Código',scope:'repository',confidence:'inferred',evidence_chain:[]},{id:'db',kind:'database',name:'SQLite',scope:'sqlite_connection',confidence:'extracted',evidence_chain:[{file:'app.py',start_line:1,end_line:1,symbol:null}]}],relations:[{source:'application',target:'db',kind:'database_configuration'}]}},insights:{snippets:{}},documents:{'README.md':'# Meu projeto\n## Arquitetura\nTexto seguro <script>não executar</script>','ARCHITECTURE.md':'test'}};state.baseId='base-job';`);
 ids.get('diagram-kind').value='arquitetura';
+// Icons use bundled paths and aliases; repository names never become HTML or URLs.
+sandbox.iconCatalog=JSON.parse(fs.readFileSync('src/octorgit/static/icons/catalog.json','utf8'));
+run('state.icons=iconCatalog;');
+assert.equal(run("technologyIcon('PostgreSQL · db','database').dataset.technology"),'postgresql');
+assert.equal(run("technologyIcon('Docker Compose','infrastructure').dataset.technology"),'docker');
+assert.equal(run("technologyIcon('<script>unknown</script>','database').children[0].getAttribute('fill')"),'none');
 // Graph must be usable, backed by actual components, with adjacent evidence.
 run(`state.page='architecture';renderMainDiagram();`);
 assert.equal(ids.get('architecture-graph').children[0].className,'graph-workspace');

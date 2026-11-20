@@ -4,7 +4,15 @@ Understand code. Generate knowledge.
 
 [**Baixar Windows e Linux**](https://github.com/viituux/octorgit/releases/latest) · [Testes automáticos](https://github.com/viituux/octorgit/actions/workflows/tests.yml)
 
-OctorGit lê projetos Python sem importar ou executar código, registra um snapshot de commit do GitHub e produz um inventário verificável. Versão **0.10.0**: mapas visuais, relatório com diagramas, trechos de código, histórico SQLite e comparação por snapshot. IA configurável continua opcional. IR **0.3.0**. A interface foi acrescentada por solicitação do usuário; o gate de qualidade do MVP continua pendente.
+OctorGit lê projetos Python sem importar ou executar código, registra um snapshot de commit do GitHub e produz um inventário verificável. Versão **0.11.0**: mapas visuais, relatório com diagramas, trechos de código, histórico SQLite e comparação por snapshot. IA configurável continua opcional. IR **0.3.0**. A interface foi acrescentada por solicitação do usuário; o gate de qualidade do MVP continua pendente.
+
+## Ícones das tecnologias — 0.11.0
+
+Cartões, canvas de arquitetura, resumo de tecnologias e painéis de evidências usam 47 marcas vetoriais empacotadas localmente, incluindo Python, JavaScript, TypeScript, Django, React, PostgreSQL, SQLite, Redis, Docker, Kubernetes, AWS e Azure. As cores dos ícones dão identificação visual sem alterar o restante do layout claro.
+
+Diagramas SVG e relatórios HTML também incorporam os paths dos ícones, preservados ao salvar o documento como PDF. Não precisam de internet/CDN para exibir. Tecnologias não mapeadas e componentes não confirmados recebem símbolos genéricos, sem inferir presença de uma marca ou infraestrutura pelo desenho. As evidências continuam determinando o que foi detectado.
+
+Ícones derivados de Simple Icons sob CC0; origem/licença em `src/octorgit/static/icons/`. Algumas cores são ajustadas para contraste. Nomes/marcas pertencem aos respectivos titulares.
 
 ## Resumo de projeto escrito pela IA — 0.10.0
 
@@ -59,8 +67,8 @@ O mesmo programa funciona nos dois sistemas, com inicializadores próprios. Requ
 
 | Sistema | Pacote | Iniciar |
 | --- | --- | --- |
-| Windows | `octorgit-0.10.0-windows.zip` | Dois cliques em `ABRIR_OCTORGIT.bat` |
-| Linux | `octorgit-0.10.0-linux.tar.gz` | `bash ABRIR_OCTORGIT.sh` |
+| Windows | `octorgit-0.11.0-windows.zip` | Dois cliques em `ABRIR_OCTORGIT.bat` |
+| Linux | `octorgit-0.11.0-linux.tar.gz` | `bash ABRIR_OCTORGIT.sh` |
 
 ### Linux: início rápido
 
@@ -211,7 +219,7 @@ python -m octorgit.benchmark --public-manifest docs/benchmarks/rest-framework-tu
 
 O benchmark recusa sobrescrever um relatório existente. Gabaritos são JSONs revisáveis, escritos por inspeção das declarações, não gerados pelo parser. O teste público baixa apenas o SHA fixado e não executa o projeto. Execute os comandos a partir da raiz do OctorGit após instalar; sem instalar, prefixe com `PYTHONPATH=src` no Linux/macOS.
 
-Verificações desta versão: **115 testes**, **20/20 pares método/rota em três fixtures**, **9/9 endpoints de negócio em um projeto público**, com zero falsos positivos nos escopos dos gabaritos. Isso **não valida o MVP**: as fixtures são sintéticas, o gabarito público é parcial e ainda não foi revisado por uma pessoa independente. Consulte `docs/VERIFICATION.md` e os relatórios em `docs/benchmarks/`.
+Verificações desta versão: **118 testes**, **20/20 pares método/rota em três fixtures**, **9/9 endpoints de negócio em um projeto público**, com zero falsos positivos nos escopos dos gabaritos. Isso **não valida o MVP**: as fixtures são sintéticas, o gabarito público é parcial e ainda não foi revisado por uma pessoa independente. Consulte `docs/VERIFICATION.md` e os relatórios em `docs/benchmarks/`.
 
 ## Próximas entregas
 

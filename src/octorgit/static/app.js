@@ -401,16 +401,34 @@ async function testAI() {
   } catch (error) { $("#ai-settings-message").textContent = error.message; }
   finally { settingsBusy(false); await loadAIUsage(); }
 }
+function technologyIcon(name, kind = "application", className = "technology-icon") {
+  const key = name.split(" · ")[0].trim().toLowerCase().replace(/\s+\((?:cliente|driver)\)$/, "");
+  const catalog = state.icons || {icons:{},aliases:{}};
+  const icon = catalog.icons[catalog.aliases[key]];
+  const svg = svgElement("svg", {viewBox:"0 0 24 24",width:28,height:28,"aria-hidden":"true",focusable:"false",class:className});
+  if(icon){icon.paths.forEach(path=>svg.append(svgElement("path",{d:path,fill:icon.color})));svg.dataset.technology=catalog.aliases[key];}
+  else {
+    const paths = {database:"M3 5C3 1 21 1 21 5V19C21 23 3 23 3 19ZM3 5C3 9 21 9 21 5M3 12C3 16 21 16 21 12",cache:"M3 5H21V20H3ZM6 9H18M6 13H18M6 17H14",cloud:"M5 20C-2 17 2 9 8 11C7 1 22 1 21 12C27 15 23 21 19 20Z",infrastructure:"M3 3H21V10H3ZM3 14H21V21H3ZM6 6H8M6 17H8",queue:"M5 5L12 12L19 5M12 12V21M3 3H7V7H3ZM17 3H21V7H17Z",proxy:"M3 8H21M3 16H21M17 4L21 8L17 12M7 12L3 16L7 20",application:"M3 4H21V18H3ZM8 22H16M12 18V22M7 9L5 11L7 13M17 9L19 11L17 13",service:"M3 4H21V18H3ZM8 22H16M12 18V22"};
+    svg.append(svgElement("path",{d:paths[kind]||paths.application,fill:"none",stroke:"currentColor","stroke-width":1.5,"stroke-linecap":"round","stroke-linejoin":"round"}));
+  }
+  return svg;
+}
+function componentMark(component, languages = []) {
+  const wrap=element("span","node-icon technology-icon-wrap");
+  const names=component.kind==="application" ? languages.slice(0,3).map(item=>item.name) : [component.name];
+  (names.length?names:[component.name]).forEach(name=>wrap.append(technologyIcon(name,component.kind)));
+  return wrap;
+}
 function renderTechnology() {
   const summary = $("#technology-summary"), list = $("#technology-components"); summary.replaceChildren(); list.replaceChildren();
   const tech = state.data.analysis.technology;
   if (!tech) { list.append(element("p", "empty-state", "Esta análise é de uma versão anterior. Analise novamente o mesmo SHA para detectar linguagem, banco e infraestrutura.")); return; }
   const groups = [["Linguagens", tech.languages.map(l => `${l.name} (${l.files})`).join(", ")], ["Frameworks", tech.components.filter(c => c.kind === "framework").map(c => c.name).join(", ")], ["Bancos", tech.components.filter(c => c.kind === "database").map(c => c.name).join(", ")], ["Infraestrutura declarada", tech.components.filter(c => ["cloud", "infrastructure", "proxy", "ci"].includes(c.kind)).map(c => c.name).join(", ")]];
-  groups.forEach(([title, value]) => { const card = element("div", "card technology-stat"); card.append(element("span", "", title), element("strong", "", value || "Não confirmado")); summary.append(card); });
+  groups.forEach(([title, value], index) => { const card = element("div", "card technology-stat"); card.append(element("span", "", title), element("strong", "", value || "Não confirmado")); const icons=element("div","technology-icon-row"); const items=index===0?tech.languages.map(l=>({name:l.name,kind:"application"})):tech.components.filter(c=>index===1?c.kind==="framework":index===2?c.kind==="database":["cloud","infrastructure","proxy","ci"].includes(c.kind));const seen=new Set();items.forEach(item=>{if(!seen.has(item.name)&&seen.size<6){seen.add(item.name);icons.append(technologyIcon(item.name,item.kind));}});card.append(icons); summary.append(card); });
   const scopes = {dependency: "Dependência", import: "Import", compose_service: "Serviço Compose", django_settings: "Configuração Django", sqlite_connection: "Chamada SQLite declarada", build_configuration: "Build", terraform_declaration: "Terraform", manifest: "Manifesto", deployment_manifest: "Deploy declarado", compose_manifest: "Compose", ci_configuration: "CI declarada", repository: "Inventário de código"};
   tech.components.forEach(component => {
     const card = element("button", "technology-component"); card.type = "button";
-    card.append(element("span", "technology-symbol", ["database", "cache"].includes(component.kind) ? "▱" : ["cloud", "infrastructure"].includes(component.kind) ? "☁" : component.kind === "queue" ? "⋈" : "⚙"), element("strong", "", component.name), pill(scopes[component.scope] || component.scope), element("span", "small-muted", component.evidence_chain.length ? `${component.evidence_chain.length} referência(s) · ver código →` : "Inferido do inventário"));
+    card.append(componentMark(component, tech.languages), element("strong", "", component.name), pill(scopes[component.scope] || component.scope), element("span", "small-muted", component.evidence_chain.length ? `${component.evidence_chain.length} referência(s) · ver código →` : "Inferido do inventário"));
     card.addEventListener("click", () => showTechnology(component, scopes[component.scope])); list.append(card);
   });
   const note = element("p", "card-note", tech.limits.join(" ")); list.append(note);
@@ -420,6 +438,7 @@ function showTechnology(component, scope) {
   if (inArchitecture) { $("#architecture-detail").hidden = false; state.componentId = component.id; $$(".architecture-node").forEach(node => node.classList.toggle("selected", node.dataset.component === component.id)); }
   const title = $(inArchitecture ? "#architecture-detail-title" : "#dialog-title"); title.textContent = component.name;
   const content = $(inArchitecture ? "#architecture-detail-content" : "#dialog-content"); content.replaceChildren();
+  content.append(componentMark(component,state.data.analysis.technology?.languages || []));
   [["Tipo", technologyKinds[component.kind] || component.kind], ["Origem", scope || technologyScopes[component.scope] || component.scope], ["Confiança", confidenceNames[component.confidence] || component.confidence]].forEach(([label, value]) => { const row = element("div", "detail-row"); row.append(element("span", "", label), element("code", "", value)); content.append(row); });
   const code = element("div", "code-panel evidence-code");
   content.append(element("h3", "", "Evidências no repositório")); const refs = element("ol", "evidence-list");
@@ -438,8 +457,8 @@ function renderDiscoveryBoard() {
   categories.forEach(([title,kinds]) => {
     const column = element("section", "discovery-column"), components = (tech?.components || []).filter(c => kinds.includes(c.kind));
     const heading = element("h2", "discovery-heading", title); heading.append(element("span", "", components.length)); column.append(heading);
-    if (title === "Código e frameworks" && tech?.languages.length) { const card = element("button", "discovery-card"); card.type="button"; card.append(element("strong", "", tech.languages.map(l=>l.name).join(" / ")), element("p", "", "Linguagens identificadas pelas extensões dos arquivos."), pill("Inventário de código")); card.addEventListener("click",()=>page("architecture")); column.append(card); }
-    components.slice(0,3).forEach(component => { const card = element("button","discovery-card"); card.type="button"; card.append(element("strong","",component.name), element("p","",technologyScopes[component.scope] || component.scope), pill(`${component.evidence_chain.length} referência(s)`)); card.addEventListener("click",()=>showTechnology(component)); column.append(card); });
+    if (title === "Código e frameworks" && tech?.languages.length) { const card = element("button", "discovery-card"); card.type="button"; const marks=element("span","technology-icon-row");tech.languages.slice(0,4).forEach(l=>marks.append(technologyIcon(l.name)));card.append(marks); card.append(element("strong", "", tech.languages.map(l=>l.name).join(" / ")), element("p", "", "Linguagens identificadas pelas extensões dos arquivos."), pill("Inventário de código")); card.addEventListener("click",()=>page("architecture")); column.append(card); }
+    components.slice(0,3).forEach(component => { const card = element("button","discovery-card"); card.type="button"; card.append(componentMark(component),element("strong","",component.name), element("p","",technologyScopes[component.scope] || component.scope), pill(`${component.evidence_chain.length} referência(s)`)); card.addEventListener("click",()=>showTechnology(component)); column.append(card); });
     if (!components.length && title!=="Código e frameworks") { const card=element("div","discovery-card"); card.append(element("strong","","Não confirmado"),element("p","","Nenhuma declaração reconhecida neste recorte.")); column.append(card); }
     board.append(column);
   });
@@ -466,7 +485,7 @@ function renderInteractiveArchitecture(graph) {
     const path=svgElement("path",{d:`M ${fromX} ${fromY} C ${bend} ${fromY}, ${bend} ${toY}, ${toX} ${toY}`,stroke:"#77776b","stroke-width":1.3,fill:"none","marker-end":"url(#connection-arrow)"});if(relation.kind==="declared_dependency")path.setAttribute("stroke-dasharray","5 5");lines.append(path);
   }); canvas.append(lines);
   selected.forEach(component=>{const pos=positions.get(component.id),card=element("button",`architecture-node${state.componentId===component.id?" selected":""}`);card.type="button";card.dataset.component=component.id;card.style.left=`${pos.x/10}%`;card.style.top=`${pos.y}px`;card.style.width="23.6%";
-    card.append(element("span","node-icon",{application:"⌘",database:"▱",cache:"▤",queue:"⋈",proxy:"⇄",cloud:"☁",infrastructure:"▦",service:"▣",worker:"⚙"}[component.kind] || "▣"),pill(confidenceNames[component.confidence],component.confidence==="unconfirmed"?"unconfirmed":"neutral"),element("strong","",component.kind==="application"?(tech.languages.map(l=>l.name).join(" / ")||component.name):component.name));
+    card.append(componentMark(component,tech.languages),pill(confidenceNames[component.confidence],component.confidence==="unconfirmed"?"unconfirmed":"neutral"),element("strong","",component.kind==="application"?(tech.languages.map(l=>l.name).join(" / ")||component.name):component.name));
     const ref=component.evidence_chain[0];card.append(element("span","small-muted",component.kind==="application" ? tech.components.filter(c=>c.kind==="framework").map(c=>c.name).join(" · ") || "Inventário de código" : technologyKinds[component.kind] || component.kind),element("span","small-muted",ref?`${ref.file}:${ref.start_line}`:"Sem evidência suficiente"));card.addEventListener("click",()=>showTechnology(component));canvas.append(card);
   }); graph.append(canvas);
 }
@@ -657,6 +676,7 @@ $("#toggle-ai-key").addEventListener("click", () => { const field = $("#ai-api-k
 $("#ai-provider").addEventListener("change", () => { const preset = state.aiConfig?.presets[$("#ai-provider").value]; if (preset) { $("#ai-model").value = preset.model; $("#ai-base-url").value = preset.base_url; } $("#ai-api-key").value = ""; $("#ai-key-status").textContent = "Ao trocar de provedor ou endereço, informe a chave desse destino. A chave anterior não é reutilizada automaticamente."; });
 $("#clear-ai-key").addEventListener("click", async () => { settingsBusy(true); try { applyPublicAI((await api("/api/ai/config", {clear_key: true})).ai); $("#ai-settings-message").textContent = "Chave removida da sessão. Preferências não secretas mantidas."; } catch (error) { $("#ai-settings-message").textContent = error.message; } finally { settingsBusy(false); } });
 async function init() {
+  try { state.icons = await api("/technology-icons.json"); } catch { state.icons = {icons:{},aliases:{}}; }
   try { applyPublicAI((await api("/api/config")).ai); }
   catch { $("#ai-config-status").textContent = "Não foi possível consultar a configuração de IA. Atualize a página."; }
   await loadHistory();

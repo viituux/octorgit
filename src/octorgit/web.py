@@ -30,6 +30,7 @@ from .ai_config import AIConfiguration, create_provider
 from .history import HistoryStore, compare_analyses, metadata, repository_identity, snapshot_fingerprint
 from .insights import build_insights
 from .reports import diagrams, report_html
+from .technology_icons import catalog as technology_icon_catalog
 
 DOCUMENTS = ("README.md", "ENDPOINTS.md", "ARCHITECTURE.md", "analysis.json")
 
@@ -251,6 +252,9 @@ class Handler(BaseHTTPRequestHandler):
         if not self.trusted():
             return
         path = urlsplit(self.path).path
+        if path == "/technology-icons.json":
+            self.json(200, technology_icon_catalog())
+            return
         if path in {"/fonts/geist-regular.ttf", "/fonts/geist-semibold.ttf", "/fonts/jetbrains-mono.ttf"}:
             body = resources("octorgit").joinpath("static" + path).read_bytes()
             self.respond(200, body, "font/ttf")
