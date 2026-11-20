@@ -1,3 +1,4 @@
+from helpers_ai import structured_response
 import io
 import json
 import re
@@ -130,9 +131,9 @@ class WebTests(unittest.TestCase):
             model = "gemini-test"
 
             def generate(self, context):
-                return {"sections": [{"title": "Organização", "claims": [
-                    {"text": "Uma rota está declarada no projeto.", "confidence": "inferred", "evidence_ids": [context["facts"][0]["id"]]}
-                ]}]}, {"totalTokenCount": 99}
+                result = structured_response()
+                result["sections"][0]["claims"] = [{"text": "Uma rota está declarada no projeto.", "confidence": "inferred", "evidence_ids": [context["facts"][0]["id"]]}]
+                return result, {"totalTokenCount": 99}
         with patch.dict("os.environ", {"GEMINI_API_KEY": "test-http-private-key", "GEMINI_MODEL": "gemini-test"}):
             with self.request("/api/config") as response:
                 config_bytes = response.read()
@@ -146,6 +147,15 @@ class WebTests(unittest.TestCase):
                 self.assertIn("**Inferido**", response.read().decode())
             with self.request(f"/api/jobs/{job['id']}/download") as response:
                 archive = zipfile.ZipFile(io.BytesIO(response.read()))
+            self.assertIn("PROJECT.md", archive.namelist())
+            self.assertIn("RELATORIO-TECNICO.html", archive.namelist())
+            self.assertEqual(archive.read("PROJECT.md").decode().count("\n## "), 9)
+            with self.request(f"/api/jobs/{job['id']}/documents/PROJECT.md") as response:
+                self.assertIn("Resumo técnico do projeto", response.read().decode())
+            with self.request(f"/api/jobs/{job['id']}/report") as response:
+                self.assertEqual(response.read().count(b'<section id="summary-'), 9)
+            with self.request(f"/api/jobs/{job['id']}/report?view=technical") as response:
+                self.assertEqual(response.read().count(b'<svg xmlns='), 6)
             self.assertIn("AI.json", archive.namelist())
             self.assertNotIn(b"test-http-private-key", archive.read("AI.json"))
 
@@ -263,7 +273,7 @@ class WebTests(unittest.TestCase):
                 with request("/api/config") as response:
                     self.assertNotIn(b"dummy-http-session-key", response.read())
                 self.assertNotIn("dummy-http-session-key", (Path(directory) / "ai-settings.json").read_text())
-                structured = {"sections": [{"title": "Teste", "claims": [{"text": "Teste de API.", "confidence": "unconfirmed", "evidence_ids": []}]}]}
+                structured = structured_response()
                 upstream = {"choices": [{"finish_reason": "stop", "message": {"content": json.dumps(structured)}}], "usage": {"total_tokens": 10}}
                 with patch("octorgit.ai_engine.urlopen", return_value=io.BytesIO(json.dumps(upstream).encode())):
                     with request("/api/ai/test", {}) as response:

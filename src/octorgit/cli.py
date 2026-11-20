@@ -38,7 +38,9 @@ def main(argv=None):
             try:
                 result = DocumentationEngine().generate(ir, create_provider(AIConfiguration().snapshot()))
                 ai_result = result
-                (args.output / "AI.md").write_text(render_markdown(result, repo), encoding="utf-8")
+                summary = render_markdown(result, repo)
+                (args.output / "PROJECT.md").write_text(summary, encoding="utf-8")
+                (args.output / "AI.md").write_text(summary, encoding="utf-8")
                 (args.output / "AI.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
                 print("Documentação de IA gerada com referências verificadas; afirmações continuam inferidas.")
             except AIError as exc:
@@ -47,6 +49,8 @@ def main(argv=None):
         from .reports import report_html, diagrams
         insights = build_insights(ir, files)
         (args.output / "RELATORIO.html").write_text(report_html(ir, insights, ai=ai_result), encoding="utf-8")
+        if ai_result and ai_result.get("template_version"):
+            (args.output / "RELATORIO-TECNICO.html").write_text(report_html(ir, insights, ai=ai_result, detailed=True), encoding="utf-8")
         diagrams_dir = args.output / "diagramas"
         diagrams_dir.mkdir()
         for name, svg in diagrams(ir, insights).items():

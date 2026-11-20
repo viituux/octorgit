@@ -1,3 +1,4 @@
+from helpers_ai import structured_response
 from copy import deepcopy
 import io
 import json
@@ -22,10 +23,12 @@ def analysis():
 
 
 def response(context):
-    return {"sections": [{"title": "Organização", "claims": [
+    result = structured_response()
+    result["sections"][0]["claims"] = [
         {"text": "O projeto declara uma rota de consulta.", "confidence": "inferred", "evidence_ids": [context["facts"][0]["id"]]},
         {"text": "As instruções para executar o projeto não foram confirmadas.", "confidence": "unconfirmed", "evidence_ids": []}
-    ]}]}
+    ]
+    return result
 
 
 class FakeProvider:

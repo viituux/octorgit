@@ -1,3 +1,4 @@
+from helpers_ai import structured_response
 import io
 import json
 from pathlib import Path
@@ -18,7 +19,7 @@ REPO = {"url": None, "branch": None, "commit_sha": None, "source": "local_fixtur
 
 
 def answer():
-    return {"sections": [{"title": "Contexto", "claims": [{"text": "Teste de resposta estruturada.", "confidence": "unconfirmed", "evidence_ids": []}]}]}
+    return structured_response()
 
 
 class TechnologyTests(unittest.TestCase):

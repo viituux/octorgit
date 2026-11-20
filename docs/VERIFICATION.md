@@ -1,3 +1,7 @@
+# Resumo estruturado 0.10.0 — 20/11/2026
+
+115 testes Python passaram localmente, incluindo categorias obrigatórias, duplicatas, tamanho, ordem, evidências, contexto, exportação do resumo/anexo e rotas HTTP. Unidades DOM Node passaram também para as nove categorias e seu índice. Transportes de IA foram simulados: não houve chamada autenticada real nem avaliação humana da qualidade semântica dos resumos. Não houve inspeção interativa do navegador nesta sessão.
+
 # Visual Stitch 0.9.1 — 20/11/2026
 
 - Leitura dos arquivos dos testes explicitamente em UTF-8 para compatibilidade com a configuração padrão do Windows.

@@ -96,7 +96,9 @@ async function start(source) {
 }
 async function openResult(id) {
   const data = await api(`/api/jobs/${id}/result`);
-  state.job = id; state.data = data; state.endpointPage = 0; state.componentId = null;
+  state.job = id; state.data = data; state.document = data.ai?.status === "completed" ? "AI.md" : "README.md";
+  $$("[data-document]").forEach(tab => tab.setAttribute("aria-selected", String(tab.dataset.document === state.document)));
+  state.endpointPage = 0; state.componentId = null;
   $("#endpoint-detail").hidden = true; $("#architecture-detail").hidden = true; state.baseId = data.previous_id;
   try { sessionStorage.setItem("octorgit-job", id); } catch {}
   $("#progress-card").hidden = true;
@@ -116,7 +118,7 @@ function renderResult() {
   const notice = $("#ai-result-notice");
   notice.hidden = !ai || ai.status === "disabled";
   notice.classList.toggle("failed", ai?.status === "failed");
-  if (ai?.status === "completed") notice.textContent = `IA · ${ai.provider} · ${ai.model} · ${ai.cache_hit ? "Cache local · sem nova chamada ou consumo de tokens" : `${ai.usage.totalTokenCount ?? "?"} tokens informados na geração`}. Consulte a aba IA em Documentação. As referências foram verificadas; as explicações continuam sendo inferências.`;
+  if (ai?.status === "completed") notice.textContent = `IA · ${ai.provider} · ${ai.model} · ${ai.cache_hit ? "Cache local · sem nova chamada ou consumo de tokens" : `${ai.usage.totalTokenCount ?? "?"} tokens informados na geração`}. Consulte o Resumo com IA em Documentação. As referências foram verificadas; as explicações continuam sendo inferências.`;
   else if (ai?.status === "failed") notice.textContent = `A análise estática foi concluída, mas a IA não gerou o documento: ${ai.error}`;
   $("#welcome").hidden = true; $("#overview-results").hidden = false; $("#repository-bar").hidden = false;
   $("#repository-name").textContent = repo.url ? repo.url.replace("https://github.com/", "") : "Exemplo integrado · Django/DRF";
@@ -235,6 +237,7 @@ function renderDocument() {
   }
   $("#download-document").hidden = false;
   $("#download-document").href = `/api/jobs/${state.job}/documents/${state.document}`;
+  if (state.document === "AI.md" && state.data.ai?.template_version === "project-summary-v1") { renderProjectSummary(content); return; }
   if (state.document.endsWith(".json")) { content.append(element("pre", "", text)); return; }
   let fenced = false, code = [], list = null;
   for (const line of text.split("\n")) {
@@ -248,6 +251,19 @@ function renderDocument() {
   }
   if (fenced && code.length) content.append(element("pre", "", code.join("\n")));
   content.querySelectorAll("h1,h2,h3").forEach((heading, index) => { heading.id = `doc-section-${index}`; const button = element("button", "", heading.textContent); button.type = "button"; button.addEventListener("click", () => heading.scrollIntoView({block:"start", behavior:"smooth"})); $("#document-outline").append(button); });
+}
+function renderProjectSummary(content) {
+  const ai = state.data.ai;
+  content.append(element("h1", "", "Resumo técnico do projeto"), element("p", "detail-notice", "Documentação padronizada escrita pela IA a partir de fatos selecionados. As explicações continuam sendo inferências; o inventário completo está nos documentos técnicos e no anexo do relatório."));
+  ai.sections.forEach((section, index) => {
+    const card = element("section", "project-summary-section"), heading = element("h2", "", `${String(index+1).padStart(2,"0")} · ${section.title}`); heading.id = `summary-${section.category}`; card.append(heading);
+    section.claims.forEach(claim => {
+      card.append(pill(confidenceNames[claim.confidence], claim.confidence === "inferred" ? "inferred" : "unconfirmed"), element("p", "", claim.text));
+      if (claim.evidence_chain.length) { const details = element("details", "summary-evidence"); details.append(element("summary", "", "Ver evidências")); const list = element("ul"); claim.evidence_chain.forEach(ref=>{const li=element("li");li.append(sourceRef(ref));list.append(li);}); details.append(list); card.append(details); }
+    });
+    content.append(card);
+    const button = element("button", "", section.title);button.type="button";button.addEventListener("click",()=>heading.scrollIntoView({block:"start",behavior:"smooth"}));$("#document-outline").append(button);
+  });
 }
 async function loadHistory() {
   try { const response = await api("/api/jobs"); state.history = response.jobs; renderHistory(); }
@@ -575,8 +591,10 @@ $("#export-ai-usage").addEventListener("click", () => {
 function prepareExport() {
   if(!state.data){message("Faça uma análise para exportar um relatório.");return;}
   const query=`base=${encodeURIComponent(state.baseId || "none")}`;
+  $("#export-download-html").textContent = state.data.ai?.template_version === "project-summary-v1" ? "Baixar resumo HTML" : "Baixar relatório HTML";
   $("#export-repository").textContent=`${state.data.analysis.repository.url || "Exemplo integrado"} · ${state.data.analysis.repository.commit_sha || "Fixture sem SHA"}`;
   $("#export-open-report").href=`/api/jobs/${state.job}/report?${query}`;
+  $("#export-open-technical").href=`/api/jobs/${state.job}/report?${query}&view=technical`;
   $("#export-download-html").href=`/api/jobs/${state.job}/report?${query}&download=1`;
   $("#export-dialog").showModal();
 }

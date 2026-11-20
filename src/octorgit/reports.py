@@ -270,7 +270,39 @@ def diagrams(ir, insights, history=None, diff=None):
             "cobertura": coverage_svg(insights), "historico": history_svg(history or []), "comparacao": comparison_svg(diff)}
 
 
-def report_html(ir, insights=None, history=None, diff=None, ai=None):
+def project_summary_html(ir, insights, history, diff, ai):
+    """Concise AI-led document; raw inventories live in the separate technical report."""
+    repo = ir['repository']
+    charts = diagrams(ir, insights or build_insights(ir), history, diff)
+    parts = ['<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">',
+             '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; style-src \'unsafe-inline\'; img-src data:; base-uri \'none\'; form-action \'none\'">',
+             '<title>OctorGit · Resumo do projeto</title><style>body{margin:0;background:#f7f7f3;color:#242421;font:15px/1.7 "Segoe UI",Arial,sans-serif}main{max-width:1000px;margin:auto;padding:36px}header,section{background:#fff;border:1px solid #e6e5df;border-radius:10px;padding:26px;margin-bottom:20px}header{border-top:5px solid #181818}h1{font-size:30px;line-height:1.3}h2{font-size:21px;line-height:1.4}p{overflow-wrap:anywhere}.meta,.evidence{font-size:12px;color:#63635a}.notice{padding:15px;background:#f4f4ee;border-left:3px solid #77776b}.badge{font-size:11px;font-weight:600;text-transform:uppercase;color:#66665c}svg{width:100%;height:auto}details{font-size:12px;color:#63635a;margin:12px 0}summary{cursor:pointer}li{overflow-wrap:anywhere}@media print{body{background:white}main{padding:0;max-width:none}header,section{border:0;padding:12px 0;margin:12px 0}h2{break-after:avoid}svg{max-height:200mm}p{orphans:3;widows:3}}@page{size:A4;margin:15mm}</style></head><body><main>',
+             '<header><p class="meta">OCTORGIT · DOCUMENTAÇÃO PADRONIZADA</p><h1>Resumo técnico do projeto</h1>',
+             '<p>' + h(repo.get('url') or 'Exemplo / fixture local') + '</p>',
+             '<p class="meta">Commit: ' + h(repo.get('commit_sha') or 'não disponível — fixture local') + ' · Modelo: ' + h(ai['model']) + ' · Padrão: ' + h(ai['template_version']) + '</p>',
+             '<p class="notice">Resumo escrito pela IA a partir de fatos selecionados da análise estática. O código não foi executado. Referências foram verificadas, mas não provam a semântica das explicações. Informações ausentes permanecem não confirmadas. O inventário completo fica no anexo técnico.</p>']
+    if repo.get('private'):
+        parts.append('<p class="notice">Repositório privado: este documento pode conter informações internas.</p>')
+    parts.append('</header>')
+    chart_for = {'architecture':'arquitetura', 'endpoints':'endpoints', 'limitations':'cobertura'}
+    for index, section in enumerate(ai['sections'], 1):
+        parts.append('<section id="summary-' + h(section['category']) + '"><h2>' + str(index).zfill(2) + ' · ' + h(section['title']) + '</h2>')
+        for claim in section['claims']:
+            parts.append('<p><span class="badge">' + ('Inferido' if claim['confidence']=='inferred' else 'Não confirmado') + '</span><br>' + h(claim['text']) + '</p>')
+            if claim['evidence_chain']:
+                parts.append('<details><summary>Evidências da explicação</summary><ul>')
+                parts.extend('<li>' + h(ref['file']) + ':' + str(ref['start_line']) + '–' + str(ref['end_line']) + '</li>' for ref in claim['evidence_chain'])
+                parts.append('</ul></details>')
+        if section['category'] in chart_for:
+            parts.append(charts[chart_for[section['category']]])
+        parts.append('</section>')
+    parts.append('<footer class="meta">OctorGit · Resumo por categoria. Dados e afirmações continuam sujeitos aos limites do parser e do contexto parcial.</footer></main></body></html>')
+    return ''.join(parts)
+
+
+def report_html(ir, insights=None, history=None, diff=None, ai=None, detailed=False):
+    if ai and ai.get("status") == "completed" and ai.get("template_version") == "project-summary-v1" and not detailed:
+        return project_summary_html(ir, insights, history, diff, ai)
     insights = insights or build_insights(ir)
     charts = diagrams(ir, insights, history, diff)
     repo = ir["repository"]

@@ -69,4 +69,8 @@ run(`state.document='README.md';renderDocument();`);
 assert.equal(ids.get('document-outline').children.length,2);
 assert.ok(ids.get('document-content').textContent.includes('<script>não executar</script>'));
 assert.equal(ids.get('document-content').querySelectorAll('script').length,0);
+// AI summary is split into nine concise sections with an index, rather than one raw block.
+run(`state.data.documents['AI.md']='summary';state.data.ai={template_version:'project-summary-v1',sections:Array.from({length:9},(_,index)=>({category:'category-'+index,title:'Categoria '+index,claims:[{text:'Texto curto da categoria.',confidence:'unconfirmed',evidence_chain:[]}]}))};state.document='AI.md';renderDocument();`);
+assert.equal(ids.get('document-content').children.filter(node=>node.className==='project-summary-section').length,9);
+assert.equal(ids.get('document-outline').children.length,9);
 console.log('Frontend interaction units passed: graph, evidence panes, export, tabs, search, documentation.');

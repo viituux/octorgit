@@ -1,3 +1,4 @@
+from helpers_ai import structured_response
 import io
 import json
 from pathlib import Path
@@ -101,7 +102,7 @@ class GitHubTests(unittest.TestCase):
             provider = 'openai-compatible'
             provider_id = 'fake'
             def generate(self, context):
-                return {'sections':[{'title':'Teste','claims':[{'text':'Não confirmado','confidence':'unconfirmed','evidence_ids':[]}]}]}, {}
+                return structured_response(), {}
         with tempfile.TemporaryDirectory() as directory:
             jobs = Jobs(HistoryStore(directory))
             try:

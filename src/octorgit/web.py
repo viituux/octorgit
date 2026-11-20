@@ -157,7 +157,7 @@ class Jobs:
             insights = build_insights(ir, source)
             ai_result = {"status": "disabled"}
             if payload.get("use_ai"):
-                self.update(job_id, progress=85, stage="Gerando explicações com IA e validando referências")
+                self.update(job_id, progress=85, stage="Analisando categorias e escrevendo o resumo com IA")
                 try:
                     if repository.get("private") and not payload.get("private_ai_consent", False):
                         raise AIError("IA não acionada: autorize explicitamente o envio de fatos do repositório privado ao provedor. A análise estática está disponível.")
@@ -170,7 +170,8 @@ class Jobs:
                 export(ir, output)
                 documents = {name: (output / name).read_text(encoding="utf-8") for name in DOCUMENTS}
             if ai_result["status"] == "completed":
-                documents["AI.md"] = render_markdown(ai_result, repository)
+                documents["PROJECT.md"] = render_markdown(ai_result, repository)
+                documents["AI.md"] = documents["PROJECT.md"]
                 documents["AI.json"] = json.dumps(ai_result, indent=2, ensure_ascii=False) + "\n"
             self.update(job_id, status="completed", progress=100, stage="Análise concluída", ir=ir, documents=documents, ai_result=ai_result, insights=insights,
                         repository_id=repository_identity(ir), repository_url=repository.get("url"), commit_sha=repository.get("commit_sha"), fingerprint=snapshot_fingerprint(ir),
@@ -312,7 +313,7 @@ class Handler(BaseHTTPRequestHandler):
                 if parts[3:] == ["compare"]:
                     self.json(200, {"comparison": diff})
                 elif parts[3:] == ["report"]:
-                    body = report_html(visual["analysis"], visual["insights"], visual["history"], diff, visual["ai"])
+                    body = report_html(visual["analysis"], visual["insights"], visual["history"], diff, visual["ai"], detailed=parse_qs(urlsplit(self.path).query).get("view") == ["technical"])
                     download = "download" in parse_qs(urlsplit(self.path).query)
                     self.respond(200, body, "text/html; charset=utf-8", "RELATORIO.html" if download else None, standalone=True)
                 else:
@@ -334,11 +335,13 @@ class Handler(BaseHTTPRequestHandler):
                     for name, content in result["documents"].items():
                         archive.writestr(name, content)
                     archive.writestr("RELATORIO.html", report_html(visual["analysis"], visual["insights"], visual["history"], diff, visual["ai"]))
+                    if visual["ai"].get("template_version") == "project-summary-v1":
+                        archive.writestr("RELATORIO-TECNICO.html", report_html(visual["analysis"], visual["insights"], visual["history"], diff, visual["ai"], detailed=True))
                     for name, content in diagrams(visual["analysis"], visual["insights"], visual["history"], diff).items():
                         archive.writestr("diagramas/" + name + ".svg", content)
                 self.respond(200, buffer.getvalue(), "application/zip", "octorgit-documentacao.zip")
                 return
-            if len(parts) == 5 and parts[3] == "documents" and parts[4] in (*DOCUMENTS, "AI.md", "AI.json") and parts[4] in result["documents"]:
+            if len(parts) == 5 and parts[3] == "documents" and parts[4] in (*DOCUMENTS, "PROJECT.md", "AI.md", "AI.json") and parts[4] in result["documents"]:
                 self.respond(200, result["documents"][parts[4]], "text/plain; charset=utf-8", parts[4])
                 return
         self.json(404, {"error": "Página não encontrada."})

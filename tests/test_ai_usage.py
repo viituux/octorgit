@@ -1,3 +1,4 @@
+from helpers_ai import structured_response
 import io
 from datetime import datetime, timezone
 import json
@@ -23,7 +24,7 @@ def policy(**overrides):
 
 
 def answer():
-    return {'sections':[{'title':'Teste', 'claims':[{'text':'Não confirmado.', 'confidence':'unconfirmed','evidence_ids':[]}]}]}
+    return structured_response()
 
 
 class Fake:

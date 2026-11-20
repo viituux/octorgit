@@ -4,7 +4,17 @@ Understand code. Generate knowledge.
 
 [**Baixar Windows e Linux**](https://github.com/viituux/octorgit/releases/latest) · [Testes automáticos](https://github.com/viituux/octorgit/actions/workflows/tests.yml)
 
-OctorGit lê projetos Python sem importar ou executar código, registra um snapshot de commit do GitHub e produz um inventário verificável. Versão **0.9.1**: mapas visuais, relatório com diagramas, trechos de código, histórico SQLite e comparação por snapshot. IA configurável continua opcional. IR **0.3.0**. A interface foi acrescentada por solicitação do usuário; o gate de qualidade do MVP continua pendente.
+OctorGit lê projetos Python sem importar ou executar código, registra um snapshot de commit do GitHub e produz um inventário verificável. Versão **0.10.0**: mapas visuais, relatório com diagramas, trechos de código, histórico SQLite e comparação por snapshot. IA configurável continua opcional. IR **0.3.0**. A interface foi acrescentada por solicitação do usuário; o gate de qualidade do MVP continua pendente.
+
+## Resumo de projeto escrito pela IA — 0.10.0
+
+Ative **Gerar resumo padronizado com IA** ao analisar um projeto. Em uma chamada, a IA interpreta os fatos selecionados e escreve nove categorias fixas: **Resumo do projeto; Arquitetura e organização; Linguagens e tecnologias; Dados e persistência; Endpoints e fluxos; Infraestrutura e integrações; Segurança e acesso; Execução e testes; Limitações e próximos passos**.
+
+Cada categoria tem uma ou duas afirmações curtas (até 320 caracteres por afirmação, 4.800 no documento). Quando o contexto não permite uma conclusão, a informação fica explicitamente não confirmada. IDs de evidência e estrutura são validados; isso não garante a interpretação semântica. A IA não executa o código e não inventa comandos, testes aprovados ou implantação. O padrão é `project-summary-v1`; não depende de títulos livres gerados pelo modelo.
+
+Após uma geração válida, **Documentação → Resumo com IA** abre o resumo por categorias e índice. `PROJECT.md` contém o documento padrão; `AI.md` mantém uma cópia por compatibilidade e `AI.json` guarda os resultados/evidências. O relatório principal `RELATORIO.html` contém o resumo com três diagramas relevantes, e `RELATORIO-TECNICO.html` preserva o inventário completo com seis SVGs. Ambos podem ser salvos como PDF pela impressão do navegador. Os arquivos detalhados e os seis SVGs também continuam no ZIP.
+
+Configure a API antes de ativar a opção; projetos privados exigem o consentimento separado já existente. Falha de IA, seção ausente, repetida ou fora dos limites mantém o resultado estático e mostra um erro, sem preencher textos como se tivessem sido escritos pela IA. Análises antigas precisam ser refeitas com IA para obter este padrão; não são alteradas automaticamente.
 
 ## Novo visual — 0.9.1
 
@@ -49,8 +59,8 @@ O mesmo programa funciona nos dois sistemas, com inicializadores próprios. Requ
 
 | Sistema | Pacote | Iniciar |
 | --- | --- | --- |
-| Windows | `octorgit-0.9.1-windows.zip` | Dois cliques em `ABRIR_OCTORGIT.bat` |
-| Linux | `octorgit-0.9.1-linux.tar.gz` | `bash ABRIR_OCTORGIT.sh` |
+| Windows | `octorgit-0.10.0-windows.zip` | Dois cliques em `ABRIR_OCTORGIT.bat` |
+| Linux | `octorgit-0.10.0-linux.tar.gz` | `bash ABRIR_OCTORGIT.sh` |
 
 ### Linux: início rápido
 
@@ -117,7 +127,7 @@ Depois de analisar, abra **Relatório visual**. O botão **Relatório visual** n
 2. Pressione **Ctrl+P → Salvar como PDF**.
 3. Os diagramas já estão dentro do documento: não precisa de internet, Mermaid ou do OctorGit aberto para visualizar.
 
-O documento contém organização, endpoints/configuração, histórico, comparação, cobertura e trechos de código. Limites de exibição acompanham cada seção; as listas completas permanecem no JSON. Há um exemplo pronto em `examples/relatorio-visual/RELATORIO-EXEMPLO.html` para abrir sem iniciar o aplicativo.
+Sem IA, o relatório contém organização, endpoints/configuração, histórico, comparação, cobertura e trechos de código. Com o resumo padronizado de IA, esses inventários completos ficam no anexo técnico e o relatório principal apresenta as nove categorias e três diagramas. Limites de exibição acompanham cada seção; as listas completas permanecem no JSON. Há um exemplo pronto em `examples/relatorio-visual/RELATORIO-EXEMPLO.html` para abrir sem iniciar o aplicativo.
 
 O mapa de tecnologias usa fundo claro e ícones monocromáticos de aplicação, banco, fila e infraestrutura. As conexões representam configurações e dependências declaradas, não tráfego observado. Hospedagem e banco não detectados aparecem como não confirmados. As imagens SVG não dependem de IA.
 
@@ -201,7 +211,7 @@ python -m octorgit.benchmark --public-manifest docs/benchmarks/rest-framework-tu
 
 O benchmark recusa sobrescrever um relatório existente. Gabaritos são JSONs revisáveis, escritos por inspeção das declarações, não gerados pelo parser. O teste público baixa apenas o SHA fixado e não executa o projeto. Execute os comandos a partir da raiz do OctorGit após instalar; sem instalar, prefixe com `PYTHONPATH=src` no Linux/macOS.
 
-Verificações desta versão: **110 testes**, **20/20 pares método/rota em três fixtures**, **9/9 endpoints de negócio em um projeto público**, com zero falsos positivos nos escopos dos gabaritos. Isso **não valida o MVP**: as fixtures são sintéticas, o gabarito público é parcial e ainda não foi revisado por uma pessoa independente. Consulte `docs/VERIFICATION.md` e os relatórios em `docs/benchmarks/`.
+Verificações desta versão: **115 testes**, **20/20 pares método/rota em três fixtures**, **9/9 endpoints de negócio em um projeto público**, com zero falsos positivos nos escopos dos gabaritos. Isso **não valida o MVP**: as fixtures são sintéticas, o gabarito público é parcial e ainda não foi revisado por uma pessoa independente. Consulte `docs/VERIFICATION.md` e os relatórios em `docs/benchmarks/`.
 
 ## Próximas entregas
 

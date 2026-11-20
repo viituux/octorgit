@@ -78,3 +78,9 @@ A IR 0.2.0 inclui permissions e configuration com evidências por campo. São re
 ## Interface Stitch — 0.9.0
 
 Mantém servidor local e dependências Python anteriores. static/fonts contém fontes locais com licenças; três rotas explícitas servem somente esses TTFs. Não serve caminhos arbitrários. Canvas de tecnologias é construído por DOM/SVG a partir da IR e seleciona evidências em painel adjacente. Exportação mantém SVG determinístico no servidor. Busca é local sobre o resultado em memória. Abas e índice usam nós DOM e atributos acessíveis. PDF continua via relatório independente e impressão manual. Testes DOM Node usam harness limitado, sem navegador ou layout.
+
+## Documentação padronizada — 0.10.0
+
+`ai_engine.CATEGORIES` define nove títulos/IDs e orientações fixas. Esquema de resposta restringe títulos, e o validador exige todas as categorias exatamente uma vez, 1–2 afirmações por categoria, até 320 caracteres por afirmação e 4.800 no total, sem quebras de linha. O resultado reordena as categorias, resolve evidências e inclui template_version=project-summary-v1. SYSTEM integra a chave do cache; o padrão não reutiliza gerações antigas.
+
+Contexto inclui linguagens e recortes de organização sem fontes brutas; símbolos auxiliares são omitidos. A IA interpreta fatos da análise estática, não substitui o parser por execução. `PROJECT.md` é o resumo e `AI.md` seu alias. `report_html` usa resumo com três diagramas por padrão quando há resultado do template; detailed=True mantém o inventário de seis diagramas. /report?view=technical e RELATORIO-TECNICO.html dão acesso ao anexo. A interface mostra categorias e índice, com evidências recolhidas. Histórico legado continua com seu renderizador anterior.
