@@ -2,7 +2,7 @@
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 const state = {job: null, data: null, page: "overview", document: "README.md", history: [], busy: false, endpointPage: 0};
-const pageNames = {overview: "Visão geral", endpoints: "Endpoints", architecture: "Arquitetura", documents: "Documentação", history: "Histórico salvo", coverage: "Relatório de cobertura", compare: "Comparar versões", report: "Relatório visual", settings: "Configurações de IA"};
+const pageNames = {overview: "Visão geral", endpoints: "Endpoints", architecture: "Arquitetura", documents: "Documentação", history: "Histórico salvo", coverage: "Relatório de cobertura", compare: "Comparar versões", report: "Relatório visual", settings: "Administração de IA"};
 const descriptions = {overview: "Transforme um repositório Python em um mapa que você pode verificar.", endpoints: "Do método à view, com as referências que sustentam cada descoberta.", architecture: "Linguagens, bancos e infraestrutura identificados com evidências.", documents: "Consulte, confira e exporte o conhecimento extraído do repositório.", history: "Retome snapshots e evidências salvos no seu computador.", coverage: "Veja o que foi lido, filtrado e permaneceu desconhecido.", compare: "Rotas, configurações e documentos que precisam de revisão.", report: "Compartilhe explicações e diagramas em um documento independente.", settings: "Escolha seu provedor, modelo, endereço de API e chave para esta sessão."};
 const confidenceNames = {extracted: "Extraído", inferred: "Inferido", unconfirmed: "Não confirmado"};
 const gaps = {auxiliary_file_excluded_from_endpoints: "Arquivo de teste, exemplo ou documentação excluído da análise de endpoints",default_router_api_root_and_format_suffix_not_enumerated: "API root e sufixos de formato do DefaultRouter não enumerados", include_module_not_found: "Módulo de URLs não encontrado no snapshot", view_symbol_not_resolved: "Não foi possível resolver o símbolo da view", custom_lookup_not_supported: "Lookup personalizado ainda não suportado", nested_regex_not_supported: "Montagem de regex aninhado não suportada", regex_include_not_supported: "Include com regex não suportado", include_cycle_or_depth_limit: "Include cíclico ou limite de profundidade atingido", dynamic_urlpatterns_not_supported: "urlpatterns construído de forma dinâmica", dynamic_route_not_supported: "Declaração dinâmica de rota não suportada", relative_import_outside_package: "Import relativo fora do pacote selecionado", root_urlconf_module_not_found: "Módulo raiz de URLs não encontrado", multiple_root_urlconfs_select_explicitly: "Várias raízes de URLs encontradas; selecione uma nas opções", python_parse_failed: "Arquivo incompatível com o parser Python", custom_action_not_supported: "Configuração de ação personalizada não suportada", dynamic_include_not_supported: "Include dinâmico não suportado", custom_dispatch_not_supported: "Dispatch personalizado exige análise adicional", viewset_base_not_supported: "Base do ViewSet não reconhecida", as_view_overrides_not_supported: "Opções de as_view ainda não suportadas"};
@@ -48,6 +48,7 @@ function page(name) {
   $("#analysis-form-card").hidden = name !== "overview" || Boolean(state.data);
   $("#new-analysis").hidden = !state.data && name === "overview";
   if (name === "history") loadHistory();
+  if (name === "settings") loadAIUsage();
 }
 function setBusy(busy) {
   state.busy = busy;
@@ -87,7 +88,7 @@ async function start(source) {
     await loadHistory();
     await poll(job);
   } catch (error) { message(error.message); $("#progress-card").hidden = true; }
-  finally { setBusy(false); await loadHistory(); }
+  finally { setBusy(false); await loadHistory(); await loadAIUsage(); }
 }
 async function openResult(id) {
   const data = await api(`/api/jobs/${id}/result`);
@@ -105,7 +106,7 @@ function renderResult() {
   const notice = $("#ai-result-notice");
   notice.hidden = !ai || ai.status === "disabled";
   notice.classList.toggle("failed", ai?.status === "failed");
-  if (ai?.status === "completed") notice.textContent = `IA · ${ai.provider} · ${ai.model} · ${ai.usage.totalTokenCount ?? "?"} tokens na geração${ai.cache_hit ? " · resposta reutilizada do cache da sessão" : ""}. Consulte a aba IA em Documentação. As referências foram verificadas; as explicações continuam sendo inferências.`;
+  if (ai?.status === "completed") notice.textContent = `IA · ${ai.provider} · ${ai.model} · ${ai.cache_hit ? "Cache local · sem nova chamada ou consumo de tokens" : `${ai.usage.totalTokenCount ?? "?"} tokens informados na geração`}. Consulte a aba IA em Documentação. As referências foram verificadas; as explicações continuam sendo inferências.`;
   else if (ai?.status === "failed") notice.textContent = `A análise estática foi concluída, mas a IA não gerou o documento: ${ai.error}`;
   $("#welcome").hidden = true; $("#overview-results").hidden = false; $("#repository-bar").hidden = false;
   $("#repository-name").textContent = repo.url ? repo.url.replace("https://github.com/", "") : "Exemplo integrado · Django/DRF";
@@ -352,6 +353,7 @@ async function saveAI(event) {
   try {
     const data = await api("/api/ai/config", aiPayload());
     applyPublicAI(data.ai);
+    await loadAIUsage();
     $("#ai-settings-message").textContent = data.ai.persistence_error || (data.ai.configured ? "Configuração aplicada. A chave fica só na memória desta sessão. Você já pode testar a conexão ou usar IA na próxima análise." : "Preferências aplicadas. Configure uma chave para habilitar a geração com este provedor.");
   } catch (error) { $("#ai-settings-message").textContent = error.message; }
   finally { settingsBusy(false); }
@@ -366,7 +368,7 @@ async function testAI() {
     const data = await api("/api/ai/test", {});
     $("#ai-settings-message").textContent = `Conexão e resposta JSON verificadas · ${data.model} · ${data.usage.totalTokenCount ?? "?"} tokens informados.`;
   } catch (error) { $("#ai-settings-message").textContent = error.message; }
-  finally { settingsBusy(false); }
+  finally { settingsBusy(false); await loadAIUsage(); }
 }
 function renderTechnology() {
   const summary = $("#technology-summary"), list = $("#technology-components"); summary.replaceChildren(); list.replaceChildren();
@@ -393,6 +395,48 @@ function showTechnology(component, scope) {
   showCode(code, component.evidence_chain[0]);
   if (!$("#endpoint-dialog").open) $("#endpoint-dialog").showModal();
 }
+
+const usageNumber = value => value === null || value === undefined ? "Desconhecido" : new Intl.NumberFormat("pt-BR").format(value);
+const usageMoney = value => value === null || value === undefined ? "Desconhecido" : new Intl.NumberFormat("pt-BR", {style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 6}).format(Number(value));
+async function loadAIUsage() {
+  try {
+    const data = await api("/api/ai/usage"); state.usage = data;
+    const totals = data.totals, summary = $("#ai-usage-summary"); summary.replaceChildren();
+    [["Chamadas no mês", usageNumber(totals.requests)], ["Tokens conhecidos", usageNumber(totals.total_tokens)], ["Subtotal estimado", usageMoney(totals.estimated_cost)], ["Custos desconhecidos", usageNumber(totals.unknown_costs)]].forEach(([title, value]) => { const card = element("div", "card technology-stat"); card.append(element("span", "", title), element("strong", "", value)); summary.append(card); });
+    const status = `${data.month} (UTC) · entrada ${usageNumber(totals.input_tokens)} · saída ${usageNumber(totals.output_tokens)} · ${totals.errors} erro(s) · ${totals.unknown_tokens} chamada(s) sem total de tokens. ${data.persistent ? "Histórico salvo neste computador." : "Histórico apenas nesta sessão."}`;
+    $("#ai-budget-status").textContent = `${data.policy.paused ? "CHAMADAS PAUSADAS. " : ""}${totals.budget_reached ? "ORÇAMENTO ESTIMADO ATINGIDO. " : ""}${data.policy.monthly_budget === null ? "Sem orçamento definido. " : `Orçamento ${usageMoney(data.policy.monthly_budget)}. `}${totals.unknown_costs ? "Subtotal parcial: existem custos desconhecidos. " : ""}${status}`;
+    $("#ai-budget-status").classList.toggle("usage-alert", totals.budget_reached || data.policy.paused);
+    $("#ai-input-price").value = data.prices.input_per_million ?? "";
+    $("#ai-output-price").value = data.prices.output_per_million ?? "";
+    $("#ai-monthly-budget").value = data.policy.monthly_budget ?? "";
+    $("#ai-calls-paused").checked = data.policy.paused;
+    $("#ai-price-profile").textContent = `Tarifa do perfil aplicado: ${data.profile.provider} / ${data.profile.model}. Aplique primeiro qualquer troca de provedor/modelo na configuração acima.`;
+    const rows = $("#ai-usage-rows"); rows.replaceChildren();
+    data.recent.forEach(event => {
+      const row = element("tr");
+      const status = {started: "Em andamento ou interrompida", received: "Resposta recebida", error: "Erro · cobrança não confirmada"}[event.status] || event.status;
+      [new Date(event.created_at).toLocaleString("pt-BR"), `${event.provider} / ${event.model}`, `${event.purpose === "analysis" ? "Análise" : "Teste de conexão"} · ${status}`, usageNumber(event.input_tokens), usageNumber(event.output_tokens), usageNumber(event.total_tokens), usageMoney(event.estimated_cost)].forEach(value => row.append(element("td", "", value)));
+      rows.append(row);
+    });
+    if (!data.recent.length) { const row = element("tr"), cell = element("td", "empty-state", "Nenhuma chamada registrada. O acompanhamento começa nesta versão."); cell.colSpan = 7; row.append(cell); rows.append(row); }
+  } catch (error) { $("#ai-budget-message").textContent = error.message; }
+}
+$("#refresh-ai-usage").addEventListener("click", loadAIUsage);
+$("#ai-budget-form").addEventListener("submit", async event => {
+  event.preventDefault(); $("#save-ai-budget").disabled = true;
+  try {
+    await api("/api/ai/usage", {profile_id: state.usage?.profile.id, input_per_million: $("#ai-input-price").value, output_per_million: $("#ai-output-price").value, monthly_budget: $("#ai-monthly-budget").value, paused: $("#ai-calls-paused").checked});
+    $("#ai-budget-message").textContent = "Gestão salva. As novas tarifas serão usadas nas próximas chamadas; chamadas em andamento mantêm a tarifa inicial.";
+    await loadAIUsage();
+  } catch (error) { $("#ai-budget-message").textContent = error.message; }
+  finally { $("#save-ai-budget").disabled = false; }
+});
+$("#export-ai-usage").addEventListener("click", () => {
+  if (!state.usage) return;
+  const rows = [["Data UTC", "Provedor", "Modelo", "Finalidade", "Estado", "Entrada", "Saída", "Total", "Estimativa USD"], ...state.usage.recent.map(e => [e.created_at, e.provider, e.model, e.purpose, e.status, e.input_tokens, e.output_tokens, e.total_tokens, e.estimated_cost])];
+  const csv = rows.map(row => row.map(value => { let text = value === null ? "desconhecido" : String(value); if (/^[=+@\-]/.test(text)) text = "'" + text; return '"' + text.replaceAll('"', '""') + '"'; }).join(";")).join("\r\n");
+  const url = URL.createObjectURL(new Blob(["\uFEFF" + csv], {type: "text/csv;charset=utf-8"})); const link = element("a"); link.href = url; link.download = "octorgit-consumo-ia.csv"; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+});
 
 $("#analysis-form").addEventListener("submit", event => { event.preventDefault(); start("github"); });
 $("#demo-button").addEventListener("click", () => start("demo"));
@@ -433,6 +477,7 @@ async function init() {
   try { applyPublicAI((await api("/api/config")).ai); }
   catch { $("#ai-config-status").textContent = "Não foi possível consultar a configuração de IA. Atualize a página."; }
   await loadHistory();
+  await loadAIUsage();
   let saved;
   try { saved = sessionStorage.getItem("octorgit-job"); } catch {}
   if (!saved || !state.history.some(j => j.id === saved)) saved = state.history.find(j => j.status === "completed")?.id;

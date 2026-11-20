@@ -66,3 +66,7 @@ A IR 0.2.0 inclui permissions e configuration com evidências por campo. São re
 ## Tecnologias — 0.6.0
 
 `technology.py` examina extensões, manifests conhecidos, DATABASES literal, Dockerfile, Compose, Kubernetes, Terraform e Render sem executar comandos ou carregar dependências. Mantém evidências e distingue clientes de servidores declarados. `reports.py` gera ícones e relações estáticas; não usa IA para inventar imagens. Hospedagem não detectada é explicitamente não confirmada. Primeiro contato foi removido da interface e relatório.
+
+## Administração de consumo — 0.7.0
+
+`ai_usage.py` mantém ledger SQLite separado, com tarifas por hash de provedor/endereço/modelo e política global de orçamento/pausa. `MeteredProvider` registra antes da chamada e finaliza com tokens numéricos normalizados, inclusive quando o adaptador rejeita uma resposta após receber metadados. O cache de DocumentationEngine evita chamar o wrapper novamente. Tokens não fornecidos ficam null. Eventos interrompidos permanecem started, sem alegar cobrança zero. Custos usam Decimal e a tarifa capturada na abertura. O painel usa mês UTC e distingue subtotal conhecido de registros sem custo. Chamadas da CLI não são instrumentadas. GET /api/ai/usage retorna resumo mensal e 50 eventos; POST protegido salva tarifas/política com verificação de perfil para evitar salvar preços no destino errado.

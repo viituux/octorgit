@@ -4,7 +4,17 @@ Understand code. Generate knowledge.
 
 [**Baixar Windows e Linux**](https://github.com/viituux/octorgit/releases/latest) · [Testes automáticos](https://github.com/viituux/octorgit/actions/workflows/tests.yml)
 
-OctorGit lê projetos Python sem importar ou executar código, registra um snapshot de commit do GitHub e produz um inventário verificável. Versão **0.6.1**: mapas visuais, relatório com diagramas, trechos de código, histórico SQLite e comparação por snapshot. IA configurável continua opcional. IR **0.3.0**. A interface foi acrescentada por solicitação do usuário; o gate de qualidade do MVP continua pendente.
+OctorGit lê projetos Python sem importar ou executar código, registra um snapshot de commit do GitHub e produz um inventário verificável. Versão **0.7.0**: mapas visuais, relatório com diagramas, trechos de código, histórico SQLite e comparação por snapshot. IA configurável continua opcional. IR **0.3.0**. A interface foi acrescentada por solicitação do usuário; o gate de qualidade do MVP continua pendente.
+
+## Administração de IA — 0.7.0
+
+No menu **Administração de IA**, configure sua API e acompanhe tokens de entrada/saída, subtotal estimado em USD, orçamento mensal, erros e as 50 chamadas mais recentes. Informe os preços oficiais por milhão de tokens do modelo aplicado e clique em **Salvar gestão de consumo**. Tarifas ficam separadas por provedor/endereço/modelo e são capturadas no início de cada chamada; alterações não recalculam chamadas anteriores.
+
+O orçamento é global para este aplicativo e gera aviso, sem bloqueio automático. **Pausar novas chamadas externas de IA** impede novos pedidos de análise/teste; chamadas em andamento podem terminar, e o cache local continua disponível sem novo consumo. Exporte os 50 registros recentes em CSV para conferência.
+
+O painel registra apenas chamadas feitas pela interface local a partir desta versão, incluindo testes de conexão. Não consulta saldo, fatura, uso de outros aplicativos ou uso da CLI. Totais mensais usam UTC e incluem todos os registros do mês. O histórico local fica em `ai-usage.sqlite3`, ao lado do histórico de análises; nenhuma chave, prompt ou resposta é guardada nesse registro.
+
+Custos desconhecidos são destacados, e o subtotal é parcial nesses casos. Falhas podem ter cobrança mesmo sem tokens informados. Tokens de raciocínio são incluídos na saída quando informados; descontos/cache do provedor, faixas, ferramentas e impostos podem alterar o valor real. **Não é uma fatura nem um limite garantido de gastos.**
 
 ## Correções de precisão — 0.6.1
 
@@ -18,8 +28,8 @@ O mesmo programa funciona nos dois sistemas, com inicializadores próprios. Requ
 
 | Sistema | Pacote | Iniciar |
 | --- | --- | --- |
-| Windows | `octorgit-0.6.1-windows.zip` | Dois cliques em `ABRIR_OCTORGIT.bat` |
-| Linux | `octorgit-0.6.1-linux.tar.gz` | `bash ABRIR_OCTORGIT.sh` |
+| Windows | `octorgit-0.7.0-windows.zip` | Dois cliques em `ABRIR_OCTORGIT.bat` |
+| Linux | `octorgit-0.7.0-linux.tar.gz` | `bash ABRIR_OCTORGIT.sh` |
 
 ### Linux: início rápido
 
@@ -69,7 +79,7 @@ Nesse caso abra http://127.0.0.1:8766. Para encerrar, pressione Ctrl+C no termin
 - **Visão geral:** entrada do repositório, opções de branch/raiz, progresso real por etapa, resumo e lacunas.
 - **Endpoints:** busca, filtro de método/confiança, paginação e detalhes das evidências de cada rota.
 - **Arquitetura:** linguagem, frameworks, banco e infraestrutura declarados, com ícones, conexões, evidências e download SVG; até 20 componentes no mapa. O mapa de arquivos/imports é separado.
-- **Configurações de IA:** provedor, modelo, endereço da API, chave de sessão e teste de conexão.
+- **Administração de IA:** configurações de API, chave de sessão, consumo, tarifas, orçamento, pausa e histórico de chamadas.
 - **Documentação:** leitura de README, endpoints, arquitetura e JSON; download individual ou ZIP.
 - **Histórico salvo:** reabertura após reiniciar o aplicativo; até 100 análises recentes na tela, sem apagar automaticamente as antigas do banco.
 - **Comparar versões:** mudanças nas rotas/configurações, arquivos e documentos que precisam de revisão.
@@ -106,7 +116,7 @@ Para testar sem internet, analise **Experimentar um exemplo**; depois abra **Com
 
 ## Configurar a IA
 
-Abra **Configurações de IA**, escolha o tipo de API, informe o modelo, o endereço base e sua chave. Clique em **Aplicar configurações** e, se desejar, **Testar conexão**. Depois marque **Usar IA** ao iniciar uma análise e consulte **Documentação → IA**.
+Abra **Administração de IA**, escolha o tipo de API, informe o modelo, o endereço base e sua chave. Clique em **Aplicar configurações** e, se desejar, **Testar conexão**. Depois marque **Usar IA** ao iniciar uma análise e consulte **Documentação → IA**.
 
 Tipos suportados: APIs compatíveis com OpenAI (`/chat/completions`), Google (`generateContent`) e Anthropic (`/messages`). Uma chave precisa corresponder ao provedor, modelo, permissões e protocolo escolhidos; não existe compatibilidade universal entre chaves. APIs locais compatíveis podem usar HTTP somente em loopback.
 
@@ -170,7 +180,7 @@ python -m octorgit.benchmark --public-manifest docs/benchmarks/rest-framework-tu
 
 O benchmark recusa sobrescrever um relatório existente. Gabaritos são JSONs revisáveis, escritos por inspeção das declarações, não gerados pelo parser. O teste público baixa apenas o SHA fixado e não executa o projeto. Execute os comandos a partir da raiz do OctorGit após instalar; sem instalar, prefixe com `PYTHONPATH=src` no Linux/macOS.
 
-Verificações desta versão: **89 testes**, **20/20 pares método/rota em três fixtures**, **9/9 endpoints de negócio em um projeto público**, com zero falsos positivos nos escopos dos gabaritos. Isso **não valida o MVP**: as fixtures são sintéticas, o gabarito público é parcial e ainda não foi revisado por uma pessoa independente. Consulte `docs/VERIFICATION.md` e os relatórios em `docs/benchmarks/`.
+Verificações desta versão: **100 testes**, **20/20 pares método/rota em três fixtures**, **9/9 endpoints de negócio em um projeto público**, com zero falsos positivos nos escopos dos gabaritos. Isso **não valida o MVP**: as fixtures são sintéticas, o gabarito público é parcial e ainda não foi revisado por uma pessoa independente. Consulte `docs/VERIFICATION.md` e os relatórios em `docs/benchmarks/`.
 
 ## Próximas entregas
 

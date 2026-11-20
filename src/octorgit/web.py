@@ -24,6 +24,7 @@ from .code_parser import analyze
 from .documentation import export, validate
 from .repositories import github_snapshot
 from .ai_engine import AIError, DocumentationEngine, render_markdown, validate_response
+from .ai_usage import UsageStore, MeteredProvider
 from .ai_config import AIConfiguration, create_provider
 from .history import HistoryStore, compare_analyses, metadata, repository_identity, snapshot_fingerprint
 from .insights import build_insights
@@ -43,6 +44,7 @@ class Jobs:
         self.pool = ThreadPoolExecutor(max_workers=1, thread_name_prefix="octorgit")
         self.ai_engine = DocumentationEngine()
         self.store = store
+        self.usage = UsageStore(store.directory / "ai-usage.sqlite3" if store else None)
         self.ai_configuration = ai_configuration or AIConfiguration(store.directory / "ai-settings.json" if store else None)
 
     def submit(self, payload):
@@ -56,7 +58,8 @@ class Jobs:
         provider = None
         if payload.get("use_ai"):
             try:
-                provider = create_provider(self.ai_configuration.snapshot())
+                config = self.ai_configuration.snapshot()
+                provider = MeteredProvider(create_provider(config), self.usage, config, "analysis")
             except AIError as exc:
                 raise ValueError(str(exc)) from None
         if source not in {"github", "demo", "demo-next"}:
@@ -180,6 +183,7 @@ class Jobs:
 
     def close(self):
         self.pool.shutdown(wait=True, cancel_futures=True)
+        self.usage.close()
 
 
 class LocalServer(ThreadingHTTPServer):
@@ -249,6 +253,12 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/jobs":
             self.json(200, {"jobs": self.server.jobs.list()})
             return
+        if path == "/api/ai/usage":
+            try:
+                self.json(200, self.server.jobs.usage.summary(self.server.jobs.ai_configuration.public()))
+            except sqlite3.Error:
+                self.json(503, {"error": "Não foi possível consultar o histórico de consumo."})
+            return
         if path == "/api/config":
             self.json(200, {"ai": self.server.jobs.ai_configuration.public(), "persistent_history": self.server.jobs.store is not None})
             return
@@ -313,7 +323,7 @@ class Handler(BaseHTTPRequestHandler):
         if not self.trusted():
             return
         path = urlsplit(self.path).path
-        if path not in {"/api/jobs", "/api/ai/config", "/api/ai/test"}:
+        if path not in {"/api/jobs", "/api/ai/config", "/api/ai/test", "/api/ai/usage"}:
             self.json(404, {"error": "Página não encontrada."})
             return
         if not secrets.compare_digest(self.headers.get("X-OctorGit-Token", ""), self.server.csrf):
@@ -327,6 +337,9 @@ class Handler(BaseHTTPRequestHandler):
             if not 0 < size <= 4096:
                 raise ValueError("Requisição inválida ou muito grande.")
             payload = json.loads(self.rfile.read(size))
+            if path == "/api/ai/usage":
+                self.json(200, self.server.jobs.usage.configure(payload, self.server.jobs.ai_configuration.public()))
+                return
             if path == "/api/ai/config":
                 config = self.server.jobs.ai_configuration.apply(payload)
                 self.json(200, {"ai": config})
@@ -337,7 +350,8 @@ class Handler(BaseHTTPRequestHandler):
                 if not self.server.ai_test_lock.acquire(blocking=False):
                     raise BusyError("Um teste de IA já está em andamento.")
                 try:
-                    provider = create_provider(self.server.jobs.ai_configuration.snapshot())
+                    config = self.server.jobs.ai_configuration.snapshot()
+                    provider = MeteredProvider(create_provider(config), self.server.jobs.usage, config, "connection_test")
                     context = {"facts": [{"id": "TEST0001", "kind": "test", "data": {"purpose": "connection test, no repository data"}, "evidence": []}], "partial": True}
                     result, usage = provider.generate(context)
                     validate_response(result, context)
@@ -346,6 +360,9 @@ class Handler(BaseHTTPRequestHandler):
                     self.server.ai_test_lock.release()
                 return
             job = self.server.jobs.submit(payload)
+        except sqlite3.Error:
+            self.json(503, {"error": "Não foi possível salvar ou consultar o consumo de IA."})
+            return
         except AIError as exc:
             self.json(422, {"error": str(exc)})
             return

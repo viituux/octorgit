@@ -35,3 +35,7 @@ A pedido do usuário, SQLite local persiste resultados e trechos de código já 
 Snippets e mapas ficam apenas no computador do usuário e nos arquivos que ele exportar. A opção IA continua enviando apenas fatos da IR, nunca snippets de código. Para excluir o histórico, fechar o aplicativo e remover o SQLite da pasta escolhida. Arquivos de dados não entram no ZIP do programa.
 
 Relatório HTML não contém scripts, carregamentos externos ou handlers. Todos os nomes/códigos são escapados; SVG usa formas/textos controlados pelo gerador. O relatório recebe CSP distinta que permite apenas seu CSS inline e framing pela própria origem; a aplicação principal continua sem scripts inline. A impressão para PDF é manual no navegador.
+
+## Registro de consumo — 0.7.0
+
+`ai-usage.sqlite3` contém somente data, provedor/modelo, hash do perfil, finalidade, estado, contadores de tokens, tarifas e custo estimado. Não guarda chave, prompt, código nem resposta. GET não devolve segredo; gravações exigem token/Host/Origin. CSV escapa células potencialmente interpretáveis como fórmula. A pausa é local e não revoga a chave no provedor; não interrompe pedidos em andamento. Orçamento é um aviso, não uma barreira de cobrança. Falha ao iniciar o registro impede nova chamada externa.

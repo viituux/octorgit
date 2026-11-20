@@ -125,6 +125,21 @@ def validate_response(response, context):
     return response
 
 
+def reported_usage(body, provider):
+    if not isinstance(body, dict):
+        return {}
+    raw = body.get("usageMetadata" if provider == "google" else "usage", {})
+    if not isinstance(raw, dict):
+        return {}
+    mapping = ({key: key for key in ("promptTokenCount", "candidatesTokenCount", "thoughtsTokenCount", "totalTokenCount")} if provider == "google" else
+               {"input_tokens": "promptTokenCount", "output_tokens": "candidatesTokenCount"} if provider == "anthropic" else
+               {"prompt_tokens": "promptTokenCount", "completion_tokens": "candidatesTokenCount", "total_tokens": "totalTokenCount"})
+    result = {destination: raw[source] for source, destination in mapping.items() if type(raw.get(source)) is int and 0 <= raw[source] <= 10**12}
+    if provider == "anthropic" and "promptTokenCount" in result:
+        result["promptTokenCount"] += sum(raw[key] for key in ("cache_creation_input_tokens", "cache_read_input_tokens") if type(raw.get(key)) is int and 0 <= raw[key] <= 10**12)
+    return result
+
+
 class GeminiProvider:
     def __init__(self, config=None):
         config = config or {"api_key": os.environ.get("GEMINI_API_KEY", "").strip(), "model": os.environ.get("GEMINI_MODEL", DEFAULT_MODEL).strip(), "base_url": "https://generativelanguage.googleapis.com/v1beta"}
@@ -156,14 +171,13 @@ class GeminiProvider:
             if self._key and self._key.encode() in raw:
                 raise AIError("A resposta incluiu credenciais e foi rejeitada. A análise estática foi preservada.")
             body = json.loads(raw)
+            self.last_usage = reported_usage(body, self.provider)
             candidate = body["candidates"][0]
             if candidate.get("finishReason") != "STOP":
                 raise AIError("A IA não concluiu uma resposta válida dentro dos limites. A análise estática foi preservada.")
             text = "".join(p.get("text", "") for p in candidate["content"]["parts"] if not p.get("thought"))
             parsed = json.loads(text)
-            metadata = body.get("usageMetadata", {})
-            usage = {k: metadata[k] for k in ("promptTokenCount", "candidatesTokenCount", "thoughtsTokenCount", "totalTokenCount")
-                     if isinstance(metadata.get(k), int) and metadata[k] >= 0}
+            usage = reported_usage(body, self.provider)
             return parsed, usage
         except HTTPError as exc:
             messages = {400: "A IA rejeitou a configuração. Confira a chave e o modelo no Google AI Studio.",
@@ -195,7 +209,9 @@ class JSONProvider:
                 raise AIError("Resposta da IA acima do limite de tamanho.")
             if self._key and self._key.encode() in raw:
                 raise AIError("A resposta incluiu credenciais e foi rejeitada.")
-            return json.loads(raw)
+            body = json.loads(raw)
+            self.last_usage = reported_usage(body, self.provider)
+            return body
         except HTTPError as exc:
             messages = {400: "A API rejeitou o pedido. Confira modelo, protocolo e suporte a JSON.",
                         401: "A API não aceitou a chave configurada.", 403: "A API não autorizou esta chave ou projeto.",
@@ -223,8 +239,7 @@ class OpenAICompatibleProvider(JSONProvider):
             if choice["finish_reason"] != "stop":
                 raise AIError("A IA não concluiu a resposta dentro dos limites.")
             result = json.loads(choice["message"]["content"])
-            usage = body.get("usage", {})
-            stats = {destination: usage[source] for source, destination in (("prompt_tokens", "promptTokenCount"), ("completion_tokens", "candidatesTokenCount"), ("total_tokens", "totalTokenCount")) if isinstance(usage.get(source), int) and usage[source] >= 0}
+            stats = reported_usage(body, self.provider)
             return result, stats
         except (ValueError, TypeError, KeyError, IndexError, AttributeError):
             raise AIError("A IA não retornou o documento JSON esperado. A análise estática foi preservada.") from None
@@ -243,8 +258,7 @@ class AnthropicProvider(JSONProvider):
                 raise AIError("A IA não concluiu a resposta dentro dos limites.")
             text = "".join(part["text"] for part in body["content"] if part.get("type") == "text")
             result = json.loads(text)
-            usage = body.get("usage", {})
-            stats = {destination: usage[source] for source, destination in (("input_tokens", "promptTokenCount"), ("output_tokens", "candidatesTokenCount")) if isinstance(usage.get(source), int) and usage[source] >= 0}
+            stats = reported_usage(body, self.provider)
             if len(stats) == 2:
                 stats["totalTokenCount"] = sum(stats.values())
             return result, stats

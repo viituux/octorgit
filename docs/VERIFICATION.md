@@ -1,3 +1,7 @@
+# Administração de IA 0.7.0 — 20/11/2026
+
+100 testes locais passaram, incluindo consumo/custo Decimal, dados desconhecidos, persistência sem segredo, troca de tarifas/perfil, pausa, cache, raciocínio, falhas com tokens reportados e API HTTP protegida. Integrações usam transporte/respostas simulados, sem chamada autenticada real nem verificação de fatura. A inspeção interativa do navegador não foi executada nesta versão.
+
 # Correções de precisão 0.6.1 — 20/11/2026
 
 89 testes passaram localmente, incluindo seis novos testes de regressão com variações: separação de endpoints auxiliares, fixture como raiz, Compose com chaves aninhadas/indentação diferente e SQLite com aliases/sombreamento/import isolado. Nenhuma chamada de IA foi necessária.

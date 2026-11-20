@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "octorgit"
-version = "0.6.1"
+version = "0.7.0"
 description = "Understand code. Generate knowledge. Evidence-first static Python analysis."
 requires-python = ">=3.11"
 dependencies = []
